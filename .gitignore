@@ -1,0 +1,11 @@
+# macOS
+.DS_Store
+
+# SMB temporary files
+.smbdelete*
+
+# Claude
+.claude/
+
+# Todo locali
+.todo.md

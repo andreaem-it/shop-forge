@@ -6,6 +6,9 @@
 
 # Claude
 .claude/
+LICENSE-SETUP.md
+opcache-reset.php
 
 # Todo locali
 .todo.md
+

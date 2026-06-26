@@ -27,6 +27,9 @@ define( 'SHOPFORGE_FILE', __FILE__ );
 define( 'SHOPFORGE_DIR',  plugin_dir_path( __FILE__ ) );
 define( 'SHOPFORGE_URL',  plugin_dir_url( __FILE__ ) );
 
+// License server endpoint
+define( 'SHOPFORGE_LICENSE_SERVER', 'https://licenses.andreaem.it/api.php?action=validate' );
+
 // URL kit FontAwesome — unico punto di configurazione
 define( 'SHOPFORGE_FA_KIT_URL', 'https://kit.fontawesome.com/051de31815.js' );
 
@@ -38,6 +41,9 @@ add_action( 'before_woocommerce_init', function () {
         );
     }
 } );
+
+// Licensing (controlla prima di caricare il plugin)
+require_once SHOPFORGE_DIR . 'inc/shopforge-license.php';
 
 // Carica solo se WooCommerce è attivo
 add_action( 'plugins_loaded', function () {

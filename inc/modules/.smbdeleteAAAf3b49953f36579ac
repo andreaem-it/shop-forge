@@ -1,0 +1,13 @@
+<?php
+/**
+ * Modulo: Tracking spedizioni
+ *
+ * Carica la logica 17track (metabox admin, REST endpoint, widget frontend).
+ * Non aggiunge voci al menu My Account — agisce sulla pagina dettaglio ordine.
+ *
+ * @package BnComShopAccount
+ */
+
+defined( 'ABSPATH' ) || exit;
+
+require_once BNCOM_SA_DIR . 'inc/bncom-tracking.php';

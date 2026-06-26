@@ -1,0 +1,747 @@
+/* ShopForge — Order Tracker CSS */
+/* Generato automaticamente da shopforge-order-tracker.php */
+
+/* ---- Dettaglio ordine & progress tracker ---- */
+	/* ============================================================
+	   BNCOM — Account: stili uniformi per tutte le sezioni
+	   Usa le variabili CSS del plugin shopforge
+	   ============================================================ */
+
+	/* --- Heading sezioni content --- */
+	.woocommerce-account .woocommerce-MyAccount-content h2 {
+		font-size: 17px;
+		font-weight: 800;
+		color: var(--shopforge-text-main);
+		margin: 0 0 18px;
+		padding-bottom: 14px;
+		border-bottom: 1px solid var(--shopforge-border-soft, #EEF2F7);
+		line-height: 1.3;
+	}
+
+	.woocommerce-account .woocommerce-MyAccount-content h3 {
+		font-size: 14px;
+		font-weight: 700;
+		color: var(--shopforge-text-muted);
+		margin: 0 0 12px;
+	}
+
+	/* --- Barra info ordine (paragrafo con numero / data / stato) --- */
+	.woocommerce-account .woocommerce-MyAccount-content > p:first-of-type {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 6px 10px;
+		padding: 14px 18px;
+		margin: 0 0 24px;
+		background: var(--shopforge-bg-soft);
+		border: 1px solid var(--shopforge-border);
+		border-radius: var(--shopforge-radius);
+		font-size: 14px;
+		color: var(--shopforge-text-muted);
+		line-height: 1.5;
+	}
+
+	.woocommerce-account .woocommerce-MyAccount-content > p:first-of-type mark.order-number,
+	.woocommerce-account .woocommerce-MyAccount-content > p:first-of-type mark.order-date {
+		background: none;
+		color: var(--shopforge-text-main);
+		font-weight: 700;
+	}
+
+	/* Badge stato inline */
+	.woocommerce-account mark.order-status {
+		display: inline-flex;
+		align-items: center;
+		padding: 2px 10px;
+		border-radius: 999px;
+		font-size: 12px;
+		font-weight: 700;
+		background: #EFF6FF;
+		color: #1D4ED8;
+	}
+
+	.woocommerce-account mark.order-status.status-completed   { background: #DCFCE7; color: #15803D; }
+	.woocommerce-account mark.order-status.status-processing  { background: #DBEAFE; color: #1D4ED8; }
+	.woocommerce-account mark.order-status.status-on-hold     { background: #FEF3C7; color: #B45309; }
+	.woocommerce-account mark.order-status.status-pending     { background: #F3F4F6; color: #4B5563; }
+	.woocommerce-account mark.order-status.status-cancelled,
+	.woocommerce-account mark.order-status.status-failed,
+	.woocommerce-account mark.order-status.status-refunded    { background: #FEE2E2; color: #B91C1C; }
+	.woocommerce-account mark.order-status.status-spedito     { background: #dbeeff; color: #1565C0; }
+
+	/* --- Sezioni dettaglio ordine --- */
+	.woocommerce-account .woocommerce-order-details,
+	.woocommerce-account .woocommerce-customer-details {
+		margin-bottom: 24px;
+	}
+
+	/* Tabella prodotti */
+	.woocommerce-account table.woocommerce-table--order-details {
+		width: 100%;
+		border-collapse: collapse;
+		background: #fff;
+		border: 1px solid var(--shopforge-border);
+		border-radius: var(--shopforge-radius);
+		overflow: hidden;
+		box-shadow: var(--shopforge-shadow);
+		font-size: 14px;
+	}
+
+	.woocommerce-account table.woocommerce-table--order-details thead th {
+		padding: 12px 18px;
+		font-size: 11px;
+		font-weight: 800;
+		text-transform: uppercase;
+		letter-spacing: .06em;
+		color: var(--shopforge-text-muted);
+		background: var(--shopforge-bg-soft);
+		border-bottom: 1px solid var(--shopforge-border);
+		text-align: left;
+	}
+
+	.woocommerce-account table.woocommerce-table--order-details thead th:last-child { text-align: right; }
+
+	.woocommerce-account table.woocommerce-table--order-details tbody td {
+		padding: 14px 18px;
+		border-bottom: 1px solid var(--shopforge-border-soft);
+		color: var(--shopforge-text-main);
+		vertical-align: middle;
+	}
+
+	.woocommerce-account table.woocommerce-table--order-details tbody td:last-child {
+		text-align: right;
+		font-weight: 600;
+	}
+
+	.woocommerce-account table.woocommerce-table--order-details tbody tr:last-child td { border-bottom: none; }
+
+	.woocommerce-account table.woocommerce-table--order-details .woocommerce-table__product-name a {
+		color: var(--shopforge-primary);
+		font-weight: 600;
+		text-decoration: none;
+	}
+
+	.woocommerce-account table.woocommerce-table--order-details .woocommerce-table__product-name a:hover {
+		color: var(--shopforge-primary-hover);
+		text-decoration: underline;
+	}
+
+	.woocommerce-account table.woocommerce-table--order-details tfoot { background: var(--shopforge-bg-soft); }
+
+	.woocommerce-account table.woocommerce-table--order-details tfoot tr th,
+	.woocommerce-account table.woocommerce-table--order-details tfoot tr td {
+		padding: 11px 18px;
+		font-size: 14px;
+		color: var(--shopforge-text-muted);
+		border-top: 1px solid var(--shopforge-border);
+	}
+
+	.woocommerce-account table.woocommerce-table--order-details tfoot tr th { text-align: left; }
+	.woocommerce-account table.woocommerce-table--order-details tfoot tr td { text-align: right; }
+
+	.woocommerce-account table.woocommerce-table--order-details tfoot tr:last-child th,
+	.woocommerce-account table.woocommerce-table--order-details tfoot tr:last-child td {
+		color: var(--shopforge-text-main);
+		font-weight: 800;
+		font-size: 15px;
+	}
+
+	/* --- Indirizzi cliente --- */
+	.woocommerce-account .woocommerce-customer-details {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 20px;
+	}
+
+	.woocommerce-account .woocommerce-customer-details section {
+		padding: 22px 24px;
+		background: #fff;
+		border: 1px solid var(--shopforge-border);
+		border-radius: var(--shopforge-radius);
+		box-shadow: var(--shopforge-shadow);
+		font-size: 14px;
+		line-height: 1.75;
+		color: var(--shopforge-text-muted);
+	}
+
+	.woocommerce-account .woocommerce-customer-details section h2 {
+		font-size: 12px;
+		font-weight: 800;
+		text-transform: uppercase;
+		letter-spacing: .07em;
+		color: var(--shopforge-text-muted);
+		margin: 0 0 14px;
+		padding-bottom: 10px;
+		border-bottom: 1px solid var(--shopforge-border-soft);
+	}
+
+	.woocommerce-account .woocommerce-customer-details address {
+		font-style: normal;
+		color: var(--shopforge-text-main);
+	}
+
+	/* --- Lista ordini (/ordini/) --- */
+	.woocommerce-account table.woocommerce-orders-table {
+		border: 1px solid var(--shopforge-border);
+		border-radius: var(--shopforge-radius);
+		overflow: hidden;
+		box-shadow: var(--shopforge-shadow);
+		background: #fff;
+		font-size: 14px;
+		width: 100%;
+		border-collapse: collapse;
+	}
+
+	.woocommerce-account table.woocommerce-orders-table thead th {
+		padding: 12px 16px;
+		font-size: 11px;
+		font-weight: 800;
+		text-transform: uppercase;
+		letter-spacing: .06em;
+		color: var(--shopforge-text-muted);
+		background: var(--shopforge-bg-soft);
+		border-bottom: 1px solid var(--shopforge-border);
+		text-align: left;
+	}
+
+	.woocommerce-account table.woocommerce-orders-table tbody td {
+		padding: 13px 16px;
+		border-bottom: 1px solid var(--shopforge-border-soft);
+		color: var(--shopforge-text-main);
+		vertical-align: middle;
+	}
+
+	.woocommerce-account table.woocommerce-orders-table tbody tr:last-child td { border-bottom: none; }
+	.woocommerce-account table.woocommerce-orders-table tbody tr:hover td { background: #FAFBFC; }
+
+	.woocommerce-account table.woocommerce-orders-table .woocommerce-orders-table__cell-order-number a {
+		color: var(--shopforge-primary);
+		font-weight: 700;
+		text-decoration: none;
+	}
+
+	.woocommerce-account table.woocommerce-orders-table mark.order-status {
+		display: inline-flex;
+		align-items: center;
+		padding: 3px 11px;
+		border-radius: 999px;
+		font-size: 12px;
+		font-weight: 700;
+		background: var(--shopforge-bg-soft);
+		color: var(--shopforge-text-muted);
+	}
+
+	/* --- Form (dettagli account, indirizzi) --- */
+	.woocommerce-account .woocommerce-MyAccount-content fieldset {
+		border: 1px solid var(--shopforge-border);
+		border-radius: var(--shopforge-radius);
+		padding: 22px 24px;
+		margin: 0 0 24px;
+	}
+
+	.woocommerce-account .woocommerce-MyAccount-content fieldset legend {
+		font-size: 13px;
+		font-weight: 700;
+		color: var(--shopforge-text-muted);
+		padding: 0 8px;
+	}
+
+	.woocommerce-account .woocommerce-MyAccount-content .woocommerce-form-row label {
+		font-size: 13px;
+		font-weight: 700;
+		color: var(--shopforge-text-main);
+		margin-bottom: 6px;
+	}
+
+	.woocommerce-account .woocommerce-MyAccount-content .woocommerce-form-row { margin-bottom: 18px; }
+
+	/* --- Tracker --- */
+	.shopforge-order-tracker {
+		margin-bottom: 24px;
+		padding: 24px 28px;
+		background: #fff;
+		border: 1px solid var(--shopforge-border);
+		border-radius: var(--shopforge-radius);
+		box-shadow: var(--shopforge-shadow);
+	}
+
+	.shopforge-tracker-header {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		margin: 0 0 22px;
+		font-size: 12px;
+		font-weight: 800;
+		text-transform: uppercase;
+		letter-spacing: .07em;
+		color: var(--shopforge-text-muted);
+	}
+
+	.shopforge-tracker-steps { display: flex; align-items: flex-start; position: relative; }
+
+	.shopforge-tracker-step {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		flex: 1;
+		position: relative;
+		min-width: 0;
+	}
+
+	.shopforge-tracker-step::before {
+		content: "";
+		position: absolute;
+		top: 21px;
+		left: calc(-50% + 22px);
+		right: calc(50% + 22px);
+		height: 2px;
+		background: var(--shopforge-border);
+		z-index: 0;
+		transition: background .35s ease;
+	}
+
+	.shopforge-tracker-step:first-child::before { display: none; }
+
+	.shopforge-tracker-step.is-completed::before,
+	.shopforge-tracker-step.is-active::before { background: var(--shopforge-success); }
+
+	.shopforge-tracker-step__bubble {
+		position: relative;
+		z-index: 1;
+		width: 44px;
+		height: 44px;
+		border-radius: 50%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 17px;
+		background: var(--shopforge-bg-soft);
+		color: var(--shopforge-border);
+		border: 2px solid var(--shopforge-border);
+		transition: background .3s, color .3s, border-color .3s, box-shadow .3s;
+	}
+
+	.shopforge-tracker-step.is-completed .shopforge-tracker-step__bubble {
+		background: var(--shopforge-success); color: #fff; border-color: var(--shopforge-success);
+	}
+
+	.shopforge-tracker-step.is-active .shopforge-tracker-step__bubble {
+		background: var(--shopforge-primary); color: #fff; border-color: var(--shopforge-primary);
+		box-shadow: 0 0 0 5px rgba(0,111,239,.14);
+	}
+
+	.shopforge-tracker-step__label {
+		margin-top: 10px;
+		font-size: 11px;
+		font-weight: 700;
+		text-align: center;
+		line-height: 1.3;
+		color: var(--shopforge-border);
+		transition: color .3s;
+		padding: 0 4px;
+	}
+
+	.shopforge-tracker-step.is-completed .shopforge-tracker-step__label { color: var(--shopforge-success); }
+	.shopforge-tracker-step.is-active .shopforge-tracker-step__label { color: var(--shopforge-primary); }
+
+	.shopforge-order-tracker--error {
+		display: flex;
+		align-items: center;
+		gap: 12px;
+		color: var(--shopforge-danger);
+		background: #FEF2F2;
+		border-color: #FECACA;
+		font-size: 14px;
+		font-weight: 600;
+	}
+
+	.shopforge-order-tracker--error i { font-size: 22px; flex-shrink: 0; }
+
+	/* --- Responsive --- */
+	@media (max-width: 860px) {
+		.woocommerce-account .woocommerce-customer-details { grid-template-columns: 1fr; }
+	}
+
+	@media (max-width: 600px) {
+		.shopforge-order-tracker { padding: 18px 14px; }
+
+		.shopforge-tracker-step__bubble { width: 36px; height: 36px; font-size: 14px; }
+
+		.shopforge-tracker-step::before {
+			top: 17px;
+			left: calc(-50% + 18px);
+			right: calc(50% + 18px);
+		}
+
+		.shopforge-tracker-step__label { font-size: 9px; margin-top: 7px; }
+
+		.woocommerce-account table.woocommerce-table--order-details thead th,
+		.woocommerce-account table.woocommerce-table--order-details tbody td,
+		.woocommerce-account table.woocommerce-table--order-details tfoot tr th,
+		.woocommerce-account table.woocommerce-table--order-details tfoot tr td {
+			padding: 10px 12px;
+			font-size: 13px;
+		}
+	}
+
+/* ---- Card assistenza (decorativa, solo con styles ON) ---- */
+
+	/* ---- Card ---- */
+	.shopforge-support-card {
+		display: flex; align-items: center; gap: 18px;
+		margin-top: 24px; padding: 20px 24px;
+		background: #fff;
+		border: 1px solid var(--shopforge-border);
+		border-radius: var(--shopforge-radius);
+		box-shadow: var(--shopforge-shadow);
+	}
+	.shopforge-support-card__icon {
+		width: 44px; height: 44px; flex-shrink: 0;
+		background: #EFF6FF; border-radius: 12px;
+		display: flex; align-items: center; justify-content: center;
+		color: var(--shopforge-primary); font-size: 20px;
+	}
+	.shopforge-support-card__body { flex: 1; min-width: 0; }
+	.shopforge-support-card__title {
+		margin: 0 0 4px; font-size: 14px; font-weight: 700;
+		color: var(--shopforge-text-main);
+	}
+	.shopforge-support-card__text {
+		margin: 0; font-size: 13px;
+		color: var(--shopforge-text-muted); line-height: 1.5;
+	}
+	.shopforge-support-card__btn {
+		flex-shrink: 0;
+		display: inline-flex; align-items: center; gap: 7px;
+		padding: 10px 18px;
+		background: var(--shopforge-primary); color: #fff;
+		font-size: 13px; font-weight: 700;
+		border: none; border-radius: var(--shopforge-radius);
+		cursor: pointer; white-space: nowrap;
+		transition: background .2s;
+	}
+	.shopforge-support-card__btn:hover { background: var(--shopforge-primary-hover); }
+	.shopforge-support-card__btn i { font-size: 11px; }
+
+
+/* ---- Modale assistenza ---- */
+
+	/* ---- Form ticket inline (sostituisce modal overlay) ---- */
+	.shopforge-ticket-inline {
+		margin-top: 20px;
+		background: #fff;
+		border: 1px solid var(--shopforge-border);
+		border-radius: calc(var(--shopforge-radius) * 1.5);
+		box-shadow: var(--shopforge-shadow);
+		overflow: hidden;
+	}
+	.shopforge-ticket-inline__header {
+		display: flex; align-items: center; gap: 12px;
+		padding: 16px 20px;
+		border-bottom: 1px solid var(--shopforge-border-soft);
+		background: var(--shopforge-bg-soft);
+	}
+	.shopforge-ticket-inline__title {
+		flex: 1; margin: 0;
+		font-size: 15px; font-weight: 700;
+		color: var(--shopforge-text-main);
+		display: flex; align-items: center; gap: 9px; flex-wrap: wrap;
+	}
+	.shopforge-ticket-inline__title i { color: var(--shopforge-primary); }
+	.shopforge-ticket-inline__close {
+		width: 32px; height: 32px;
+		background: transparent;
+		border: none; border-radius: 8px;
+		cursor: pointer; font-size: 16px;
+		color: var(--shopforge-text-muted);
+		display: flex; align-items: center; justify-content: center;
+		flex-shrink: 0; transition: background .15s;
+	}
+	.shopforge-ticket-inline__close:hover { background: var(--shopforge-border-soft); }
+	.shopforge-ticket-inline__body { padding: 20px 24px 24px; }
+
+	/* Alias per compatibilità stili interni */
+	.shopforge-ticket-inline .shopforge-modal__ref {
+		margin: 0 0 18px;
+		font-size: 13px; color: var(--shopforge-text-muted);
+		padding: 10px 14px;
+		background: var(--shopforge-bg-soft);
+		border-radius: var(--shopforge-radius);
+		border: 1px solid var(--shopforge-border-soft);
+	}
+
+	/* ---- Form ---- */
+	.shopforge-field { margin-bottom: 16px; }
+	.shopforge-field label {
+		display: block; margin-bottom: 6px;
+		font-size: 12px; font-weight: 700;
+		color: var(--shopforge-text-main);
+		text-transform: uppercase; letter-spacing: .05em;
+	}
+	.shopforge-field select,
+	.shopforge-field textarea {
+		width: 100%; padding: 10px 12px;
+		border: 1px solid var(--shopforge-border);
+		border-radius: var(--shopforge-radius);
+		font-size: 14px; color: var(--shopforge-text-main);
+		background: #fff; box-sizing: border-box;
+		transition: border-color .15s;
+		font-family: inherit;
+	}
+	.shopforge-field select:focus,
+	.shopforge-field textarea:focus {
+		outline: none;
+		border-color: var(--shopforge-primary);
+		box-shadow: 0 0 0 3px rgba(0,111,239,.1);
+	}
+	.shopforge-field textarea { resize: vertical; min-height: 110px; }
+
+	/* ---- Lista prodotti ---- */
+	.shopforge-product-list {
+		list-style: none !important; margin: 0 !important; padding: 0 !important;
+		border: 1px solid var(--shopforge-border);
+		border-radius: var(--shopforge-radius);
+		overflow: hidden;
+	}
+	.shopforge-product-list__item + .shopforge-product-list__item {
+		border-top: 1px solid var(--shopforge-border-soft);
+	}
+	.shopforge-product-list__item:has(input:checked) { background: #EFF6FF; }
+
+	.shopforge-product-row {
+		display: flex !important;
+		flex-direction: row !important;
+		flex-wrap: nowrap !important;
+		align-items: center !important;
+		gap: 12px;
+		padding: 10px 14px !important;
+		width: 100%; box-sizing: border-box;
+		cursor: pointer;
+		transition: background .15s;
+		margin: 0 !important;
+		font-weight: normal !important;
+		text-transform: none !important;
+		letter-spacing: normal !important;
+		color: var(--shopforge-text-main) !important;
+		font-size: 13px !important;
+		line-height: 1.4 !important;
+	}
+	.shopforge-product-row:hover { background: var(--shopforge-bg-soft); }
+	.shopforge-product-list__item:has(input:checked) .shopforge-product-row:hover { background: #dbeafe; }
+	.shopforge-product-row input[type=checkbox] { display: none !important; }
+
+	.shopforge-product-row__check-icon {
+		display: flex !important;
+		align-items: center !important;
+		justify-content: center !important;
+		width: 20px !important; height: 20px !important;
+		flex-shrink: 0 !important;
+		border-radius: 50%;
+		border: 2px solid var(--shopforge-border);
+		font-size: 9px; color: transparent;
+		transition: background .15s, border-color .15s, color .15s;
+		box-sizing: border-box;
+	}
+	.shopforge-product-row__thumb {
+		display: flex !important;
+		align-items: center !important;
+		justify-content: center !important;
+		width: 50px !important; height: 50px !important;
+		flex-shrink: 0 !important;
+		border-radius: 6px; overflow: hidden;
+		border: 1px solid var(--shopforge-border-soft);
+		background: var(--shopforge-bg-soft);
+	}
+	.shopforge-product-row__thumb img {
+		width: 50px !important; height: 50px !important;
+		object-fit: cover !important; display: block !important;
+	}
+	.shopforge-product-row__no-img { font-size: 16px; color: var(--shopforge-border); }
+	.shopforge-product-row__name {
+		flex: 1 !important; min-width: 0;
+		display: flex !important; flex-direction: column !important; gap: 3px;
+	}
+	.shopforge-product-row__title {
+		font-size: 13px !important; font-weight: 700 !important;
+		color: var(--shopforge-text-main) !important;
+		line-height: 1.3;
+	}
+	.shopforge-product-row__price {
+		font-size: 12px !important; font-weight: 400 !important;
+		color: var(--shopforge-text-muted) !important;
+	}
+	.shopforge-product-row__price * { font-size: 12px !important; }
+
+	/* Stato selezionato */
+	.shopforge-product-list__item:has(input:checked) .shopforge-product-row__check-icon {
+		background: var(--shopforge-primary) !important;
+		border-color: var(--shopforge-primary) !important;
+		color: #fff !important;
+	}
+
+	.shopforge-field-note {
+		margin: -8px 0 16px;
+		font-size: 12px; color: var(--shopforge-text-muted);
+	}
+
+	/* ---- File upload ---- */
+	.shopforge-form-group--file label { margin-bottom: 6px; }
+	.shopforge-file-input {
+		display: block; width: 100%;
+		padding: 8px 10px;
+		border: 1.5px dashed var(--shopforge-border);
+		border-radius: var(--shopforge-radius);
+		background: #FAFAFA;
+		font-size: 13px; color: var(--shopforge-text-muted);
+		cursor: pointer;
+		margin-bottom: 8px;
+	}
+	.shopforge-file-input:hover { border-color: var(--shopforge-primary); background: #F0F7FF; }
+	.shopforge-file-preview { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
+	.shopforge-file-chip {
+		display: inline-flex; align-items: center;
+		padding: 3px 8px;
+		background: #EFF6FF; border: 1px solid #BFDBFE;
+		border-radius: 999px; font-size: 11px; color: #1D4ED8;
+		max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+	}
+
+	.shopforge-modal__submit {
+		width: 100%; padding: 12px;
+		background: var(--shopforge-primary); color: #fff;
+		font-size: 14px; font-weight: 700;
+		border: none; border-radius: var(--shopforge-radius);
+		cursor: pointer;
+		display: flex; align-items: center; justify-content: center; gap: 8px;
+		transition: background .2s;
+	}
+	.shopforge-modal__submit:hover:not(:disabled) { background: var(--shopforge-primary-hover); }
+	.shopforge-modal__submit:disabled { opacity: .65; cursor: not-allowed; }
+
+	/* ---- Errore ---- */
+	.shopforge-ticket-error {
+		margin-top: 12px; padding: 10px 14px;
+		background: #FEF2F2; border: 1px solid #FECACA;
+		border-radius: var(--shopforge-radius);
+		font-size: 13px; color: #B91C1C;
+	}
+
+	/* ---- Successo ---- */
+	.shopforge-ticket-success {
+		text-align: center; padding: 16px 0 8px;
+	}
+	.shopforge-ticket-success > i {
+		font-size: 48px; color: var(--shopforge-success);
+		display: block; margin-bottom: 14px;
+	}
+	.shopforge-ts__title {
+		margin: 0 0 8px;
+		font-size: 17px; font-weight: 800;
+		color: var(--shopforge-text-main);
+	}
+	.shopforge-ts__text {
+		margin: 0 0 22px;
+		font-size: 14px; color: var(--shopforge-text-muted);
+		line-height: 1.6;
+	}
+	.shopforge-modal__close-btn {
+		padding: 10px 24px;
+		background: var(--shopforge-bg-soft);
+		border: 1px solid var(--shopforge-border);
+		border-radius: var(--shopforge-radius);
+		font-size: 13px; font-weight: 700;
+		color: var(--shopforge-text-main);
+		cursor: pointer; transition: background .15s;
+	}
+	.shopforge-modal__close-btn:hover { background: var(--shopforge-border-soft); }
+
+	/* ---- Responsive ---- */
+	@media (max-width: 680px) {
+		.shopforge-support-card { flex-wrap: wrap; gap: 14px; }
+		.shopforge-support-card__btn { width: 100%; justify-content: center; }
+		.shopforge-modal__header, .shopforge-modal__body { padding-left: 16px; padding-right: 16px; }
+	}
+
+
+/* ---- Storico ticket ---- */
+	.shopforge-tickets-history {
+		margin-top: 20px;
+		border: 1px solid var(--shopforge-border);
+		border-radius: var(--shopforge-radius);
+		background: #fff;
+		box-shadow: var(--shopforge-shadow);
+		overflow: hidden;
+	}
+	.shopforge-tickets-history__title {
+		margin: 0;
+		padding: 14px 20px;
+		font-size: 12px; font-weight: 800;
+		text-transform: uppercase; letter-spacing: .06em;
+		color: var(--shopforge-text-muted);
+		background: var(--shopforge-bg-soft);
+		border-bottom: 1px solid var(--shopforge-border-soft);
+		display: flex; align-items: center; gap: 8px;
+	}
+	.shopforge-tickets-list { list-style: none; margin: 0; padding: 0; }
+	.shopforge-ticket-row {
+		display: flex; align-items: flex-start;
+		justify-content: space-between; gap: 16px;
+		padding: 14px 20px;
+		border-bottom: 1px solid var(--shopforge-border-soft);
+	}
+	.shopforge-ticket-row:last-child { border-bottom: none; }
+	.shopforge-ticket-row__main {
+		display: flex; flex-direction: column; gap: 4px;
+		min-width: 0; flex: 1;
+	}
+	.shopforge-ticket-row__subject {
+		font-size: 13px; font-weight: 700;
+		color: var(--shopforge-text-main);
+	}
+	.shopforge-ticket-row__products {
+		font-size: 12px; color: var(--shopforge-text-muted);
+		font-style: italic;
+	}
+	.shopforge-ticket-row__message {
+		font-size: 13px; color: var(--shopforge-text-muted);
+		line-height: 1.4;
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+	}
+	.shopforge-ticket-row__meta {
+		display: flex; flex-direction: column;
+		align-items: flex-end; gap: 6px;
+		flex-shrink: 0;
+	}
+	.shopforge-ticket-row__date {
+		font-size: 11px; color: var(--shopforge-text-muted); white-space: nowrap;
+	}
+	.shopforge-ticket-badge {
+		padding: 3px 10px; border-radius: 999px;
+		font-size: 11px; font-weight: 700;
+	}
+	.shopforge-ticket-badge--open   { background: #FEF3C7; color: #B45309; }
+	.shopforge-ticket-badge--closed { background: #DCFCE7; color: #15803D; }
+	.shopforge-ticket-row__reply {
+		margin-top: 6px;
+		padding: 6px 10px;
+		background: #EFF6FF;
+		border-left: 3px solid #3B82F6;
+		border-radius: 0 4px 4px 0;
+		font-size: 12px;
+		color: var(--shopforge-text-main);
+		line-height: 1.5;
+	}
+	.shopforge-ticket-row__reply strong {
+		display: block;
+		font-size: 11px;
+		font-weight: 700;
+		color: #1D4ED8;
+		margin-bottom: 2px;
+	}
+	@media (max-width: 560px) {
+		.shopforge-ticket-row { flex-direction: column; gap: 10px; }
+		.shopforge-ticket-row__meta { flex-direction: row; align-items: center; }
+	}

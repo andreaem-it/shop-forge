@@ -1,0 +1,79 @@
+/* ==========================================================================
+   BnCom Fix — Larghezza uniforme + normalizzazione font account
+   Caricato via @import da bncom-woo-account.css per bypassare il cache browser.
+   ========================================================================== */
+
+/* --- Larghezza widget Elementor uniforme su tutte le pagine account --- */
+.woocommerce-account .e-con-inner > *:has(.woocommerce-MyAccount-navigation) {
+  flex: 1 1 0% !important;
+  min-width: 0 !important;
+}
+.woocommerce-account .e-con-inner > *:has(.woocommerce-MyAccount-navigation)
+  > .elementor-widget-container {
+  width: 100%;
+}
+.woocommerce-account .woocommerce {
+  width: 100%;
+}
+
+/* --- Indirizzi: override The7 col-1/col-2 che imposta width:48% --- */
+.woocommerce-account .woocommerce-Address {
+  width: 100% !important;
+  float: none !important;
+  box-sizing: border-box;
+}
+
+/* --- Dettaglio ordine: normalizzazione font a 14px ---
+     The7 imposta 19px come base su td/a/strong */
+
+.woocommerce-account .woocommerce-table--order-details td,
+.woocommerce-account .woocommerce-table--order-details th,
+.woocommerce-account .woocommerce-table--order-details a,
+.woocommerce-account .woocommerce-table--order-details strong,
+.woocommerce-account .woocommerce-table--order-details span {
+  font-size: 14px !important;
+}
+.woocommerce-account .woocommerce-table--order-details .woocommerce-table__product-name a {
+  font-weight: 600 !important;
+  color: var(--bncom-text-main) !important;
+}
+.woocommerce-account .woocommerce-table--order-details .product-quantity {
+  color: var(--bncom-text-muted) !important;
+  font-weight: 400 !important;
+}
+
+/* Tabella dati cliente */
+.woocommerce-account table.customer_details th,
+.woocommerce-account table.customer_details td {
+  font-size: 14px !important;
+  font-weight: 400 !important;
+  padding: 10px 16px !important;
+}
+.woocommerce-account table.customer_details th {
+  font-weight: 600 !important;
+  color: var(--bncom-text-muted) !important;
+  width: 200px;
+}
+
+/* "Mostra i dettagli" h4: da 30px a label uppercase */
+.woocommerce-account .wc-wide-column > header h4,
+.woocommerce-account .woocommerce-customer-details > header h4 {
+  font-size: 12px !important;
+  font-weight: 800 !important;
+  text-transform: uppercase !important;
+  letter-spacing: .07em !important;
+  color: var(--bncom-text-muted) !important;
+  margin: 0 0 16px !important;
+  padding: 0 !important;
+}
+
+/* Tfoot: Metodo di pagamento etc. da 15px a 14px */
+.woocommerce-account .woocommerce-table--order-details tfoot th,
+.woocommerce-account .woocommerce-table--order-details tfoot td {
+  font-size: 14px !important;
+  font-weight: 700 !important;
+}
+.woocommerce-account .woocommerce-table--order-details tfoot tr:last-child th,
+.woocommerce-account .woocommerce-table--order-details tfoot tr:last-child td {
+  font-size: 15px !important;
+}

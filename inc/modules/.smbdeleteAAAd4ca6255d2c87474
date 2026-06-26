@@ -1,0 +1,497 @@
+<?php
+/**
+ * Modulo: Preventivi
+ *
+ * I clienti possono richiedere un preventivo personalizzato indicando
+ * prodotti, quantità e note. L'admin gestisce le richieste dalla pagina
+ * dedicata sotto WooCommerce e può rispondere via email.
+ *
+ * @package BnComShopAccount
+ */
+
+defined( 'ABSPATH' ) || exit;
+
+
+// =============================================================================
+// ENDPOINT — Contenuto pagina "Preventivi" nell'account
+// =============================================================================
+
+add_action( 'woocommerce_account_bncom-quotes_endpoint', function () {
+	$user_id = get_current_user_id();
+	$quotes  = get_user_meta( $user_id, '_bncom_quotes', true ) ?: [];
+	usort( $quotes, fn( $a, $b ) => strtotime( $b['date'] ) - strtotime( $a['date'] ) );
+
+	$nonce = wp_create_nonce( 'bncom_quote_' . $user_id );
+
+	bncom_account_section_header( 'Preventivi', 'fa-solid fa-file-invoice', count( $quotes ) . ' richieste' );
+
+	$status_labels = [
+		'pending'  => [ 'label' => 'In attesa', 'class' => 'pending' ],
+		'sent'     => [ 'label' => 'Inviato',   'class' => 'sent' ],
+		'accepted' => [ 'label' => 'Accettato', 'class' => 'accepted' ],
+		'declined' => [ 'label' => 'Rifiutato', 'class' => 'declined' ],
+		'expired'  => [ 'label' => 'Scaduto',   'class' => 'expired' ],
+	];
+	?>
+
+	<!-- Form nuova richiesta -->
+	<div class="bncom-quote-new-card">
+		<button type="button" class="bncom-quote-toggle" id="bncom-quote-toggle">
+			<i class="fa-solid fa-plus" aria-hidden="true"></i>
+			Nuova richiesta di preventivo
+		</button>
+
+		<form id="bncom-quote-form" class="bncom-quote-form" style="display:none">
+			<p class="bncom-quote-form__intro">
+				Elenca i prodotti per i quali desideri ricevere un preventivo.
+				Ti risponderemo via email nel più breve tempo possibile.
+			</p>
+
+			<div id="bncom-quote-rows">
+				<div class="bncom-quote-row-input">
+					<input type="text" class="bncom-qrow-name" placeholder="Nome prodotto / codice SKU" required>
+					<input type="number" class="bncom-qrow-qty" placeholder="Qtà" min="1" value="1">
+					<button type="button" class="bncom-qrow-remove" aria-label="Rimuovi">
+						<i class="fa-solid fa-xmark"></i>
+					</button>
+				</div>
+			</div>
+
+			<button type="button" class="bncom-btn bncom-btn--ghost" id="bncom-quote-add-row">
+				<i class="fa-solid fa-plus"></i> Aggiungi prodotto
+			</button>
+
+			<div class="bncom-field">
+				<label for="bncom-quote-notes">Note / richieste speciali <span style="font-weight:400;text-transform:none">(opzionale)</span></label>
+				<textarea id="bncom-quote-notes" rows="3" placeholder="Varianti, quantità alternative, tempistiche…"></textarea>
+			</div>
+
+			<p class="bncom-ret-error" id="bncom-quote-error" style="display:none"></p>
+
+			<button type="submit" class="bncom-modal__submit" id="bncom-quote-submit">
+				<span id="bncom-quote-label">Invia richiesta</span>
+				<span class="bncom-st-spinner" id="bncom-quote-spinner" style="display:none"></span>
+			</button>
+
+			<div id="bncom-quote-success" style="display:none" class="bncom-ticket-success">
+				<i class="fa-solid fa-circle-check" aria-hidden="true"></i>
+				<p class="bncom-ts__title">Richiesta inviata</p>
+				<p class="bncom-ts__text" id="bncom-quote-success-text"></p>
+			</div>
+		</form>
+	</div>
+
+	<!-- Storico preventivi -->
+	<?php if ( ! empty( $quotes ) ) : ?>
+	<div class="bncom-quotes-list">
+		<?php foreach ( $quotes as $quote ) :
+			$st   = $status_labels[ $quote['status'] ] ?? $status_labels['pending'];
+			$date = date_i18n( 'd/m/Y \a\l\l\e H:i', strtotime( $quote['date'] ) );
+		?>
+		<div class="bncom-quote-row-card">
+			<div class="bncom-quote-row-card__head">
+				<span class="bncom-quote-ref"><?php echo esc_html( $quote['ref'] ); ?></span>
+				<span class="bncom-quote-badge bncom-quote-badge--<?php echo esc_attr( $st['class'] ); ?>">
+					<?php echo esc_html( $st['label'] ); ?>
+				</span>
+			</div>
+			<div class="bncom-quote-row-card__body">
+				<p class="bncom-quote-meta"><?php echo esc_html( $date ); ?></p>
+				<?php if ( ! empty( $quote['items'] ) ) : ?>
+				<ul class="bncom-quote-items">
+					<?php foreach ( $quote['items'] as $item ) : ?>
+					<li><strong><?php echo esc_html( $item['qty'] ); ?>×</strong> <?php echo esc_html( $item['name'] ); ?></li>
+					<?php endforeach; ?>
+				</ul>
+				<?php endif; ?>
+				<?php if ( ! empty( $quote['notes'] ) ) : ?>
+				<p class="bncom-quote-notes"><?php echo esc_html( $quote['notes'] ); ?></p>
+				<?php endif; ?>
+				<?php if ( ! empty( $quote['reply'] ) ) : ?>
+				<div class="bncom-quote-reply">
+					<p class="bncom-quote-reply__label">
+						<i class="fa-solid fa-reply" aria-hidden="true"></i> Risposta del venditore:
+					</p>
+					<p class="bncom-quote-reply__text"><?php echo nl2br( esc_html( $quote['reply'] ) ); ?></p>
+				</div>
+				<?php endif; ?>
+			</div>
+		</div>
+		<?php endforeach; ?>
+	</div>
+	<?php else : ?>
+		<?php bncom_account_empty_state(
+			'fa-solid fa-file-invoice',
+			'Nessuna richiesta di preventivo',
+			'Usa il modulo qui sopra per richiedere un preventivo personalizzato.'
+		); ?>
+	<?php endif; ?>
+
+	<script>
+	(function () {
+		'use strict';
+		var ajaxUrl = '<?php echo esc_url( admin_url('admin-ajax.php') ); ?>';
+		var nonce   = '<?php echo esc_js( $nonce ); ?>';
+
+		document.getElementById('bncom-quote-toggle')?.addEventListener('click', function () {
+			var form = document.getElementById('bncom-quote-form');
+			var icon = this.querySelector('i');
+			var show = form.style.display === 'none';
+			form.style.display = show ? 'block' : 'none';
+			icon.className = show ? 'fa-solid fa-minus' : 'fa-solid fa-plus';
+		});
+
+		document.getElementById('bncom-quote-add-row')?.addEventListener('click', function () {
+			var rows = document.getElementById('bncom-quote-rows');
+			var tpl  = rows.querySelector('.bncom-quote-row-input').cloneNode(true);
+			tpl.querySelector('.bncom-qrow-name').value = '';
+			tpl.querySelector('.bncom-qrow-qty').value  = '1';
+			rows.appendChild(tpl);
+			tpl.querySelector('.bncom-qrow-name').focus();
+		});
+
+		document.getElementById('bncom-quote-rows')?.addEventListener('click', function (e) {
+			var btn = e.target.closest('.bncom-qrow-remove');
+			if ( ! btn ) return;
+			var rows = this.querySelectorAll('.bncom-quote-row-input');
+			if (rows.length > 1) btn.closest('.bncom-quote-row-input').remove();
+		});
+
+		document.getElementById('bncom-quote-form')?.addEventListener('submit', function (e) {
+			e.preventDefault();
+			var err    = document.getElementById('bncom-quote-error');
+			var label  = document.getElementById('bncom-quote-label');
+			var spin   = document.getElementById('bncom-quote-spinner');
+			var submit = document.getElementById('bncom-quote-submit');
+			err.style.display = 'none';
+
+			var items = [];
+			document.querySelectorAll('.bncom-quote-row-input').forEach(function (row) {
+				var name = row.querySelector('.bncom-qrow-name').value.trim();
+				var qty  = parseInt(row.querySelector('.bncom-qrow-qty').value) || 1;
+				if (name) items.push({ name: name, qty: qty });
+			});
+
+			if ( ! items.length) { err.textContent = 'Inserisci almeno un prodotto.'; err.style.display = 'block'; return; }
+
+			label.textContent = 'Invio in corso…';
+			spin.style.display = 'inline-block';
+			submit.disabled = true;
+
+			var params = new URLSearchParams({ action: 'bncom_submit_quote', nonce: nonce, notes: document.getElementById('bncom-quote-notes').value.trim() });
+			items.forEach(function (it, i) {
+				params.append('items[' + i + '][name]', it.name);
+				params.append('items[' + i + '][qty]',  it.qty);
+			});
+
+			fetch(ajaxUrl, { method: 'POST', headers: {'Content-Type':'application/x-www-form-urlencoded'}, body: params.toString() })
+			.then(function (r) { return r.json(); })
+			.then(function (d) {
+				if (d.success) {
+					document.getElementById('bncom-quote-success').style.display = 'block';
+					document.getElementById('bncom-quote-success-text').textContent = 'Rif. ' + d.data.ref + ' — riceverai conferma a ' + d.data.email;
+					submit.style.display = 'none';
+				} else {
+					err.textContent = d.data || 'Errore. Riprova.';
+					err.style.display = 'block';
+					label.textContent = 'Invia richiesta';
+					spin.style.display = 'none';
+					submit.disabled = false;
+				}
+			});
+		});
+	})();
+	</script>
+	<?php
+} );
+
+
+// =============================================================================
+// AJAX — Invia richiesta preventivo
+// =============================================================================
+
+add_action( 'wp_ajax_bncom_submit_quote', 'bncom_submit_quote_handler' );
+
+function bncom_submit_quote_handler(): void {
+	$user_id = get_current_user_id();
+	if ( ! $user_id ) wp_send_json_error( 'Accesso non autorizzato.' );
+
+	if ( ! wp_verify_nonce( $_POST['nonce'] ?? '', 'bncom_quote_' . $user_id ) ) {
+		wp_send_json_error( 'Sessione scaduta. Ricarica e riprova.' );
+	}
+
+	$items = [];
+	foreach ( (array) ( $_POST['items'] ?? [] ) as $item ) {
+		$name = sanitize_text_field( $item['name'] ?? '' );
+		$qty  = absint( $item['qty'] ?? 1 );
+		if ( $name ) $items[] = [ 'name' => $name, 'qty' => max( 1, $qty ) ];
+	}
+	if ( empty( $items ) ) wp_send_json_error( 'Inserisci almeno un prodotto.' );
+
+	$notes = sanitize_textarea_field( $_POST['notes'] ?? '' );
+	$ref   = 'PRV-' . strtoupper( substr( md5( $user_id . time() ), 0, 8 ) );
+	$now   = current_time( 'mysql' );
+
+	$quotes   = get_user_meta( $user_id, '_bncom_quotes', true ) ?: [];
+	$quotes[] = [ 'ref' => $ref, 'date' => $now, 'items' => $items, 'notes' => $notes, 'status' => 'pending', 'reply' => '' ];
+	update_user_meta( $user_id, '_bncom_quotes', $quotes );
+
+	$user           = get_userdata( $user_id );
+	$customer_email = $user->user_email;
+	$customer_name  = $user->display_name;
+	$site_name      = get_bloginfo( 'name' );
+	$date_str       = date_i18n( 'd/m/Y \a\l\l\e H:i', strtotime( $now ) );
+	$items_str      = implode( "\n", array_map( fn( $i ) => '  • ' . $i['qty'] . '× ' . $i['name'], $items ) );
+
+	wp_mail(
+		get_option( 'admin_email' ),
+		sprintf( '[%s] Nuova richiesta preventivo — Rif. %s', $site_name, $ref ),
+		sprintf( "Cliente: %s (%s)\nRif: %s\nData: %s\n\nProdotti:\n%s\n\n%s", $customer_name, $customer_email, $ref, $date_str, $items_str, $notes ? "Note: $notes" : '' ),
+		[ 'Content-Type: text/plain; charset=UTF-8', 'Reply-To: ' . $customer_name . ' <' . $customer_email . '>' ]
+	);
+
+	wp_mail(
+		$customer_email,
+		sprintf( '[%s] Richiesta preventivo ricevuta — Rif. %s', $site_name, $ref ),
+		sprintf( "Gentile %s,\n\nAbbiamo ricevuto la tua richiesta di preventivo (rif. %s).\n\nProdotti:\n%s\n\n%s\nTi risponderemo al più presto.\n\nGrazie,\n%s", $customer_name, $ref, $items_str, $notes ? "Note: $notes\n\n" : '', $site_name ),
+		[ 'Content-Type: text/plain; charset=UTF-8' ]
+	);
+
+	do_action( 'bncom_notification', $user_id, 'quote_received', [
+		'text' => 'La tua richiesta di preventivo ' . $ref . ' è stata ricevuta.',
+		'url'  => wc_get_account_endpoint_url( 'bncom-quotes' ),
+	] );
+
+	wp_send_json_success( [ 'ref' => $ref, 'email' => $customer_email ] );
+}
+
+
+// =============================================================================
+// ADMIN — Pagina gestione preventivi (WooCommerce → Preventivi)
+// =============================================================================
+
+add_action( 'admin_menu', function () {
+	add_submenu_page( 'woocommerce', 'Preventivi clienti', 'Preventivi', 'edit_shop_orders', 'bncom-quotes', 'bncom_admin_quotes_page' );
+} );
+
+function bncom_admin_quotes_page(): void {
+	$status_map = [
+		'pending'  => [ 'label' => 'In attesa', 'bg' => '#FEF9C3', 'color' => '#854D0E' ],
+		'sent'     => [ 'label' => 'Inviato',   'bg' => '#DBEAFE', 'color' => '#1E40AF' ],
+		'accepted' => [ 'label' => 'Accettato', 'bg' => '#DCFCE7', 'color' => '#166534' ],
+		'declined' => [ 'label' => 'Rifiutato', 'bg' => '#FEE2E2', 'color' => '#991B1B' ],
+		'expired'  => [ 'label' => 'Scaduto',   'bg' => '#F3F4F6', 'color' => '#6B7280' ],
+	];
+
+	$users = get_users( [ 'meta_key' => '_bncom_quotes' ] );
+	$all   = [];
+	foreach ( $users as $user ) {
+		foreach ( get_user_meta( $user->ID, '_bncom_quotes', true ) ?: [] as $idx => $q ) {
+			$all[] = array_merge( $q, [ '_user_id' => $user->ID, '_user_name' => $user->display_name, '_user_email' => $user->user_email, '_idx' => $idx ] );
+		}
+	}
+	usort( $all, fn( $a, $b ) => strtotime( $b['date'] ) - strtotime( $a['date'] ) );
+	?>
+	<div class="wrap">
+		<h1>Preventivi clienti</h1>
+		<?php if ( empty( $all ) ) : ?>
+		<p>Nessuna richiesta ricevuta.</p>
+		<?php else : ?>
+		<table class="wp-list-table widefat fixed striped" style="margin-top:16px">
+			<thead><tr>
+				<th style="width:110px">Riferimento</th>
+				<th>Cliente</th>
+				<th>Prodotti</th>
+				<th style="width:110px">Data</th>
+				<th style="width:110px">Stato</th>
+				<th style="width:90px">Azioni</th>
+			</tr></thead>
+			<tbody>
+			<?php foreach ( $all as $q ) :
+				$st   = $status_map[ $q['status'] ] ?? $status_map['pending'];
+				$key  = $q['_user_id'] . '-' . $q['_idx'];
+			?>
+			<tr>
+				<td><strong><?php echo esc_html( $q['ref'] ); ?></strong></td>
+				<td><?php echo esc_html( $q['_user_name'] ); ?><br><small><?php echo esc_html( $q['_user_email'] ); ?></small></td>
+				<td>
+					<?php foreach ( $q['items'] ?? [] as $it ) : ?><div><?php echo esc_html( $it['qty'] ); ?>× <?php echo esc_html( $it['name'] ); ?></div><?php endforeach; ?>
+					<?php if ( $q['notes'] ) : ?><small style="color:#646970"><em><?php echo esc_html( $q['notes'] ); ?></em></small><?php endif; ?>
+				</td>
+				<td><?php echo date_i18n( 'd/m/Y', strtotime( $q['date'] ) ); ?></td>
+				<td><span style="display:inline-block;padding:3px 8px;border-radius:999px;font-size:11px;font-weight:700;background:<?php echo esc_attr( $st['bg'] ); ?>;color:<?php echo esc_attr( $st['color'] ); ?>"><?php echo esc_html( $st['label'] ); ?></span></td>
+				<td><button type="button" class="button button-small bncom-qadm-edit" data-key="<?php echo esc_attr( $key ); ?>">Gestisci</button></td>
+			</tr>
+			<tr class="bncom-qadm-panel" id="bncom-qpanel-<?php echo esc_attr( $key ); ?>" style="display:none">
+				<td colspan="6" style="background:#f9f9f9;padding:16px">
+					<label style="display:block;margin-bottom:8px;font-weight:600">Stato:
+						<select class="bncom-qadm-status">
+							<?php foreach ( $status_map as $val => $info ) : ?>
+							<option value="<?php echo esc_attr( $val ); ?>" <?php selected( $q['status'], $val ); ?>><?php echo esc_html( $info['label'] ); ?></option>
+							<?php endforeach; ?>
+						</select>
+					</label>
+					<label style="display:block;margin-bottom:6px;font-weight:600">Risposta al cliente:</label>
+					<textarea class="widefat bncom-qadm-reply" rows="4" style="margin-bottom:8px"><?php echo esc_textarea( $q['reply'] ?? '' ); ?></textarea>
+					<label style="display:block;margin-bottom:12px">
+						<input type="checkbox" class="bncom-qadm-email" checked> Invia risposta via email
+					</label>
+					<button type="button" class="button button-primary bncom-qadm-save"
+					        data-user="<?php echo esc_attr( $q['_user_id'] ); ?>"
+					        data-idx="<?php echo esc_attr( $q['_idx'] ); ?>"
+					        data-ref="<?php echo esc_attr( $q['ref'] ); ?>"
+					        data-email="<?php echo esc_attr( $q['_user_email'] ); ?>"
+					        data-name="<?php echo esc_attr( $q['_user_name'] ); ?>"
+					        data-nonce="<?php echo esc_attr( wp_create_nonce('bncom_quote_admin') ); ?>">Salva</button>
+				</td>
+			</tr>
+			<?php endforeach; ?>
+			</tbody>
+		</table>
+		<?php endif; ?>
+	</div>
+	<script>
+	document.querySelectorAll('.bncom-qadm-edit').forEach(function(btn){
+		btn.addEventListener('click', function(){
+			var panel = document.getElementById('bncom-qpanel-' + this.dataset.key);
+			var show  = panel.style.display === 'none';
+			panel.style.display = show ? 'table-row' : 'none';
+			this.textContent = show ? 'Chiudi' : 'Gestisci';
+		});
+	});
+	document.querySelectorAll('.bncom-qadm-save').forEach(function(btn){
+		btn.addEventListener('click', function(){
+			var td    = this.closest('td');
+			var reply  = td.querySelector('.bncom-qadm-reply').value;
+			var status = td.querySelector('.bncom-qadm-status').value;
+			var doMail = td.querySelector('.bncom-qadm-email').checked ? '1' : '0';
+			var me = this; me.disabled = true; me.textContent = '…';
+			fetch(ajaxurl, { method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'},
+				body: new URLSearchParams({ action:'bncom_admin_quote_update', nonce:this.dataset.nonce,
+					user_id:this.dataset.user, idx:this.dataset.idx, status:status, reply:reply,
+					send_email:doMail, customer_email:this.dataset.email, customer_name:this.dataset.name, ref:this.dataset.ref }).toString()
+			}).then(function(r){return r.json();}).then(function(d){
+				me.disabled = false; me.textContent = d.success ? '✓ Salvato' : '✗ Errore';
+				if (d.success) setTimeout(function(){ location.reload(); }, 800);
+			});
+		});
+	});
+	</script>
+	<?php
+}
+
+add_action( 'wp_ajax_bncom_admin_quote_update', function () {
+	check_ajax_referer( 'bncom_quote_admin', 'nonce' );
+	if ( ! current_user_can( 'edit_shop_orders' ) ) wp_send_json_error();
+
+	$user_id  = absint( $_POST['user_id'] );
+	$idx      = intval( $_POST['idx'] );
+	$valid    = [ 'pending', 'sent', 'accepted', 'declined', 'expired' ];
+	$status   = in_array( $_POST['status'], $valid, true ) ? $_POST['status'] : 'pending';
+	$reply    = sanitize_textarea_field( $_POST['reply'] ?? '' );
+	$do_mail  = ( $_POST['send_email'] ?? '' ) === '1';
+
+	$quotes = get_user_meta( $user_id, '_bncom_quotes', true ) ?: [];
+	if ( ! isset( $quotes[ $idx ] ) ) wp_send_json_error();
+
+	$quotes[ $idx ]['status'] = $status;
+	$quotes[ $idx ]['reply']  = $reply;
+	update_user_meta( $user_id, '_bncom_quotes', $quotes );
+
+	if ( $do_mail && $reply ) {
+		$customer_email = sanitize_email( $_POST['customer_email'] ?? '' );
+		$customer_name  = sanitize_text_field( $_POST['customer_name'] ?? '' );
+		$ref            = sanitize_text_field( $_POST['ref'] ?? '' );
+		$site_name      = get_bloginfo( 'name' );
+
+		wp_mail(
+			$customer_email,
+			sprintf( '[%s] Risposta preventivo — Rif. %s', $site_name, $ref ),
+			sprintf( "Gentile %s,\n\nAbbiamo elaborato la tua richiesta di preventivo (rif. %s).\n\n--- Risposta ---\n%s\n---\n\nGrazie,\n%s", $customer_name, $ref, $reply, $site_name ),
+			[ 'Content-Type: text/plain; charset=UTF-8' ]
+		);
+
+		do_action( 'bncom_notification', $user_id, 'quote_replied', [
+			'text' => 'Il tuo preventivo ' . $ref . ' ha ricevuto una risposta.',
+			'url'  => wc_get_account_endpoint_url( 'bncom-quotes' ),
+		] );
+	}
+
+	wp_send_json_success();
+} );
+
+
+// =============================================================================
+// CSS
+// =============================================================================
+
+add_action( 'wp_head', function () {
+	if ( ! is_wc_endpoint_url( 'bncom-quotes' ) ) return;
+	?>
+	<style id="bncom-quotes-css">
+	.bncom-quote-new-card {
+		margin-bottom: 24px;
+		border: 1px solid var(--bncom-border);
+		border-radius: var(--bncom-radius);
+		background: #fff; box-shadow: var(--bncom-shadow);
+		overflow: hidden;
+	}
+	.bncom-quote-toggle {
+		width: 100%; padding: 16px 20px;
+		display: flex; align-items: center; gap: 10px;
+		background: none; border: none; cursor: pointer;
+		font-size: 14px; font-weight: 700; color: var(--bncom-primary);
+		text-align: left; letter-spacing: normal; text-transform: none;
+	}
+	.bncom-quote-toggle:hover { background: var(--bncom-bg-soft); }
+	.bncom-quote-form {
+		padding: 0 20px 20px;
+		border-top: 1px solid var(--bncom-border-soft);
+	}
+	.bncom-quote-form__intro {
+		margin: 14px 0 16px; font-size: 13px; color: var(--bncom-text-muted);
+	}
+	.bncom-quote-row-input {
+		display: flex; gap: 8px; align-items: center; margin-bottom: 8px;
+	}
+	.bncom-quote-row-input .bncom-qrow-name { flex: 1; }
+	.bncom-quote-row-input .bncom-qrow-qty  { width: 70px; }
+	.bncom-qrow-remove {
+		width: 32px; height: 32px; flex-shrink: 0;
+		background: none; border: 1px solid var(--bncom-border);
+		border-radius: 6px; cursor: pointer; color: var(--bncom-text-muted);
+		display: flex; align-items: center; justify-content: center;
+	}
+	.bncom-qrow-remove:hover { background:#FEE2E2; color:#991B1B; border-color:#FECACA; }
+	#bncom-quote-add-row { margin-bottom: 16px; }
+
+	/* Storico */
+	.bncom-quotes-list { display: flex; flex-direction: column; gap: 12px; }
+	.bncom-quote-row-card {
+		padding: 16px 20px; background: #fff;
+		border: 1px solid var(--bncom-border);
+		border-radius: var(--bncom-radius); box-shadow: var(--bncom-shadow);
+	}
+	.bncom-quote-row-card__head {
+		display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;
+	}
+	.bncom-quote-ref { font-family: monospace; font-size: 13px; font-weight: 700; color: var(--bncom-text-main); }
+	.bncom-quote-badge { padding: 3px 10px; border-radius: 999px; font-size: 11px; font-weight: 700; }
+	.bncom-quote-badge--pending  { background:#FEF9C3; color:#854D0E; }
+	.bncom-quote-badge--sent     { background:#DBEAFE; color:#1E40AF; }
+	.bncom-quote-badge--accepted { background:#DCFCE7; color:#166534; }
+	.bncom-quote-badge--declined { background:#FEE2E2; color:#991B1B; }
+	.bncom-quote-badge--expired  { background:#F3F4F6; color:#6B7280; }
+	.bncom-quote-meta  { margin: 0 0 6px; font-size: 12px; color: var(--bncom-text-muted); }
+	.bncom-quote-items { margin: 0 0 6px; padding-left: 18px; font-size: 13px; }
+	.bncom-quote-notes { margin: 0 0 6px; font-size: 13px; color: var(--bncom-text-muted); font-style: italic; }
+	.bncom-quote-reply {
+		margin-top: 12px; padding: 12px 14px;
+		background: #EFF6FF; border: 1px solid #BFDBFE;
+		border-radius: var(--bncom-radius);
+	}
+	.bncom-quote-reply__label { margin: 0 0 6px; font-size: 12px; font-weight: 700; color: #1E40AF; }
+	.bncom-quote-reply__text  { margin: 0; font-size: 13px; color: #1E40AF; }
+	</style>
+	<?php
+} );

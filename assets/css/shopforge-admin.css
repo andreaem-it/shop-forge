@@ -1,0 +1,28 @@
+/* ShopForge — Admin CSS (metabox ticket assistenza) */
+
+.shopforge-adm-tickets { margin: 0; border-collapse: collapse; width: 100%; font-size: 13px; }
+.shopforge-adm-tickets th {
+	padding: 8px 12px; text-align: left;
+	background: #f6f7f7; border-bottom: 1px solid #dcdcde;
+	font-weight: 700; color: #646970; font-size: 11px; text-transform: uppercase;
+}
+.shopforge-adm-tickets td { padding: 10px 12px; border-bottom: 1px solid #f0f0f1; vertical-align: top; }
+.shopforge-adm-tickets tr:last-child td { border-bottom: none; }
+.shopforge-adm-ticket-products { font-size: 11px; color: #646970; margin-top: 4px; font-style: italic; }
+.shopforge-adm-ticket-msg { color: #646970; margin-top: 4px; }
+.shopforge-adm-status {
+	display: inline-block; padding: 2px 9px; border-radius: 999px;
+	font-size: 11px; font-weight: 700;
+}
+.shopforge-adm-actions select { font-size: 12px; padding: 3px 6px; }
+.shopforge-adm-actions button { font-size: 12px; margin-left: 4px; }
+
+/* ShopForge — Returns Admin (storico admin) */
+	.shopforge-ret-adm { border-collapse:collapse; width:100%; font-size:13px; }
+	.shopforge-ret-adm th { padding:8px 10px; background:#f6f7f7; border-bottom:1px solid #dcdcde; font-size:11px; font-weight:700; text-transform:uppercase; color:#646970; text-align:left; }
+	.shopforge-ret-adm td { padding:10px; border-bottom:1px solid #f0f0f1; vertical-align:top; }
+	.shopforge-ret-adm tr:last-child td { border-bottom:none; }
+	.shopforge-ret-adm-decl { font-family:monospace; font-size:11px; background:#f6f7f7; padding:8px; border-radius:4px; white-space:pre-wrap; max-height:120px; overflow-y:auto; margin-top:6px; }
+	.shopforge-ret-badge { display:inline-block; padding:2px 8px; border-radius:999px; font-size:11px; font-weight:700; }
+	.shopforge-ret-adm-status { display:flex; align-items:center; gap:6px; margin-top:8px; }
+	.shopforge-ret-adm-status select, .shopforge-ret-adm-status button { font-size:12px; }

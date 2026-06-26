@@ -1,0 +1,1279 @@
+/* ==========================================================================
+   ShopForge — Dashboard WooCommerce
+   Palette:  Primary #006FEF · Hover #168BFF · Testo #07172F · Muted #64748B
+   ========================================================================== */
+
+/* Fix larghezza contenitore: file separato, URL mai cachato dai browser. */
+@import url('shopforge-width-fix.css?v=1');
+
+:root {
+  --shopforge-primary:      #006FEF;
+  --shopforge-primary-hover:#168BFF;
+  --shopforge-text-main:    #07172F;
+  --shopforge-text-muted:   #64748B;
+  --shopforge-border:       #E2E8F0;
+  --shopforge-border-soft:  #EEF2F7;
+  --shopforge-bg-soft:      #F8FAFC;
+  --shopforge-success:      #16A34A;
+  --shopforge-warning:      #F59E0B;
+  --shopforge-danger:       #DC2626;
+  --shopforge-radius:       8px;
+  --shopforge-shadow:       0 16px 40px rgba(15, 23, 42, 0.06);
+}
+
+/* --------------------------------------------------------------------------
+   THE7 OVERRIDE — elimina sidebar, porta content a piena larghezza
+   -------------------------------------------------------------------------- */
+
+body.shopforge-account-page #sidebar,
+body.shopforge-account-page .l-sidebar,
+body.shopforge-account-page .sidebar-container,
+body.shopforge-account-page #secondary,
+body.shopforge-account-page .widget-area,
+body.shopforge-account-page aside.sidebar {
+  display: none !important;
+}
+
+body.shopforge-account-page #main,
+body.shopforge-account-page #primary,
+body.shopforge-account-page .l-main-content,
+body.shopforge-account-page .site-content,
+body.shopforge-account-page .l-article,
+body.shopforge-account-page .entry-content {
+  width: 100% !important;
+  max-width: 100% !important;
+  float: none !important;
+  padding-right: 0 !important;
+  padding-left: 0 !important;
+}
+
+/* --------------------------------------------------------------------------
+   LAYOUT PRINCIPALE — flexbox (non grid: evita problema notices-wrapper)
+   -------------------------------------------------------------------------- */
+
+/* --------------------------------------------------------------------------
+   LARGHEZZA UNIFORME — forza il widget Elementor a occupare tutta la colonna
+   disponibile in e-con-inner, indipendentemente dal contenuto della pagina.
+   Senza questo il widget si restringe al suo contenuto (es. 899px su /ordini/
+   vs 1137px sulla bacheca perché la bacheca ha un template più largo).
+   -------------------------------------------------------------------------- */
+
+/* Fix larghezza uniforme: !important batte qualsiasi regola non-important
+   indipendentemente dall'ordine dei fogli di stile.
+   Il widget Elementor ha flex-grow:0 di default e si restringe al contenuto. */
+.woocommerce-account .e-con-inner > *:has(.woocommerce-MyAccount-navigation) {
+  flex: 1 1 0% !important;
+  min-width: 0 !important;
+}
+
+.woocommerce-account .e-con-inner > *:has(.woocommerce-MyAccount-navigation)
+  > .elementor-widget-container {
+  width: 100%;
+}
+
+/* --------------------------------------------------------------------------
+   LAYOUT PRINCIPALE — flexbox (non grid: evita problema notices-wrapper)
+   -------------------------------------------------------------------------- */
+
+.woocommerce-account .woocommerce {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  width: 100%;
+}
+
+/* Notices e messaggi WooCommerce → riga intera */
+.woocommerce-account .woocommerce .woocommerce-notices-wrapper,
+.woocommerce-account .woocommerce > .woocommerce-error,
+.woocommerce-account .woocommerce > .woocommerce-message,
+.woocommerce-account .woocommerce > .woocommerce-info,
+.woocommerce-account .woocommerce > *:not(.woocommerce-MyAccount-navigation):not(.woocommerce-MyAccount-content) {
+  flex: 0 0 100%;
+  width: 100%;
+}
+
+/* --------------------------------------------------------------------------
+   NAVIGAZIONE LATERALE
+   -------------------------------------------------------------------------- */
+
+.woocommerce-account .woocommerce-MyAccount-navigation {
+  flex: 0 0 260px;
+  width: 260px;
+  min-width: 0;
+  background: #fff;
+  border: 1px solid var(--shopforge-border);
+  border-radius: var(--shopforge-radius);
+  box-shadow: var(--shopforge-shadow);
+  overflow: hidden;
+  position: sticky;
+  top: 24px;
+  align-self: flex-start;
+  margin-right: 32px;
+}
+
+.woocommerce-account .woocommerce-MyAccount-navigation ul {
+  list-style: none;
+  padding: 8px;
+  margin: 0;
+}
+
+.woocommerce-account .woocommerce-MyAccount-navigation li {
+  margin: 0;
+}
+
+.woocommerce-account .woocommerce-MyAccount-navigation a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 44px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  text-decoration: none;
+  color: var(--shopforge-text-main);
+  font-size: 14px;
+  font-weight: 400;
+  transition: background-color 0.18s, color 0.18s, transform 0.18s;
+}
+
+/* Icona FontAwesome nella nav — dimensione fissa per allineamento uniforme */
+.woocommerce-account .woocommerce-MyAccount-navigation a i {
+  width: 20px;
+  text-align: center;
+  font-size: 15px;
+  flex-shrink: 0;
+  opacity: 0.65;
+  transition: opacity 0.18s;
+}
+
+.woocommerce-account .woocommerce-MyAccount-navigation a span {
+  flex: 1;
+  min-width: 0;
+  line-height: 1.3;
+}
+
+.woocommerce-account .woocommerce-MyAccount-navigation a:hover {
+  background: #EFF6FF;
+  color: var(--shopforge-primary);
+  transform: translateX(2px);
+}
+
+.woocommerce-account .woocommerce-MyAccount-navigation a:hover i {
+  opacity: 1;
+}
+
+.woocommerce-MyAccount-navigation > ul li:not(.is-active) a {
+    background-color: #FFF!important;
+}
+
+.woocommerce-account .woocommerce-MyAccount-navigation .is-active a i {
+  opacity: 1;
+}
+
+/* --------------------------------------------------------------------------
+   CONTENUTO ACCOUNT
+   -------------------------------------------------------------------------- */
+
+.woocommerce-account .woocommerce-MyAccount-content {
+  flex: 1 1 0;
+  min-width: 0;
+  width: 0; /* forza shrink/grow corretto */
+}
+
+/* --------------------------------------------------------------------------
+   DASHBOARD WRAPPER
+   -------------------------------------------------------------------------- */
+
+.shopforge-account-dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* --------------------------------------------------------------------------
+   WELCOME BAR
+   -------------------------------------------------------------------------- */
+
+.shopforge-account-welcome {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 24px;
+  background: linear-gradient(135deg, #fff 0%, #F8FBFF 100%);
+  border: 1px solid var(--shopforge-border);
+  border-radius: var(--shopforge-radius);
+  box-shadow: var(--shopforge-shadow);
+}
+
+.shopforge-account-eyebrow {
+  display: inline-flex;
+  margin-bottom: 8px;
+  color: var(--shopforge-primary);
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.shopforge-account-welcome h2 {
+  margin: 0 0 6px;
+  font-size: 26px;
+  line-height: 1.2;
+  color: var(--shopforge-text-main);
+}
+
+.shopforge-account-welcome p {
+  margin: 0;
+  max-width: 680px;
+  color: var(--shopforge-text-muted);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.shopforge-account-logout {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 0 18px;
+  border: 1px solid var(--shopforge-border);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--shopforge-text-main);
+  text-decoration: none!important;
+  font-size: 14px;
+  font-weight: 300;
+  white-space: nowrap;
+  transition: border-color 0.18s, color 0.18s;
+}
+
+.shopforge-account-logout:hover {
+  border-color: var(--shopforge-primary);
+  color: var(--shopforge-primary);
+}
+
+/* --------------------------------------------------------------------------
+   STAT CARDS
+   -------------------------------------------------------------------------- */
+
+.shopforge-account-stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.shopforge-stat-card {
+  display: grid;
+  grid-template-columns: 52px 1fr;
+  grid-template-areas:
+    "icon label"
+    "icon value"
+    "icon link";
+  gap: 2px 14px;
+  align-items: center;
+  padding: 20px;
+  background: #fff;
+  border: 1px solid var(--shopforge-border);
+  border-radius: var(--shopforge-radius);
+  box-shadow: var(--shopforge-shadow);
+  color: var(--shopforge-text-main);
+  text-decoration: none!important;
+  transition: transform 0.18s, border-color 0.18s, box-shadow 0.18s;
+}
+
+.shopforge-stat-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(0, 111, 239, 0.3);
+  box-shadow: 0 18px 44px rgba(0, 111, 239, 0.09);
+}
+
+.shopforge-stat-icon {
+  grid-area: icon;
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--shopforge-primary);
+  background: #EAF3FF;
+  font-size: 20px;
+}
+
+.shopforge-stat-label {
+  grid-area: label;
+  color: var(--shopforge-text-muted);
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.shopforge-stat-card strong {
+  grid-area: value;
+  color: var(--shopforge-text-main);
+  font-size: 28px;
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+.shopforge-stat-card em {
+  grid-area: link;
+  color: var(--shopforge-primary);
+  font-style: normal;
+  font-size: 13px;
+  font-weight: 300;
+  text-decoration: none;
+}
+
+.shopforge-stat-card:hover em {
+  text-decoration: none;
+}
+
+/* --------------------------------------------------------------------------
+   GRIGLIA ORDINI / INDIRIZZI
+   -------------------------------------------------------------------------- */
+
+.shopforge-account-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.7fr) minmax(300px, 0.8fr);
+  gap: 20px;
+}
+
+/* --------------------------------------------------------------------------
+   CARD GENERICA
+   -------------------------------------------------------------------------- */
+
+.shopforge-account-card {
+  background: #fff;
+  border: 1px solid var(--shopforge-border);
+  border-radius: var(--shopforge-radius);
+  box-shadow: var(--shopforge-shadow);
+  padding: 24px;
+}
+
+.shopforge-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.shopforge-card-header h3,
+.shopforge-account-card h2 {
+  margin: 0 0 4px;
+  font-size: 18px;
+  line-height: 1.3;
+  color: var(--shopforge-text-main);
+}
+
+.shopforge-account-card h2 {
+  font-size: 22px;
+}
+
+.shopforge-card-header p,
+.shopforge-account-card > p {
+  margin: 0;
+  color: var(--shopforge-text-muted);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.shopforge-card-header a,
+.shopforge-small-link {
+  color: var(--shopforge-primary);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 300;
+  white-space: nowrap;
+  transition: color 0.18s;
+}
+
+.shopforge-card-header a:hover,
+.shopforge-small-link:hover {
+  color: var(--shopforge-primary-hover);
+}
+
+/* --------------------------------------------------------------------------
+   TABELLA ORDINI
+   -------------------------------------------------------------------------- */
+
+.shopforge-orders-table-wrap {
+  overflow-x: auto;
+}
+
+.shopforge-orders-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.shopforge-orders-table th {
+  color: var(--shopforge-text-muted);
+  font-weight: 700;
+  font-size: 13px;
+  text-align: left;
+  padding: 10px 10px;
+  border-bottom: 1px solid var(--shopforge-border);
+  background: var(--shopforge-bg-soft);
+}
+
+.shopforge-orders-table td {
+  padding: 13px 10px;
+  border-bottom: 1px solid var(--shopforge-border-soft);
+  color: var(--shopforge-text-main);
+}
+
+.shopforge-orders-table tr:last-child td {
+  border-bottom: 0;
+}
+
+/* Badge stati ordine */
+.shopforge-status {
+  display: inline-flex;
+  align-items: center;
+  min-height: 22px;
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  background: #E2E8F0;
+  color: #334155;
+}
+
+.shopforge-status-completed  { background: #DCFCE7; color: #15803D; }
+.shopforge-status-processing { background: #DBEAFE; color: #1D4ED8; }
+.shopforge-status-on-hold    { background: #FEF3C7; color: #B45309; }
+.shopforge-status-pending    { background: #F3F4F6; color: #4B5563; }
+.shopforge-status-cancelled,
+.shopforge-status-failed,
+.shopforge-status-refunded   { background: #FEE2E2; color: #B91C1C; }
+
+/* --------------------------------------------------------------------------
+   INDIRIZZI
+   -------------------------------------------------------------------------- */
+
+.shopforge-address-block {
+  padding: 14px 16px;
+  border: 1px solid var(--shopforge-border-soft);
+  border-radius: 8px;
+  background: var(--shopforge-bg-soft);
+  margin-bottom: 12px;
+}
+
+.shopforge-address-block h4 {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin: 0 0 8px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--shopforge-text-muted);
+}
+
+.shopforge-address-block h4 i {
+  color: var(--shopforge-primary);
+  font-size: 12px;
+}
+
+.shopforge-address-block address {
+  margin: 0;
+  color: var(--shopforge-text-main);
+  font-style: normal;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.shopforge-outline-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 42px;
+  padding: 0 18px;
+  border: 1px solid rgba(0, 111, 239, 0.35);
+  border-radius: 8px;
+  color: var(--shopforge-primary);
+  background: #fff;
+  text-decoration: none!important;
+  font-size: 14px;
+  font-weight: 300;
+  transition: background-color 0.18s, color 0.18s;
+}
+
+.shopforge-outline-button:hover {
+  background: #EFF6FF;
+  color: var(--shopforge-primary-hover);
+}
+
+/* --------------------------------------------------------------------------
+   ACCESSO RAPIDO
+   -------------------------------------------------------------------------- */
+
+.shopforge-actions-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.shopforge-actions-grid a {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 18px 16px;
+  border: 1px solid var(--shopforge-border-soft);
+  border-radius: 8px;
+  background: var(--shopforge-bg-soft);
+  text-decoration: none;
+  color: var(--shopforge-text-main);
+  transition: background-color 0.18s, border-color 0.18s, transform 0.18s;
+}
+
+.shopforge-actions-grid a:hover {
+  background: #EFF6FF;
+  border-color: rgba(0, 111, 239, 0.28);
+  transform: translateY(-2px);
+}
+
+.shopforge-actions-grid a i {
+  font-size: 20px;
+  color: var(--shopforge-primary);
+  margin-bottom: 4px;
+}
+
+.shopforge-actions-grid strong {
+  font-size: 14px;
+  color: var(--shopforge-text-main);
+  font-weight: 700;
+}
+
+.shopforge-actions-grid span {
+  color: var(--shopforge-text-muted);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+/* --------------------------------------------------------------------------
+   EMPTY STATE
+   -------------------------------------------------------------------------- */
+
+/* ---- Section header (usato dai moduli) ---- */
+.shopforge-section-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 22px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--shopforge-border-soft);
+}
+.shopforge-section-header__icon {
+  width: 42px; height: 42px;
+  background: #EFF6FF;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--shopforge-primary);
+  font-size: 18px; flex-shrink: 0;
+}
+.shopforge-section-header__title {
+  margin: 0; font-size: 17px; font-weight: 800;
+  color: var(--shopforge-text-main); border: none; padding: 0;
+}
+.shopforge-section-header__meta {
+  margin: 3px 0 0; font-size: 12px; color: var(--shopforge-text-muted);
+}
+
+/* ---- Empty state (usato dai moduli) ---- */
+.shopforge-empty-state {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 20px;
+  border: 1px dashed #CBD5E1;
+  border-radius: 8px;
+  background: var(--shopforge-bg-soft);
+}
+
+.shopforge-empty-state__icon {
+  font-size: 36px;
+  color: var(--shopforge-border);
+  margin-bottom: 12px;
+}
+.shopforge-empty-state__title {
+  margin: 0 0 6px;
+  font-size: 15px; font-weight: 700;
+  color: var(--shopforge-text-main);
+}
+.shopforge-empty-state__text {
+  margin: 0;
+  font-size: 13px; color: var(--shopforge-text-muted);
+}
+
+/* Legacy */
+.shopforge-empty-state strong {
+  color: var(--shopforge-text-main);
+  font-size: 14px;
+}
+
+.shopforge-empty-state span {
+  color: var(--shopforge-text-muted);
+  font-size: 13px;
+}
+
+/* --------------------------------------------------------------------------
+   STILI GENERICI WooCommerce (form, tabelle, bottoni)
+   -------------------------------------------------------------------------- */
+
+.woocommerce-account .woocommerce-MyAccount-content table.shop_table {
+  border: 1px solid var(--shopforge-border);
+  border-radius: var(--shopforge-radius);
+  overflow: hidden;
+  background: #fff;
+  box-shadow: var(--shopforge-shadow);
+}
+
+.woocommerce-account .woocommerce-MyAccount-content table.shop_table th {
+  background: var(--shopforge-bg-soft);
+  color: var(--shopforge-text-main);
+  font-weight: 700;
+}
+
+.woocommerce-account .woocommerce-MyAccount-content table.shop_table td,
+.woocommerce-account .woocommerce-MyAccount-content table.shop_table th {
+  padding: 13px 16px;
+  border-color: var(--shopforge-border-soft);
+}
+
+.woocommerce-account .button,
+.woocommerce-account button.button,
+.woocommerce-account input.button {
+  min-height: 42px;
+  padding: 0 18px;
+  border-radius: 8px;
+  background: var(--shopforge-primary);
+  color: #fff !important;
+  border: 0;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background-color 0.18s;
+}
+
+.woocommerce-account .button:hover,
+.woocommerce-account button.button:hover,
+.woocommerce-account input.button:hover {
+  background: var(--shopforge-primary-hover);
+}
+
+.woocommerce-account input.input-text,
+.woocommerce-account textarea,
+.woocommerce-account select {
+  min-height: 44px;
+  border: 1px solid var(--shopforge-border);
+  border-radius: 8px;
+  padding: 10px 12px;
+  color: var(--shopforge-text-main);
+  transition: border-color 0.18s, box-shadow 0.18s;
+}
+
+.woocommerce-account input.input-text:focus,
+.woocommerce-account textarea:focus,
+.woocommerce-account select:focus {
+  outline: none;
+  border-color: var(--shopforge-primary);
+  box-shadow: 0 0 0 3px rgba(0, 111, 239, 0.12);
+}
+
+.woocommerce-account .woocommerce-MyAccount-content h2 {
+  font-size: 22px;
+  color: var(--shopforge-text-main);
+  margin-bottom: 16px;
+}
+
+/* --------------------------------------------------------------------------
+   RESPONSIVE — 1180px (stat cards 2 col, grid 1 col)
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 1180px) {
+  .shopforge-account-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .shopforge-account-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .shopforge-actions-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* --------------------------------------------------------------------------
+   RESPONSIVE — 860px (layout colonna, nav orizzontale)
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 860px) {
+  .woocommerce-account .woocommerce {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .woocommerce-account .woocommerce-MyAccount-navigation {
+    flex: 0 0 100%;
+    width: 100%;
+    position: static;
+  }
+
+  .woocommerce-account .woocommerce-MyAccount-navigation ul {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    gap: 6px;
+    padding: 10px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .woocommerce-account .woocommerce-MyAccount-navigation ul::-webkit-scrollbar {
+    display: none;
+  }
+
+  .woocommerce-account .woocommerce-MyAccount-navigation li {
+    flex: 0 0 auto;
+  }
+
+  .woocommerce-account .woocommerce-MyAccount-navigation a {
+    white-space: nowrap;
+    padding: 8px 12px;
+  }
+
+  .woocommerce-account .woocommerce-MyAccount-content {
+    flex: 0 0 100%;
+    width: 100%;
+  }
+
+  .shopforge-account-welcome {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .shopforge-account-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .shopforge-actions-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 480px) {
+  .shopforge-account-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .shopforge-actions-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.woocommerce-MyAccount-navigation {
+    float: left;
+    width: 260px!important;
+    padding-right: 0px!important;
+}
+
+/* ==========================================================================
+   BNCOM — Stili uniformi per tutte le sezioni account
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   FIX GLOBALE: mark in pagine account (The7 imposta sfondo scuro su mark)
+   -------------------------------------------------------------------------- */
+
+.woocommerce-account mark {
+  background: transparent;
+  color: inherit;
+}
+
+/* --------------------------------------------------------------------------
+   FIX GLOBALE: shop_table — border-radius richiede border-collapse: separate
+   -------------------------------------------------------------------------- */
+
+.woocommerce-account .woocommerce-MyAccount-content table.shop_table {
+  border-collapse: separate;
+  border-spacing: 0;
+  width: 100%;
+}
+
+/* Con border-spacing: 0 i bordi delle celle si gestiscono così: */
+.woocommerce-account .woocommerce-MyAccount-content table.shop_table thead th {
+  border-bottom: 1px solid var(--shopforge-border);
+}
+
+.woocommerce-account .woocommerce-MyAccount-content table.shop_table tbody td {
+  border-bottom: 1px solid var(--shopforge-border-soft);
+}
+
+.woocommerce-account .woocommerce-MyAccount-content table.shop_table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* Heading uniformi nel content area (non dashboard) */
+.woocommerce-account .woocommerce-MyAccount-content > h2,
+.woocommerce-account .woocommerce-MyAccount-content > form > h3 {
+  font-size: 17px;
+  font-weight: 800;
+  color: var(--shopforge-text-main);
+  margin: 0 0 20px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--shopforge-border-soft);
+  line-height: 1.3;
+}
+
+/* --------------------------------------------------------------------------
+   PAGINA ORDINI (/ordini/) — tabella con card
+   -------------------------------------------------------------------------- */
+
+/* Status badge nella tabella ordini */
+.woocommerce-account table.woocommerce-orders-table mark.order-status,
+.woocommerce-account table.shop_table mark.order-status {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 11px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.woocommerce-account mark.order-status                        { background: #F3F4F6; color: #4B5563; }
+.woocommerce-account mark.order-status.status-completed       { background: #DCFCE7; color: #15803D; }
+.woocommerce-account mark.order-status.status-processing      { background: #DBEAFE; color: #1D4ED8; }
+.woocommerce-account mark.order-status.status-on-hold         { background: #FEF3C7; color: #B45309; }
+.woocommerce-account mark.order-status.status-pending-payment { background: #F3F4F6; color: #4B5563; }
+.woocommerce-account mark.order-status.status-cancelled,
+.woocommerce-account mark.order-status.status-failed,
+.woocommerce-account mark.order-status.status-refunded        { background: #FEE2E2; color: #B91C1C; }
+.woocommerce-account mark.order-status.status-spedito         { background: #DBEEFF; color: #1565C0; }
+
+/* Numero ordine cliccabile */
+.woocommerce-account table.woocommerce-orders-table .woocommerce-orders-table__cell-order-number a {
+  color: var(--shopforge-primary);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.woocommerce-account table.woocommerce-orders-table .woocommerce-orders-table__cell-order-number a:hover {
+  text-decoration: underline;
+}
+
+/* Thead */
+.woocommerce-account table.woocommerce-orders-table thead th {
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: var(--shopforge-text-muted);
+  background: var(--shopforge-bg-soft);
+}
+
+/* Hover su righe */
+.woocommerce-account table.woocommerce-orders-table tbody tr:hover td {
+  background: #FAFBFC;
+}
+
+/* --------------------------------------------------------------------------
+   PAGINA INDIRIZZI (/modifica-indirizzo/) — 2 card affiancate
+   -------------------------------------------------------------------------- */
+
+.woocommerce-account .woocommerce-Addresses {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-top: 8px;
+}
+
+/* Intro text */
+.woocommerce-account .woocommerce-MyAccount-content > p {
+  font-size: 14px;
+  color: var(--shopforge-text-muted);
+  margin-bottom: 20px;
+}
+
+.woocommerce-account .woocommerce-Address {
+  padding: 24px;
+  background: #fff;
+  border: 1px solid var(--shopforge-border);
+  border-radius: var(--shopforge-radius);
+  box-shadow: var(--shopforge-shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  /* Override The7 (wc-dt-custom.css): .col-1/.col-2 ha width:48% float:left */
+  width: 100% !important;
+  float: none !important;
+  box-sizing: border-box;
+}
+
+/* Header interno: contiene h2 + link modifica */
+.woocommerce-account .woocommerce-Address .woocommerce-Address-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--shopforge-border-soft);
+  margin: 0;
+}
+
+.woocommerce-account .woocommerce-Address .woocommerce-Address-title h2 {
+  font-size: 12px !important;
+  font-weight: 800 !important;
+  text-transform: uppercase;
+  letter-spacing: .07em;
+  color: var(--shopforge-text-muted) !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+}
+
+.woocommerce-account .woocommerce-Address address {
+  font-style: normal;
+  font-size: 14px;
+  line-height: 1.8;
+  color: var(--shopforge-text-main);
+  flex: 1;
+}
+
+.woocommerce-account .woocommerce-Address .edit {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  border: 1.5px solid var(--shopforge-border);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--shopforge-primary);
+  font-size: 12px;
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background .18s, border-color .18s;
+  flex-shrink: 0;
+}
+
+.woocommerce-account .woocommerce-Address .edit:hover {
+  background: #EFF6FF;
+  border-color: rgba(0,111,239,.4);
+}
+
+/* --------------------------------------------------------------------------
+   PAGINA DETTAGLI ACCOUNT (/modifica-account/) — form come card
+   -------------------------------------------------------------------------- */
+
+.woocommerce-account form.woocommerce-EditAccountForm {
+  background: #fff;
+  border: 1px solid var(--shopforge-border);
+  border-radius: var(--shopforge-radius);
+  box-shadow: var(--shopforge-shadow);
+  padding: 28px 32px;
+}
+
+/* Layout 2 colonne per i campi nome/cognome */
+.woocommerce-account form.woocommerce-EditAccountForm .woocommerce-form-row--first,
+.woocommerce-account form.woocommerce-EditAccountForm .woocommerce-form-row--last {
+  display: inline-block;
+  width: 48%;
+  vertical-align: top;
+}
+
+.woocommerce-account form.woocommerce-EditAccountForm .woocommerce-form-row--last {
+  margin-left: 3%;
+}
+
+/* Label */
+.woocommerce-account form.woocommerce-EditAccountForm label {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--shopforge-text-main);
+  display: block;
+  margin-bottom: 6px;
+}
+
+/* Sezione password — fieldset come card interna */
+.woocommerce-account form.woocommerce-EditAccountForm fieldset {
+  border: 1px solid var(--shopforge-border-soft);
+  border-radius: 10px;
+  padding: 20px 24px;
+  margin: 24px 0;
+  background: var(--shopforge-bg-soft);
+}
+
+.woocommerce-account form.woocommerce-EditAccountForm fieldset legend {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--shopforge-text-muted);
+  padding: 0 10px;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+}
+
+/* Heading "Modifica password" (h3 dentro il form) */
+.woocommerce-account form.woocommerce-EditAccountForm h3 {
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--shopforge-text-muted);
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  margin: 24px 0 16px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--shopforge-border-soft);
+}
+
+/* Submit button */
+.woocommerce-account form.woocommerce-EditAccountForm p:last-of-type {
+  margin-top: 8px;
+  padding-top: 20px;
+  border-top: 1px solid var(--shopforge-border-soft);
+}
+
+/* --------------------------------------------------------------------------
+   PAGINA MODIFICA SINGOLO INDIRIZZO (form) — card
+   -------------------------------------------------------------------------- */
+
+.woocommerce-account form.woocommerce-address-fields {
+  background: #fff;
+  border: 1px solid var(--shopforge-border);
+  border-radius: var(--shopforge-radius);
+  box-shadow: var(--shopforge-shadow);
+  padding: 28px 32px;
+}
+
+.woocommerce-account form.woocommerce-address-fields h3 {
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .07em;
+  color: var(--shopforge-text-muted);
+  margin: 0 0 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--shopforge-border-soft);
+}
+
+.woocommerce-account form.woocommerce-address-fields p:last-of-type {
+  margin-top: 8px;
+  padding-top: 20px;
+  border-top: 1px solid var(--shopforge-border-soft);
+}
+
+/* --------------------------------------------------------------------------
+   VIEW-ORDER: fix paragrafo info ordine (mark con sfondo nero da The7)
+   -------------------------------------------------------------------------- */
+
+.woocommerce-account .woocommerce-MyAccount-content > p mark {
+  background: transparent !important;
+  color: inherit;
+  font-weight: 700;
+  font-style: normal;
+}
+
+/* Badge stato nel paragrafo info ordine */
+.woocommerce-account .woocommerce-MyAccount-content > p mark.order-status {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  background: #F3F4F6 !important;
+  color: #4B5563;
+}
+
+/* Card info ordine (paragrafo) */
+.woocommerce-account .woocommerce-order-details ~ p,
+.woocommerce-account .woocommerce-MyAccount-content > p:has(mark.order-status) {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+  padding: 14px 18px;
+  margin: 0 0 24px;
+  background: var(--shopforge-bg-soft);
+  border: 1px solid var(--shopforge-border);
+  border-radius: var(--shopforge-radius);
+  font-size: 14px;
+  color: var(--shopforge-text-muted);
+  line-height: 1.5;
+}
+
+/* --------------------------------------------------------------------------
+   DETTAGLIO ORDINE (/vedi-ordine/) — normalizzazione font a 14px
+   The7 imposta 19px come base su td/a/strong; qui riallineiamo tutto.
+   -------------------------------------------------------------------------- */
+
+/* Tabella prodotti: nome, quantità, prezzi */
+.woocommerce-account .woocommerce-table--order-details td,
+.woocommerce-account .woocommerce-table--order-details th,
+.woocommerce-account .woocommerce-table--order-details a,
+.woocommerce-account .woocommerce-table--order-details strong,
+.woocommerce-account .woocommerce-table--order-details span {
+  font-size: 14px !important;
+}
+
+.woocommerce-account .woocommerce-table--order-details .woocommerce-table__product-name a {
+  font-weight: 600 !important;
+  color: var(--shopforge-text-main) !important;
+}
+.woocommerce-account .woocommerce-table--order-details .product-quantity {
+  color: var(--shopforge-text-muted) !important;
+  font-weight: 400 !important;
+}
+
+/* Tabella clienti (Email, Telefono, Indirizzo) */
+.woocommerce-account table.customer_details th,
+.woocommerce-account table.customer_details td {
+  font-size: 14px !important;
+  font-weight: 400 !important;
+  padding: 10px 16px !important;
+}
+.woocommerce-account table.customer_details th {
+  font-weight: 600 !important;
+  color: var(--shopforge-text-muted) !important;
+  width: 200px;
+}
+
+/* "Mostra i dettagli" — h4 dentro .wc-wide-column: troppo grande di default (30px) */
+.woocommerce-account .wc-wide-column > header h4,
+.woocommerce-account .woocommerce-customer-details > header h4 {
+  font-size: 12px !important;
+  font-weight: 800 !important;
+  text-transform: uppercase !important;
+  letter-spacing: .07em !important;
+  color: var(--shopforge-text-muted) !important;
+  margin: 0 0 16px !important;
+  padding: 0 !important;
+  cursor: pointer;
+}
+
+/* Tfoot ordine: riga "Metodo di pagamento" e totale — override da 15px a 14px */
+.woocommerce-account .woocommerce-table--order-details tfoot th,
+.woocommerce-account .woocommerce-table--order-details tfoot td {
+  font-size: 14px !important;
+  font-weight: 700 !important;
+}
+.woocommerce-account .woocommerce-table--order-details tfoot tr:last-child th,
+.woocommerce-account .woocommerce-table--order-details tfoot tr:last-child td {
+  font-size: 15px !important;
+}
+
+/* --------------------------------------------------------------------------
+   PLACEHOLDER SEZIONI CUSTOM (I miei preventivi, Le mie liste, ecc.)
+   -------------------------------------------------------------------------- */
+
+/* Titolo sezione */
+.woocommerce-account .woocommerce-MyAccount-content .shopforge-placeholder-section h2 {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--shopforge-text-main);
+  margin: 0 0 6px;
+  padding: 0;
+  border: none;
+}
+
+/* --------------------------------------------------------------------------
+   RESPONSIVE — aggiornamenti per le nuove sezioni
+   -------------------------------------------------------------------------- */
+
+/* ---- Button helpers (usati dai moduli) ---- */
+.shopforge-btn {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 9px 16px;
+  font-size: 13px; font-weight: 700;
+  border-radius: var(--shopforge-radius);
+  border: none; cursor: pointer;
+  text-decoration: none !important;
+  transition: background .2s, color .2s;
+  white-space: nowrap;
+}
+.shopforge-btn--primary {
+  background: var(--shopforge-primary); color: #fff !important;
+}
+.shopforge-btn--primary:hover { background: var(--shopforge-primary-hover); }
+.shopforge-btn--ghost {
+  background: var(--shopforge-bg-soft);
+  color: var(--shopforge-text-muted) !important;
+  border: 1px solid var(--shopforge-border);
+}
+.shopforge-btn--ghost:hover { background: var(--shopforge-border-soft); }
+
+.shopforge-badge {
+  display: inline-flex; align-items: center;
+  padding: 3px 10px; border-radius: 999px;
+  font-size: 12px; font-weight: 700;
+}
+.shopforge-badge--muted { background: var(--shopforge-bg-soft); color: var(--shopforge-text-muted); }
+
+
+/* --------------------------------------------------------------------------
+   WIDGET TRACKING — dashboard
+   -------------------------------------------------------------------------- */
+
+.shopforge-tracking-widget {
+  margin-bottom: 24px;
+  padding: 18px 22px;
+  background: #fff;
+  border: 1px solid var(--shopforge-border);
+  border-radius: var(--shopforge-radius);
+  box-shadow: var(--shopforge-shadow);
+}
+.shopforge-tracking-widget__head {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 12px;
+}
+.shopforge-tracking-widget__label {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 11px; font-weight: 800; text-transform: uppercase;
+  letter-spacing: .07em; color: var(--shopforge-text-muted);
+}
+.shopforge-tracking-widget__link {
+  font-size: 12px; font-weight: 600; color: var(--shopforge-primary);
+  text-decoration: none;
+}
+.shopforge-tracking-widget__link:hover { text-decoration: underline; }
+.shopforge-tracking-widget__status {
+  display: flex; align-items: center; gap: 10px;
+  font-size: 16px; font-weight: 800; margin-bottom: 6px;
+}
+.shopforge-tracking-widget__event {
+  margin: 0 0 4px; font-size: 13px; color: var(--shopforge-text-main);
+}
+.shopforge-tracking-widget__date {
+  margin: 0; font-size: 11px; color: var(--shopforge-text-muted);
+}
+
+/* --------------------------------------------------------------------------
+   RIORDINA RAPIDO — pulsante nella lista ordini
+   -------------------------------------------------------------------------- */
+
+.woocommerce-account .woocommerce-orders-table .button.reorder,
+.woocommerce-account td.woocommerce-orders-table__cell-order-actions a.button {
+  font-size: 12px;
+  min-height: 34px;
+  padding: 0 12px;
+}
+
+
+@media (max-width: 860px) {
+  .woocommerce-account .woocommerce-Addresses {
+    grid-template-columns: 1fr;
+  }
+
+  .woocommerce-account form.woocommerce-EditAccountForm,
+  .woocommerce-account form.woocommerce-address-fields {
+    padding: 20px 18px;
+  }
+
+  .woocommerce-account form.woocommerce-EditAccountForm .woocommerce-form-row--first,
+  .woocommerce-account form.woocommerce-EditAccountForm .woocommerce-form-row--last {
+    display: block;
+    width: 100%;
+    margin-left: 0;
+  }
+}

@@ -1,0 +1,1417 @@
+<?php
+/**
+ * Andrea Emili — Tracker visivo stato ordine
+ *
+ * Mostra un indicatore a step nella pagina dettaglio ordine
+ * (My Account → Visualizza ordine).
+ * Step: Ricevuto → Pagato → In Preparazione → Spedito → Consegnato
+ *
+ * @package ShopForge
+ */
+
+defined( 'ABSPATH' ) || exit;
+
+
+// -------------------------------------------------------------------------
+// Mappa: stato WooCommerce → livello di avanzamento (1-6)
+// 6 = tutti gli step completati (ordine consegnato)
+// -------------------------------------------------------------------------
+
+function shopforge_order_tracker_progress( string $status ): int {
+	$map = [
+		'pending'    => 1, // Ricevuto (in attesa pagamento)
+		'on-hold'    => 1, // Ricevuto (in attesa verifica)
+		'processing' => 3, // Ricevuto ✓ · Pagato ✓ · In Preparazione ←
+		'spedito'    => 4, // + Spedito ←
+		'completed'  => 6, // tutti ✓ (progress > 5 → tutti is-completed)
+	];
+	return $map[ $status ] ?? 1;
+}
+
+
+// -------------------------------------------------------------------------
+// Render del tracker
+// -------------------------------------------------------------------------
+
+function shopforge_render_order_tracker( WC_Order $order ): void {
+	$status   = $order->get_status();
+	$progress = shopforge_order_tracker_progress( $status );
+
+	$error_statuses = [ 'cancelled', 'failed', 'refunded' ];
+	if ( in_array( $status, $error_statuses, true ) ) {
+		$label = wc_get_order_status_name( $status );
+		?>
+		<div class="shopforge-order-tracker shopforge-order-tracker--error">
+			<i class="fa-solid fa-circle-xmark" aria-hidden="true"></i>
+			<span>Ordine <strong><?php echo esc_html( $label ); ?></strong> — nessun avanzamento disponibile.</span>
+		</div>
+		<?php
+		return;
+	}
+
+	$steps = [
+		[ 'label' => 'Ricevuto',        'icon' => 'fa-solid fa-inbox' ],
+		[ 'label' => 'Pagato',           'icon' => 'fa-solid fa-credit-card' ],
+		[ 'label' => 'In Preparazione',  'icon' => 'fa-solid fa-box-open' ],
+		[ 'label' => 'Spedito',          'icon' => 'fa-solid fa-truck' ],
+		[ 'label' => 'Consegnato',       'icon' => 'fa-solid fa-circle-check' ],
+	];
+	?>
+	<div class="shopforge-order-tracker" role="list" aria-label="Stato ordine">
+		<p class="shopforge-tracker-header">
+			<i class="fa-solid fa-route" aria-hidden="true"></i>
+			Stato ordine
+		</p>
+
+		<div class="shopforge-tracker-steps">
+			<?php foreach ( $steps as $i => $step ) :
+				$step_num = $i + 1;
+
+				if ( $step_num < $progress ) {
+					$css_class = 'is-completed';
+					$aria      = 'Completato';
+				} elseif ( $step_num === $progress ) {
+					$css_class = 'is-active';
+					$aria      = 'In corso';
+				} else {
+					$css_class = 'is-pending';
+					$aria      = 'In attesa';
+				}
+			?>
+				<div class="shopforge-tracker-step <?php echo esc_attr( $css_class ); ?>"
+				     role="listitem"
+				     aria-label="<?php echo esc_attr( $step['label'] . ': ' . $aria ); ?>">
+
+					<div class="shopforge-tracker-step__bubble">
+						<?php if ( 'is-completed' === $css_class ) : ?>
+							<i class="fa-solid fa-check" aria-hidden="true"></i>
+						<?php else : ?>
+							<i class="<?php echo esc_attr( $step['icon'] ); ?>" aria-hidden="true"></i>
+						<?php endif; ?>
+					</div>
+
+					<span class="shopforge-tracker-step__label"><?php echo esc_html( $step['label'] ); ?></span>
+				</div>
+			<?php endforeach; ?>
+		</div>
+	</div>
+	<?php
+}
+
+
+// -------------------------------------------------------------------------
+// Hook: inietta il tracker prima della tabella ordine
+// (escludi thank-you page)
+// -------------------------------------------------------------------------
+
+add_action( 'woocommerce_order_details_before_order_table', function ( WC_Order $order ) {
+	if ( is_wc_endpoint_url( 'order-received' ) ) {
+		return;
+	}
+	shopforge_render_order_tracker( $order );
+}, 5 );
+
+
+// -------------------------------------------------------------------------
+// CSS account pages (tracker + stili uniformi dettaglio ordine)
+// -------------------------------------------------------------------------
+
+add_action( 'wp_head', function () {
+	if ( ! is_account_page() ) {
+		return;
+	}
+	?>
+	<style id="shopforge-order-detail-css">
+	/* ============================================================
+	   BNCOM — Account: stili uniformi per tutte le sezioni
+	   Usa le variabili CSS del plugin shopforge
+	   ============================================================ */
+
+	/* --- Heading sezioni content --- */
+	.woocommerce-account .woocommerce-MyAccount-content h2 {
+		font-size: 17px;
+		font-weight: 800;
+		color: var(--shopforge-text-main);
+		margin: 0 0 18px;
+		padding-bottom: 14px;
+		border-bottom: 1px solid var(--shopforge-border-soft, #EEF2F7);
+		line-height: 1.3;
+	}
+
+	.woocommerce-account .woocommerce-MyAccount-content h3 {
+		font-size: 14px;
+		font-weight: 700;
+		color: var(--shopforge-text-muted);
+		margin: 0 0 12px;
+	}
+
+	/* --- Barra info ordine (paragrafo con numero / data / stato) --- */
+	.woocommerce-account .woocommerce-MyAccount-content > p:first-of-type {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 6px 10px;
+		padding: 14px 18px;
+		margin: 0 0 24px;
+		background: var(--shopforge-bg-soft);
+		border: 1px solid var(--shopforge-border);
+		border-radius: var(--shopforge-radius);
+		font-size: 14px;
+		color: var(--shopforge-text-muted);
+		line-height: 1.5;
+	}
+
+	.woocommerce-account .woocommerce-MyAccount-content > p:first-of-type mark.order-number,
+	.woocommerce-account .woocommerce-MyAccount-content > p:first-of-type mark.order-date {
+		background: none;
+		color: var(--shopforge-text-main);
+		font-weight: 700;
+	}
+
+	/* Badge stato inline */
+	.woocommerce-account mark.order-status {
+		display: inline-flex;
+		align-items: center;
+		padding: 2px 10px;
+		border-radius: 999px;
+		font-size: 12px;
+		font-weight: 700;
+		background: #EFF6FF;
+		color: #1D4ED8;
+	}
+
+	.woocommerce-account mark.order-status.status-completed   { background: #DCFCE7; color: #15803D; }
+	.woocommerce-account mark.order-status.status-processing  { background: #DBEAFE; color: #1D4ED8; }
+	.woocommerce-account mark.order-status.status-on-hold     { background: #FEF3C7; color: #B45309; }
+	.woocommerce-account mark.order-status.status-pending     { background: #F3F4F6; color: #4B5563; }
+	.woocommerce-account mark.order-status.status-cancelled,
+	.woocommerce-account mark.order-status.status-failed,
+	.woocommerce-account mark.order-status.status-refunded    { background: #FEE2E2; color: #B91C1C; }
+	.woocommerce-account mark.order-status.status-spedito     { background: #dbeeff; color: #1565C0; }
+
+	/* --- Sezioni dettaglio ordine --- */
+	.woocommerce-account .woocommerce-order-details,
+	.woocommerce-account .woocommerce-customer-details {
+		margin-bottom: 24px;
+	}
+
+	/* Tabella prodotti */
+	.woocommerce-account table.woocommerce-table--order-details {
+		width: 100%;
+		border-collapse: collapse;
+		background: #fff;
+		border: 1px solid var(--shopforge-border);
+		border-radius: var(--shopforge-radius);
+		overflow: hidden;
+		box-shadow: var(--shopforge-shadow);
+		font-size: 14px;
+	}
+
+	.woocommerce-account table.woocommerce-table--order-details thead th {
+		padding: 12px 18px;
+		font-size: 11px;
+		font-weight: 800;
+		text-transform: uppercase;
+		letter-spacing: .06em;
+		color: var(--shopforge-text-muted);
+		background: var(--shopforge-bg-soft);
+		border-bottom: 1px solid var(--shopforge-border);
+		text-align: left;
+	}
+
+	.woocommerce-account table.woocommerce-table--order-details thead th:last-child { text-align: right; }
+
+	.woocommerce-account table.woocommerce-table--order-details tbody td {
+		padding: 14px 18px;
+		border-bottom: 1px solid var(--shopforge-border-soft);
+		color: var(--shopforge-text-main);
+		vertical-align: middle;
+	}
+
+	.woocommerce-account table.woocommerce-table--order-details tbody td:last-child {
+		text-align: right;
+		font-weight: 600;
+	}
+
+	.woocommerce-account table.woocommerce-table--order-details tbody tr:last-child td { border-bottom: none; }
+
+	.woocommerce-account table.woocommerce-table--order-details .woocommerce-table__product-name a {
+		color: var(--shopforge-primary);
+		font-weight: 600;
+		text-decoration: none;
+	}
+
+	.woocommerce-account table.woocommerce-table--order-details .woocommerce-table__product-name a:hover {
+		color: var(--shopforge-primary-hover);
+		text-decoration: underline;
+	}
+
+	.woocommerce-account table.woocommerce-table--order-details tfoot { background: var(--shopforge-bg-soft); }
+
+	.woocommerce-account table.woocommerce-table--order-details tfoot tr th,
+	.woocommerce-account table.woocommerce-table--order-details tfoot tr td {
+		padding: 11px 18px;
+		font-size: 14px;
+		color: var(--shopforge-text-muted);
+		border-top: 1px solid var(--shopforge-border);
+	}
+
+	.woocommerce-account table.woocommerce-table--order-details tfoot tr th { text-align: left; }
+	.woocommerce-account table.woocommerce-table--order-details tfoot tr td { text-align: right; }
+
+	.woocommerce-account table.woocommerce-table--order-details tfoot tr:last-child th,
+	.woocommerce-account table.woocommerce-table--order-details tfoot tr:last-child td {
+		color: var(--shopforge-text-main);
+		font-weight: 800;
+		font-size: 15px;
+	}
+
+	/* --- Indirizzi cliente --- */
+	.woocommerce-account .woocommerce-customer-details {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 20px;
+	}
+
+	.woocommerce-account .woocommerce-customer-details section {
+		padding: 22px 24px;
+		background: #fff;
+		border: 1px solid var(--shopforge-border);
+		border-radius: var(--shopforge-radius);
+		box-shadow: var(--shopforge-shadow);
+		font-size: 14px;
+		line-height: 1.75;
+		color: var(--shopforge-text-muted);
+	}
+
+	.woocommerce-account .woocommerce-customer-details section h2 {
+		font-size: 12px;
+		font-weight: 800;
+		text-transform: uppercase;
+		letter-spacing: .07em;
+		color: var(--shopforge-text-muted);
+		margin: 0 0 14px;
+		padding-bottom: 10px;
+		border-bottom: 1px solid var(--shopforge-border-soft);
+	}
+
+	.woocommerce-account .woocommerce-customer-details address {
+		font-style: normal;
+		color: var(--shopforge-text-main);
+	}
+
+	/* --- Lista ordini (/ordini/) --- */
+	.woocommerce-account table.woocommerce-orders-table {
+		border: 1px solid var(--shopforge-border);
+		border-radius: var(--shopforge-radius);
+		overflow: hidden;
+		box-shadow: var(--shopforge-shadow);
+		background: #fff;
+		font-size: 14px;
+		width: 100%;
+		border-collapse: collapse;
+	}
+
+	.woocommerce-account table.woocommerce-orders-table thead th {
+		padding: 12px 16px;
+		font-size: 11px;
+		font-weight: 800;
+		text-transform: uppercase;
+		letter-spacing: .06em;
+		color: var(--shopforge-text-muted);
+		background: var(--shopforge-bg-soft);
+		border-bottom: 1px solid var(--shopforge-border);
+		text-align: left;
+	}
+
+	.woocommerce-account table.woocommerce-orders-table tbody td {
+		padding: 13px 16px;
+		border-bottom: 1px solid var(--shopforge-border-soft);
+		color: var(--shopforge-text-main);
+		vertical-align: middle;
+	}
+
+	.woocommerce-account table.woocommerce-orders-table tbody tr:last-child td { border-bottom: none; }
+	.woocommerce-account table.woocommerce-orders-table tbody tr:hover td { background: #FAFBFC; }
+
+	.woocommerce-account table.woocommerce-orders-table .woocommerce-orders-table__cell-order-number a {
+		color: var(--shopforge-primary);
+		font-weight: 700;
+		text-decoration: none;
+	}
+
+	.woocommerce-account table.woocommerce-orders-table mark.order-status {
+		display: inline-flex;
+		align-items: center;
+		padding: 3px 11px;
+		border-radius: 999px;
+		font-size: 12px;
+		font-weight: 700;
+		background: var(--shopforge-bg-soft);
+		color: var(--shopforge-text-muted);
+	}
+
+	/* --- Form (dettagli account, indirizzi) --- */
+	.woocommerce-account .woocommerce-MyAccount-content fieldset {
+		border: 1px solid var(--shopforge-border);
+		border-radius: var(--shopforge-radius);
+		padding: 22px 24px;
+		margin: 0 0 24px;
+	}
+
+	.woocommerce-account .woocommerce-MyAccount-content fieldset legend {
+		font-size: 13px;
+		font-weight: 700;
+		color: var(--shopforge-text-muted);
+		padding: 0 8px;
+	}
+
+	.woocommerce-account .woocommerce-MyAccount-content .woocommerce-form-row label {
+		font-size: 13px;
+		font-weight: 700;
+		color: var(--shopforge-text-main);
+		margin-bottom: 6px;
+	}
+
+	.woocommerce-account .woocommerce-MyAccount-content .woocommerce-form-row { margin-bottom: 18px; }
+
+	/* --- Tracker --- */
+	.shopforge-order-tracker {
+		margin-bottom: 24px;
+		padding: 24px 28px;
+		background: #fff;
+		border: 1px solid var(--shopforge-border);
+		border-radius: var(--shopforge-radius);
+		box-shadow: var(--shopforge-shadow);
+	}
+
+	.shopforge-tracker-header {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		margin: 0 0 22px;
+		font-size: 12px;
+		font-weight: 800;
+		text-transform: uppercase;
+		letter-spacing: .07em;
+		color: var(--shopforge-text-muted);
+	}
+
+	.shopforge-tracker-steps { display: flex; align-items: flex-start; position: relative; }
+
+	.shopforge-tracker-step {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		flex: 1;
+		position: relative;
+		min-width: 0;
+	}
+
+	.shopforge-tracker-step::before {
+		content: "";
+		position: absolute;
+		top: 21px;
+		left: calc(-50% + 22px);
+		right: calc(50% + 22px);
+		height: 2px;
+		background: var(--shopforge-border);
+		z-index: 0;
+		transition: background .35s ease;
+	}
+
+	.shopforge-tracker-step:first-child::before { display: none; }
+
+	.shopforge-tracker-step.is-completed::before,
+	.shopforge-tracker-step.is-active::before { background: var(--shopforge-success); }
+
+	.shopforge-tracker-step__bubble {
+		position: relative;
+		z-index: 1;
+		width: 44px;
+		height: 44px;
+		border-radius: 50%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 17px;
+		background: var(--shopforge-bg-soft);
+		color: var(--shopforge-border);
+		border: 2px solid var(--shopforge-border);
+		transition: background .3s, color .3s, border-color .3s, box-shadow .3s;
+	}
+
+	.shopforge-tracker-step.is-completed .shopforge-tracker-step__bubble {
+		background: var(--shopforge-success); color: #fff; border-color: var(--shopforge-success);
+	}
+
+	.shopforge-tracker-step.is-active .shopforge-tracker-step__bubble {
+		background: var(--shopforge-primary); color: #fff; border-color: var(--shopforge-primary);
+		box-shadow: 0 0 0 5px rgba(0,111,239,.14);
+	}
+
+	.shopforge-tracker-step__label {
+		margin-top: 10px;
+		font-size: 11px;
+		font-weight: 700;
+		text-align: center;
+		line-height: 1.3;
+		color: var(--shopforge-border);
+		transition: color .3s;
+		padding: 0 4px;
+	}
+
+	.shopforge-tracker-step.is-completed .shopforge-tracker-step__label { color: var(--shopforge-success); }
+	.shopforge-tracker-step.is-active .shopforge-tracker-step__label { color: var(--shopforge-primary); }
+
+	.shopforge-order-tracker--error {
+		display: flex;
+		align-items: center;
+		gap: 12px;
+		color: var(--shopforge-danger);
+		background: #FEF2F2;
+		border-color: #FECACA;
+		font-size: 14px;
+		font-weight: 600;
+	}
+
+	.shopforge-order-tracker--error i { font-size: 22px; flex-shrink: 0; }
+
+	/* --- Responsive --- */
+	@media (max-width: 860px) {
+		.woocommerce-account .woocommerce-customer-details { grid-template-columns: 1fr; }
+	}
+
+	@media (max-width: 600px) {
+		.shopforge-order-tracker { padding: 18px 14px; }
+
+		.shopforge-tracker-step__bubble { width: 36px; height: 36px; font-size: 14px; }
+
+		.shopforge-tracker-step::before {
+			top: 17px;
+			left: calc(-50% + 18px);
+			right: calc(50% + 18px);
+		}
+
+		.shopforge-tracker-step__label { font-size: 9px; margin-top: 7px; }
+
+		.woocommerce-account table.woocommerce-table--order-details thead th,
+		.woocommerce-account table.woocommerce-table--order-details tbody td,
+		.woocommerce-account table.woocommerce-table--order-details tfoot tr th,
+		.woocommerce-account table.woocommerce-table--order-details tfoot tr td {
+			padding: 10px 12px;
+			font-size: 13px;
+		}
+	}
+	</style>
+	<?php
+} );
+
+// =============================================================================
+// Card "Hai bisogno di assistenza?" + Modal ticket — fondo pagina dettaglio ordine
+// =============================================================================
+
+add_action( 'woocommerce_order_details_after_order_table', function ( WC_Order $order ) {
+	if ( is_wc_endpoint_url( 'order-received' ) ) return;
+
+	$order_id     = $order->get_id();
+	$order_number = $order->get_order_number();
+	$nonce        = wp_create_nonce( 'shopforge_ticket_' . $order_id );
+	?>
+	<div class="shopforge-support-card">
+		<div class="shopforge-support-card__icon">
+			<i class="fa-solid fa-headset" aria-hidden="true"></i>
+		</div>
+		<div class="shopforge-support-card__body">
+			<p class="shopforge-support-card__title">Serve aiuto con questo ordine?</p>
+			<p class="shopforge-support-card__text">
+				Il nostro team è a disposizione per qualsiasi domanda sui prodotti,
+				sulla spedizione o per gestire resi e sostituzioni.
+			</p>
+		</div>
+		<button type="button" class="shopforge-support-card__btn"
+		        id="shopforge-open-ticket"
+		        data-order="<?php echo esc_attr( $order_id ); ?>"
+		        data-number="<?php echo esc_attr( $order_number ); ?>"
+		        data-nonce="<?php echo esc_attr( $nonce ); ?>">
+			Apri una richiesta
+			<i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+		</button>
+	</div>
+
+	<!-- Modal ticket -->
+	<div class="shopforge-modal-backdrop" id="shopforge-ticket-backdrop" aria-hidden="true">
+		<div class="shopforge-modal" role="dialog" aria-modal="true" aria-labelledby="shopforge-modal-title">
+
+			<div class="shopforge-modal__header">
+				<h2 class="shopforge-modal__title" id="shopforge-modal-title">
+					<i class="fa-solid fa-headset" aria-hidden="true"></i>
+					Richiesta assistenza
+				</h2>
+				<button type="button" class="shopforge-modal__close" id="shopforge-close-ticket" aria-label="Chiudi">
+					<i class="fa-solid fa-xmark" aria-hidden="true"></i>
+				</button>
+			</div>
+
+			<div class="shopforge-modal__body">
+				<p class="shopforge-modal__ref">
+					Ordine <strong>#<?php echo esc_html( $order_number ); ?></strong>
+				</p>
+
+				<!-- Form -->
+				<div id="shopforge-ticket-form">
+					<div class="shopforge-field">
+						<label for="shopforge-ticket-subject">Motivo della richiesta</label>
+						<select id="shopforge-ticket-subject" name="subject">
+							<option value="">— Seleziona —</option>
+							<option value="Problema con il prodotto">Problema con il prodotto</option>
+							<option value="Spedizione o tracking">Spedizione o tracking</option>
+							<option value="Reso o sostituzione">Reso o sostituzione</option>
+							<option value="Rimborso">Rimborso</option>
+							<option value="Altro">Altro</option>
+						</select>
+					</div>
+
+					<div class="shopforge-field">
+						<label>Prodotti coinvolti</label>
+						<ul class="shopforge-product-list" id="shopforge-product-list">
+							<?php foreach ( $order->get_items() as $item_id => $item ) :
+								/** @var WC_Order_Item_Product $item */
+								$product    = $item->get_product();
+								$thumb      = $product
+									? get_the_post_thumbnail_url( $product->get_id(), 'thumbnail' )
+									: '';
+								$name      = $item->get_name();
+								$price     = wc_price( $item->get_total() );
+								$field_id  = 'shopforge-prod-' . $item_id;
+							?>
+							<li class="shopforge-product-list__item">
+								<label for="<?php echo esc_attr( $field_id ); ?>" class="shopforge-product-row">
+									<input type="checkbox"
+									       id="<?php echo esc_attr( $field_id ); ?>"
+									       class="shopforge-prod-check"
+									       value="<?php echo esc_attr( $name ); ?>">
+									<span class="shopforge-product-row__check-icon">
+										<i class="fa-solid fa-check" aria-hidden="true"></i>
+									</span>
+									<span class="shopforge-product-row__thumb">
+										<?php if ( $thumb ) : ?>
+											<img src="<?php echo esc_url( $thumb ); ?>"
+											     alt="" width="50" height="50" loading="lazy">
+										<?php else : ?>
+											<span class="shopforge-product-row__no-img">
+												<i class="fa-solid fa-box" aria-hidden="true"></i>
+											</span>
+										<?php endif; ?>
+									</span>
+									<span class="shopforge-product-row__name">
+										<span class="shopforge-product-row__title"><?php echo esc_html( $name ); ?></span>
+										<span class="shopforge-product-row__price"><?php echo $price; ?></span>
+									</span>
+								</label>
+							</li>
+							<?php endforeach; ?>
+						</ul>
+					</div>
+
+					<div class="shopforge-field">
+						<label for="shopforge-ticket-message">Descrivi il problema</label>
+						<textarea id="shopforge-ticket-message" name="message" rows="5"
+						          placeholder="Descrivi nel dettaglio la tua richiesta…"></textarea>
+					</div>
+					<p class="shopforge-field-note">
+						Riceverai una risposta all'indirizzo email associato al tuo account.
+					</p>
+					<button type="button" class="shopforge-modal__submit" id="shopforge-submit-ticket">
+						<span id="shopforge-btn-label">Invia richiesta</span>
+						<span class="shopforge-st-spinner" id="shopforge-btn-spinner" style="display:none"></span>
+					</button>
+				</div>
+
+				<!-- Stato successo -->
+				<div id="shopforge-ticket-success" style="display:none" class="shopforge-ticket-success">
+					<i class="fa-solid fa-circle-check" aria-hidden="true"></i>
+					<p class="shopforge-ts__title">Richiesta inviata!</p>
+					<p class="shopforge-ts__text">
+						Abbiamo ricevuto la tua segnalazione. Ti risponderemo
+						via email nel più breve tempo possibile.
+					</p>
+					<button type="button" class="shopforge-modal__close-btn" id="shopforge-close-success">
+						Chiudi
+					</button>
+				</div>
+
+				<!-- Errore -->
+				<p class="shopforge-ticket-error" id="shopforge-ticket-error" style="display:none"></p>
+			</div>
+		</div>
+	</div>
+
+	<script>
+	(function () {
+		'use strict';
+
+		var backdrop = document.getElementById('shopforge-ticket-backdrop');
+		var openBtn  = document.getElementById('shopforge-open-ticket');
+		var closeBtn = document.getElementById('shopforge-close-ticket');
+		var closeOk  = document.getElementById('shopforge-close-success');
+		var submitBtn= document.getElementById('shopforge-submit-ticket');
+		var form     = document.getElementById('shopforge-ticket-form');
+		var success  = document.getElementById('shopforge-ticket-success');
+		var errorEl  = document.getElementById('shopforge-ticket-error');
+		var spinner  = document.getElementById('shopforge-btn-spinner');
+		var btnLabel = document.getElementById('shopforge-btn-label');
+
+		function open()  { backdrop.removeAttribute('aria-hidden'); backdrop.classList.add('is-open'); document.body.style.overflow='hidden'; }
+		function close() { backdrop.setAttribute('aria-hidden','true'); backdrop.classList.remove('is-open'); document.body.style.overflow=''; }
+
+		openBtn?.addEventListener('click', open);
+		closeBtn?.addEventListener('click', close);
+		closeOk?.addEventListener('click', close);
+		backdrop?.addEventListener('click', function(e){ if(e.target===backdrop) close(); });
+		document.addEventListener('keydown', function(e){ if(e.key==='Escape') close(); });
+
+		submitBtn?.addEventListener('click', function () {
+			var subject  = document.getElementById('shopforge-ticket-subject').value.trim();
+			var message  = document.getElementById('shopforge-ticket-message').value.trim();
+			var checked  = Array.from(document.querySelectorAll('.shopforge-prod-check:checked'))
+			                    .map(function(el){ return el.value; });
+
+			errorEl.style.display = 'none';
+
+			if (!subject) { showError('Seleziona il motivo della richiesta.'); return; }
+			if (message.length < 10) { showError('Descrivi il problema in almeno 10 caratteri.'); return; }
+
+			btnLabel.textContent = 'Invio in corso…';
+			spinner.style.display = 'inline-block';
+			submitBtn.disabled = true;
+
+			var params = new URLSearchParams({
+				action:   'shopforge_submit_ticket',
+				order_id: '<?php echo esc_js( $order_id ); ?>',
+				nonce:    '<?php echo esc_js( $nonce ); ?>',
+				subject:  subject,
+				message:  message,
+			});
+			checked.forEach(function(p){ params.append('products[]', p); });
+
+			fetch('<?php echo esc_url( admin_url( 'admin-ajax.php' ) ); ?>', {
+				method: 'POST',
+				headers: {'Content-Type':'application/x-www-form-urlencoded'},
+				body: params.toString()
+			})
+			.then(function(r){ return r.json(); })
+			.then(function(data) {
+				if (data.success) {
+					form.style.display = 'none';
+					success.style.display = 'block';
+				} else {
+					showError(data.data || 'Errore nell\'invio. Riprova tra qualche istante.');
+				}
+			})
+			.catch(function() {
+				showError('Errore di rete. Controlla la connessione e riprova.');
+			})
+			.finally(function() {
+				btnLabel.textContent = 'Invia richiesta';
+				spinner.style.display = 'none';
+				submitBtn.disabled = false;
+			});
+		});
+
+		function showError(msg) {
+			errorEl.textContent = msg;
+			errorEl.style.display = 'block';
+		}
+	})();
+	</script>
+	<?php
+}, 20 );
+
+
+// ---- AJAX handler: invia ticket ----
+
+add_action( 'wp_ajax_shopforge_submit_ticket', 'shopforge_submit_ticket_handler' );
+
+function shopforge_submit_ticket_handler(): void {
+	$order_id = absint( $_POST['order_id'] ?? 0 );
+
+	if ( ! wp_verify_nonce( $_POST['nonce'] ?? '', 'shopforge_ticket_' . $order_id ) ) {
+		wp_send_json_error( 'Sessione scaduta. Ricarica la pagina e riprova.' );
+	}
+
+	$order = wc_get_order( $order_id );
+	if ( ! $order ) {
+		wp_send_json_error( 'Ordine non trovato.' );
+	}
+
+	// Verifica che sia il proprietario dell'ordine
+	$user_id = get_current_user_id();
+	if ( ! $user_id || (int) $order->get_customer_id() !== $user_id ) {
+		wp_send_json_error( 'Accesso non autorizzato.' );
+	}
+
+	$subject  = sanitize_text_field( $_POST['subject'] ?? '' );
+	$message  = sanitize_textarea_field( $_POST['message'] ?? '' );
+	$products = array_map( 'sanitize_text_field', (array) ( $_POST['products'] ?? [] ) );
+	$products = array_filter( $products );
+
+	if ( ! $subject || strlen( $message ) < 10 ) {
+		wp_send_json_error( 'Dati mancanti o non validi.' );
+	}
+
+	$customer_name  = $order->get_billing_first_name() . ' ' . $order->get_billing_last_name();
+	$customer_email = $order->get_billing_email();
+	$order_number   = $order->get_order_number();
+	$site_name      = get_bloginfo( 'name' );
+	$admin_email    = get_option( 'admin_email' );
+
+	$products_line = $products
+		? implode( "\n", array_map( fn( $p ) => '  • ' . $p, $products ) )
+		: '  (nessun prodotto specificato)';
+
+	$products_note = $products
+		? '<strong>Prodotti:</strong><br>' . implode( '<br>', array_map( fn( $p ) => '• ' . esc_html( $p ), $products ) )
+		: '';
+
+	// 1. Salva il ticket come meta dell'ordine (storico permanente)
+	$tickets   = $order->get_meta( '_shopforge_tickets' ) ?: [];
+	$tickets[] = [
+		'id'       => uniqid( 'tck_' ),
+		'date'     => current_time( 'mysql' ),
+		'subject'  => $subject,
+		'products' => $products,
+		'message'  => $message,
+		'status'   => 'open',
+	];
+	$order->update_meta_data( '_shopforge_tickets', $tickets );
+	$order->save();
+
+	// 2. Email all'admin
+	wp_mail(
+		$admin_email,
+		sprintf( '[%s] Richiesta assistenza — Ordine #%s', $site_name, $order_number ),
+		sprintf(
+			"Nuova richiesta di assistenza ricevuta.\n\n" .
+			"Cliente: %s (%s)\n" .
+			"Ordine: #%s\n" .
+			"Motivo: %s\n\n" .
+			"Prodotti segnalati:\n%s\n\n" .
+			"Messaggio:\n%s\n\n" .
+			"---\n" .
+			"Gestisci l'ordine: %s",
+			$customer_name,
+			$customer_email,
+			$order_number,
+			$subject,
+			$products_line,
+			$message,
+			admin_url( 'post.php?post=' . $order_id . '&action=edit' )
+		),
+		[
+			'Content-Type: text/plain; charset=UTF-8',
+			'Reply-To: ' . $customer_name . ' <' . $customer_email . '>',
+		]
+	);
+
+	// 3. Email di conferma al cliente
+	wp_mail(
+		$customer_email,
+		sprintf( '[%s] Abbiamo ricevuto la tua richiesta — Ordine #%s', $site_name, $order_number ),
+		sprintf(
+			"Ciao %s,\n\n" .
+			"Abbiamo ricevuto la tua richiesta di assistenza per l'ordine #%s.\n\n" .
+			"Motivo: %s\n\n" .
+			"Prodotti segnalati:\n%s\n\n" .
+			"Il nostro team ti risponderà il prima possibile a questo indirizzo email.\n\n" .
+			"Grazie,\n%s",
+			$order->get_billing_first_name(),
+			$order_number,
+			$subject,
+			$products_line,
+			$site_name
+		),
+		[ 'Content-Type: text/plain; charset=UTF-8' ]
+	);
+
+	// Notifica in-app al cliente
+	$last_ticket = end( $tickets );
+	do_action( 'shopforge_ticket_submitted', $user_id, $order_id, $last_ticket['id'] );
+
+	wp_send_json_success();
+}
+
+
+// ---- CSS modal + card ----
+
+add_action( 'wp_head', function () {
+	if ( ! is_wc_endpoint_url( 'view-order' ) ) return;
+	?>
+	<style id="shopforge-support-card-css">
+
+	/* ---- Card ---- */
+	.shopforge-support-card {
+		display: flex; align-items: center; gap: 18px;
+		margin-top: 24px; padding: 20px 24px;
+		background: #fff;
+		border: 1px solid var(--shopforge-border);
+		border-radius: var(--shopforge-radius);
+		box-shadow: var(--shopforge-shadow);
+	}
+	.shopforge-support-card__icon {
+		width: 44px; height: 44px; flex-shrink: 0;
+		background: #EFF6FF; border-radius: 12px;
+		display: flex; align-items: center; justify-content: center;
+		color: var(--shopforge-primary); font-size: 20px;
+	}
+	.shopforge-support-card__body { flex: 1; min-width: 0; }
+	.shopforge-support-card__title {
+		margin: 0 0 4px; font-size: 14px; font-weight: 700;
+		color: var(--shopforge-text-main);
+	}
+	.shopforge-support-card__text {
+		margin: 0; font-size: 13px;
+		color: var(--shopforge-text-muted); line-height: 1.5;
+	}
+	.shopforge-support-card__btn {
+		flex-shrink: 0;
+		display: inline-flex; align-items: center; gap: 7px;
+		padding: 10px 18px;
+		background: var(--shopforge-primary); color: #fff;
+		font-size: 13px; font-weight: 700;
+		border: none; border-radius: var(--shopforge-radius);
+		cursor: pointer; white-space: nowrap;
+		transition: background .2s;
+	}
+	.shopforge-support-card__btn:hover { background: var(--shopforge-primary-hover); }
+	.shopforge-support-card__btn i { font-size: 11px; }
+
+	/* ---- Modal backdrop ---- */
+	.shopforge-modal-backdrop {
+		position: fixed; inset: 0; z-index: 99999;
+		background: rgba(0,0,0,.45);
+		display: flex; align-items: center; justify-content: center;
+		padding: 16px;
+		opacity: 0; pointer-events: none;
+		transition: opacity .2s;
+	}
+	.shopforge-modal-backdrop.is-open {
+		opacity: 1; pointer-events: all;
+	}
+
+	/* ---- Modal box ---- */
+	.shopforge-modal {
+		background: #fff;
+		border-radius: calc(var(--shopforge-radius) * 1.5);
+		box-shadow: 0 20px 60px rgba(0,0,0,.18);
+		width: 100%; max-width: 520px;
+		max-height: 90vh; overflow-y: auto;
+		transform: translateY(12px);
+		transition: transform .2s;
+	}
+	.shopforge-modal-backdrop.is-open .shopforge-modal { transform: translateY(0); }
+
+	.shopforge-modal__header {
+		display: flex; align-items: center; gap: 12px;
+		padding: 20px 24px 16px;
+		border-bottom: 1px solid var(--shopforge-border-soft);
+	}
+	.shopforge-modal__title {
+		flex: 1; margin: 0;
+		font-size: 15px; font-weight: 800;
+		color: var(--shopforge-text-main);
+		display: flex; align-items: center; gap: 9px;
+	}
+	.shopforge-modal__title i { color: var(--shopforge-primary); }
+	.shopforge-modal__close {
+		width: 32px; height: 32px;
+		background: var(--shopforge-bg-soft);
+		border: none; border-radius: 8px;
+		cursor: pointer; font-size: 15px;
+		color: var(--shopforge-text-muted);
+		display: flex; align-items: center; justify-content: center;
+		flex-shrink: 0; transition: background .15s;
+	}
+	.shopforge-modal__close:hover { background: var(--shopforge-border-soft); }
+
+	.shopforge-modal__body { padding: 20px 24px 24px; }
+
+	.shopforge-modal__ref {
+		margin: 0 0 18px;
+		font-size: 13px; color: var(--shopforge-text-muted);
+		padding: 10px 14px;
+		background: var(--shopforge-bg-soft);
+		border-radius: var(--shopforge-radius);
+		border: 1px solid var(--shopforge-border-soft);
+	}
+
+	/* ---- Form ---- */
+	.shopforge-field { margin-bottom: 16px; }
+	.shopforge-field label {
+		display: block; margin-bottom: 6px;
+		font-size: 12px; font-weight: 700;
+		color: var(--shopforge-text-main);
+		text-transform: uppercase; letter-spacing: .05em;
+	}
+	.shopforge-field select,
+	.shopforge-field textarea {
+		width: 100%; padding: 10px 12px;
+		border: 1px solid var(--shopforge-border);
+		border-radius: var(--shopforge-radius);
+		font-size: 14px; color: var(--shopforge-text-main);
+		background: #fff; box-sizing: border-box;
+		transition: border-color .15s;
+		font-family: inherit;
+	}
+	.shopforge-field select:focus,
+	.shopforge-field textarea:focus {
+		outline: none;
+		border-color: var(--shopforge-primary);
+		box-shadow: 0 0 0 3px rgba(0,111,239,.1);
+	}
+	.shopforge-field textarea { resize: vertical; min-height: 110px; }
+
+	/* ---- Lista prodotti ---- */
+	.shopforge-product-list {
+		list-style: none !important; margin: 0 !important; padding: 0 !important;
+		border: 1px solid var(--shopforge-border);
+		border-radius: var(--shopforge-radius);
+		overflow: hidden;
+	}
+	.shopforge-product-list__item + .shopforge-product-list__item {
+		border-top: 1px solid var(--shopforge-border-soft);
+	}
+	.shopforge-product-list__item:has(input:checked) { background: #EFF6FF; }
+
+	.shopforge-product-row {
+		display: flex !important;
+		flex-direction: row !important;
+		flex-wrap: nowrap !important;
+		align-items: center !important;
+		gap: 12px;
+		padding: 10px 14px !important;
+		width: 100%; box-sizing: border-box;
+		cursor: pointer;
+		transition: background .15s;
+		margin: 0 !important;
+		font-weight: normal !important;
+		text-transform: none !important;
+		letter-spacing: normal !important;
+		color: var(--shopforge-text-main) !important;
+		font-size: 13px !important;
+		line-height: 1.4 !important;
+	}
+	.shopforge-product-row:hover { background: var(--shopforge-bg-soft); }
+	.shopforge-product-list__item:has(input:checked) .shopforge-product-row:hover { background: #dbeafe; }
+	.shopforge-product-row input[type=checkbox] { display: none !important; }
+
+	.shopforge-product-row__check-icon {
+		display: flex !important;
+		align-items: center !important;
+		justify-content: center !important;
+		width: 20px !important; height: 20px !important;
+		flex-shrink: 0 !important;
+		border-radius: 50%;
+		border: 2px solid var(--shopforge-border);
+		font-size: 9px; color: transparent;
+		transition: background .15s, border-color .15s, color .15s;
+		box-sizing: border-box;
+	}
+	.shopforge-product-row__thumb {
+		display: flex !important;
+		align-items: center !important;
+		justify-content: center !important;
+		width: 50px !important; height: 50px !important;
+		flex-shrink: 0 !important;
+		border-radius: 6px; overflow: hidden;
+		border: 1px solid var(--shopforge-border-soft);
+		background: var(--shopforge-bg-soft);
+	}
+	.shopforge-product-row__thumb img {
+		width: 50px !important; height: 50px !important;
+		object-fit: cover !important; display: block !important;
+	}
+	.shopforge-product-row__no-img { font-size: 16px; color: var(--shopforge-border); }
+	.shopforge-product-row__name {
+		flex: 1 !important; min-width: 0;
+		display: flex !important; flex-direction: column !important; gap: 3px;
+	}
+	.shopforge-product-row__title {
+		font-size: 13px !important; font-weight: 700 !important;
+		color: var(--shopforge-text-main) !important;
+		line-height: 1.3;
+	}
+	.shopforge-product-row__price {
+		font-size: 12px !important; font-weight: 400 !important;
+		color: var(--shopforge-text-muted) !important;
+	}
+	.shopforge-product-row__price * { font-size: 12px !important; }
+
+	/* Stato selezionato */
+	.shopforge-product-list__item:has(input:checked) .shopforge-product-row__check-icon {
+		background: var(--shopforge-primary) !important;
+		border-color: var(--shopforge-primary) !important;
+		color: #fff !important;
+	}
+
+	.shopforge-field-note {
+		margin: -8px 0 16px;
+		font-size: 12px; color: var(--shopforge-text-muted);
+	}
+
+	.shopforge-modal__submit {
+		width: 100%; padding: 12px;
+		background: var(--shopforge-primary); color: #fff;
+		font-size: 14px; font-weight: 700;
+		border: none; border-radius: var(--shopforge-radius);
+		cursor: pointer;
+		display: flex; align-items: center; justify-content: center; gap: 8px;
+		transition: background .2s;
+	}
+	.shopforge-modal__submit:hover:not(:disabled) { background: var(--shopforge-primary-hover); }
+	.shopforge-modal__submit:disabled { opacity: .65; cursor: not-allowed; }
+
+	/* ---- Errore ---- */
+	.shopforge-ticket-error {
+		margin-top: 12px; padding: 10px 14px;
+		background: #FEF2F2; border: 1px solid #FECACA;
+		border-radius: var(--shopforge-radius);
+		font-size: 13px; color: #B91C1C;
+	}
+
+	/* ---- Successo ---- */
+	.shopforge-ticket-success {
+		text-align: center; padding: 16px 0 8px;
+	}
+	.shopforge-ticket-success > i {
+		font-size: 48px; color: var(--shopforge-success);
+		display: block; margin-bottom: 14px;
+	}
+	.shopforge-ts__title {
+		margin: 0 0 8px;
+		font-size: 17px; font-weight: 800;
+		color: var(--shopforge-text-main);
+	}
+	.shopforge-ts__text {
+		margin: 0 0 22px;
+		font-size: 14px; color: var(--shopforge-text-muted);
+		line-height: 1.6;
+	}
+	.shopforge-modal__close-btn {
+		padding: 10px 24px;
+		background: var(--shopforge-bg-soft);
+		border: 1px solid var(--shopforge-border);
+		border-radius: var(--shopforge-radius);
+		font-size: 13px; font-weight: 700;
+		color: var(--shopforge-text-main);
+		cursor: pointer; transition: background .15s;
+	}
+	.shopforge-modal__close-btn:hover { background: var(--shopforge-border-soft); }
+
+	/* ---- Responsive ---- */
+	@media (max-width: 680px) {
+		.shopforge-support-card { flex-wrap: wrap; gap: 14px; }
+		.shopforge-support-card__btn { width: 100%; justify-content: center; }
+		.shopforge-modal__header, .shopforge-modal__body { padding-left: 16px; padding-right: 16px; }
+	}
+
+	</style>
+	<?php
+} );
+
+
+// =============================================================================
+// Frontend — Storico richieste di assistenza
+// =============================================================================
+
+add_action( 'woocommerce_order_details_after_order_table', function ( WC_Order $order ) {
+	if ( is_wc_endpoint_url( 'order-received' ) ) return;
+
+	$tickets = $order->get_meta( '_shopforge_tickets' ) ?: [];
+	if ( empty( $tickets ) ) return;
+
+	// Ordina dal più recente
+	usort( $tickets, fn( $a, $b ) => strtotime( $b['date'] ) - strtotime( $a['date'] ) );
+
+	$status_labels = [
+		'open'   => [ 'label' => 'Aperto',   'class' => 'open' ],
+		'closed' => [ 'label' => 'Chiuso',   'class' => 'closed' ],
+	];
+	?>
+	<div class="shopforge-tickets-history">
+		<p class="shopforge-tickets-history__title">
+			<i class="fa-solid fa-clock-rotate-left" aria-hidden="true"></i>
+			Le tue richieste di assistenza
+		</p>
+		<ul class="shopforge-tickets-list">
+			<?php foreach ( $tickets as $ticket ) :
+				$st    = $status_labels[ $ticket['status'] ] ?? $status_labels['open'];
+				$date  = date_i18n( 'd/m/Y \a\l\l\e H:i', strtotime( $ticket['date'] ) );
+			?>
+			<li class="shopforge-ticket-row">
+				<div class="shopforge-ticket-row__main">
+					<span class="shopforge-ticket-row__subject"><?php echo esc_html( $ticket['subject'] ); ?></span>
+					<?php if ( ! empty( $ticket['products'] ) ) : ?>
+					<span class="shopforge-ticket-row__products">
+						<?php echo esc_html( implode( ', ', $ticket['products'] ) ); ?>
+					</span>
+					<?php endif; ?>
+					<span class="shopforge-ticket-row__message"><?php echo esc_html( $ticket['message'] ); ?></span>
+				</div>
+				<div class="shopforge-ticket-row__meta">
+					<span class="shopforge-ticket-row__date"><?php echo esc_html( $date ); ?></span>
+					<span class="shopforge-ticket-badge shopforge-ticket-badge--<?php echo esc_attr( $st['class'] ); ?>">
+						<?php echo esc_html( $st['label'] ); ?>
+					</span>
+				</div>
+			</li>
+			<?php endforeach; ?>
+		</ul>
+	</div>
+
+	<style>
+	.shopforge-tickets-history {
+		margin-top: 20px;
+		border: 1px solid var(--shopforge-border);
+		border-radius: var(--shopforge-radius);
+		background: #fff;
+		box-shadow: var(--shopforge-shadow);
+		overflow: hidden;
+	}
+	.shopforge-tickets-history__title {
+		margin: 0;
+		padding: 14px 20px;
+		font-size: 12px; font-weight: 800;
+		text-transform: uppercase; letter-spacing: .06em;
+		color: var(--shopforge-text-muted);
+		background: var(--shopforge-bg-soft);
+		border-bottom: 1px solid var(--shopforge-border-soft);
+		display: flex; align-items: center; gap: 8px;
+	}
+	.shopforge-tickets-list { list-style: none; margin: 0; padding: 0; }
+	.shopforge-ticket-row {
+		display: flex; align-items: flex-start;
+		justify-content: space-between; gap: 16px;
+		padding: 14px 20px;
+		border-bottom: 1px solid var(--shopforge-border-soft);
+	}
+	.shopforge-ticket-row:last-child { border-bottom: none; }
+	.shopforge-ticket-row__main {
+		display: flex; flex-direction: column; gap: 4px;
+		min-width: 0; flex: 1;
+	}
+	.shopforge-ticket-row__subject {
+		font-size: 13px; font-weight: 700;
+		color: var(--shopforge-text-main);
+	}
+	.shopforge-ticket-row__products {
+		font-size: 12px; color: var(--shopforge-text-muted);
+		font-style: italic;
+	}
+	.shopforge-ticket-row__message {
+		font-size: 13px; color: var(--shopforge-text-muted);
+		line-height: 1.4;
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+	}
+	.shopforge-ticket-row__meta {
+		display: flex; flex-direction: column;
+		align-items: flex-end; gap: 6px;
+		flex-shrink: 0;
+	}
+	.shopforge-ticket-row__date {
+		font-size: 11px; color: var(--shopforge-text-muted); white-space: nowrap;
+	}
+	.shopforge-ticket-badge {
+		padding: 3px 10px; border-radius: 999px;
+		font-size: 11px; font-weight: 700;
+	}
+	.shopforge-ticket-badge--open   { background: #FEF3C7; color: #B45309; }
+	.shopforge-ticket-badge--closed { background: #DCFCE7; color: #15803D; }
+	@media (max-width: 560px) {
+		.shopforge-ticket-row { flex-direction: column; gap: 10px; }
+		.shopforge-ticket-row__meta { flex-direction: row; align-items: center; }
+	}
+	</style>
+	<?php
+}, 25 );
+
+
+// =============================================================================
+// Admin — Pannello richieste nel metabox ordine
+// =============================================================================
+
+add_action( 'add_meta_boxes', function () {
+	foreach ( [ 'shop_order', 'woocommerce_page_wc-orders' ] as $screen ) {
+		add_meta_box(
+			'shopforge-tickets',
+			'📩 Richieste assistenza',
+			'shopforge_tickets_metabox_render',
+			$screen,
+			'normal',
+			'default'
+		);
+	}
+} );
+
+function shopforge_tickets_metabox_render( $post_or_order ): void {
+	$order = ( $post_or_order instanceof WP_Post )
+		? wc_get_order( $post_or_order->ID )
+		: $post_or_order;
+
+	if ( ! $order ) return;
+
+	$tickets = $order->get_meta( '_shopforge_tickets' ) ?: [];
+
+	if ( empty( $tickets ) ) {
+		echo '<p style="color:#646970;font-size:13px;margin:8px 0">Nessuna richiesta di assistenza per questo ordine.</p>';
+		return;
+	}
+
+	usort( $tickets, fn( $a, $b ) => strtotime( $b['date'] ) - strtotime( $a['date'] ) );
+
+	$status_labels = [ 'open' => 'Aperto', 'closed' => 'Chiuso' ];
+	$status_colors = [ 'open' => '#B45309', 'closed' => '#15803D' ];
+	$status_bg     = [ 'open' => '#FEF3C7', 'closed' => '#DCFCE7' ];
+	?>
+	<style>
+	.shopforge-adm-tickets { margin: 0; border-collapse: collapse; width: 100%; font-size: 13px; }
+	.shopforge-adm-tickets th {
+		padding: 8px 12px; text-align: left;
+		background: #f6f7f7; border-bottom: 1px solid #dcdcde;
+		font-weight: 700; color: #646970; font-size: 11px; text-transform: uppercase;
+	}
+	.shopforge-adm-tickets td { padding: 10px 12px; border-bottom: 1px solid #f0f0f1; vertical-align: top; }
+	.shopforge-adm-tickets tr:last-child td { border-bottom: none; }
+	.shopforge-adm-ticket-products { font-size: 11px; color: #646970; margin-top: 4px; font-style: italic; }
+	.shopforge-adm-ticket-msg { color: #646970; margin-top: 4px; }
+	.shopforge-adm-status {
+		display: inline-block; padding: 2px 9px; border-radius: 999px;
+		font-size: 11px; font-weight: 700;
+	}
+	.shopforge-adm-actions select { font-size: 12px; padding: 3px 6px; }
+	.shopforge-adm-actions button { font-size: 12px; margin-left: 4px; }
+	</style>
+	<table class="shopforge-adm-tickets">
+		<thead>
+			<tr>
+				<th>Data</th>
+				<th>Motivo / Prodotti / Messaggio</th>
+				<th>Stato</th>
+			</tr>
+		</thead>
+		<tbody>
+		<?php foreach ( $tickets as $idx => $ticket ) :
+			$date  = date_i18n( 'd/m/Y H:i', strtotime( $ticket['date'] ) );
+			$st    = $ticket['status'] ?? 'open';
+			$label = $status_labels[ $st ] ?? 'Aperto';
+			$color = $status_colors[ $st ] ?? '#B45309';
+			$bg    = $status_bg[ $st ] ?? '#FEF3C7';
+		?>
+		<tr>
+			<td style="white-space:nowrap;color:#646970;font-size:12px"><?php echo esc_html( $date ); ?></td>
+			<td>
+				<strong><?php echo esc_html( $ticket['subject'] ); ?></strong>
+				<?php if ( ! empty( $ticket['products'] ) ) : ?>
+				<div class="shopforge-adm-ticket-products">
+					<?php echo esc_html( implode( ', ', $ticket['products'] ) ); ?>
+				</div>
+				<?php endif; ?>
+				<div class="shopforge-adm-ticket-msg"><?php echo esc_html( $ticket['message'] ); ?></div>
+			</td>
+			<td>
+				<div class="shopforge-adm-actions">
+					<span class="shopforge-adm-status" style="background:<?php echo esc_attr( $bg ); ?>;color:<?php echo esc_attr( $color ); ?>">
+						<?php echo esc_html( $label ); ?>
+					</span>
+					<br><br>
+					<select data-idx="<?php echo esc_attr( $idx ); ?>" class="shopforge-status-select">
+						<option value="open"   <?php selected( $st, 'open' ); ?>>Aperto</option>
+						<option value="closed" <?php selected( $st, 'closed' ); ?>>Chiuso</option>
+					</select>
+					<button type="button" class="button button-small shopforge-save-status"
+					        data-idx="<?php echo esc_attr( $idx ); ?>"
+					        data-order="<?php echo esc_attr( $order->get_id() ); ?>"
+					        data-nonce="<?php echo esc_attr( wp_create_nonce( 'shopforge_ticket_status' ) ); ?>">
+						Salva
+					</button>
+				</div>
+			</td>
+		</tr>
+		<?php endforeach; ?>
+		</tbody>
+	</table>
+	<script>
+	document.querySelectorAll('.shopforge-save-status').forEach(function(btn) {
+		btn.addEventListener('click', function() {
+			var idx    = this.dataset.idx;
+			var select = document.querySelector('.shopforge-status-select[data-idx="' + idx + '"]');
+			btn.textContent = '…';
+			fetch(ajaxurl, {
+				method: 'POST',
+				headers: {'Content-Type':'application/x-www-form-urlencoded'},
+				body: 'action=shopforge_update_ticket_status&order_id=' + this.dataset.order +
+				      '&nonce=' + this.dataset.nonce +
+				      '&idx=' + idx + '&status=' + select.value
+			}).then(function(r){ return r.json(); }).then(function(d) {
+				btn.textContent = d.success ? '✓' : '✗';
+				setTimeout(function(){ location.reload(); }, 800);
+			});
+		});
+	});
+	</script>
+	<?php
+}
+
+add_action( 'wp_ajax_shopforge_update_ticket_status', function () {
+	check_ajax_referer( 'shopforge_ticket_status', 'nonce' );
+	if ( ! current_user_can( 'edit_shop_orders' ) ) wp_send_json_error();
+
+	$order_id = absint( $_POST['order_id'] ?? 0 );
+	$idx      = intval( $_POST['idx'] ?? -1 );
+	$status   = in_array( $_POST['status'] ?? '', [ 'open', 'closed' ], true )
+		? $_POST['status'] : 'open';
+
+	$order = wc_get_order( $order_id );
+	if ( ! $order ) wp_send_json_error();
+
+	$tickets = $order->get_meta( '_shopforge_tickets' ) ?: [];
+	if ( ! isset( $tickets[ $idx ] ) ) wp_send_json_error();
+
+	$tickets[ $idx ]['status'] = $status;
+	$order->update_meta_data( '_shopforge_tickets', $tickets );
+	$order->save();
+
+	wp_send_json_success();
+} );
+
+
+// Fix larghezza uniforme account — iniettato via wp_footer (dopo tutto il CSS di Elementor)
+add_action( 'wp_footer', function () {
+	if ( ! is_account_page() ) {
+		return;
+	}
+	?>
+	<script id="shopforge-width-fix-js">
+	(function() {
+		function shopforgeFixWidth() {
+			var widget = document.querySelector(
+				'.woocommerce-account .e-con-inner > *:has(.woocommerce-MyAccount-navigation)'
+			);
+			if ( ! widget ) return;
+			widget.style.setProperty('flex', '1 1 0%', 'important');
+			widget.style.setProperty('min-width', '0', 'important');
+			var wc = widget.querySelector('.elementor-widget-container');
+			if ( wc ) wc.style.width = '100%';
+		}
+		if ( document.readyState === 'loading' ) {
+			document.addEventListener('DOMContentLoaded', shopforgeFixWidth);
+		} else {
+			shopforgeFixWidth();
+		}
+	})();
+	</script>
+	<?php
+}, 999 );

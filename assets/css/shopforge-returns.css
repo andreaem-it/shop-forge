@@ -1,0 +1,260 @@
+/* ShopForge — Returns Module CSS */
+
+	/* ---- Modal backdrop (recesso wizard) ---- */
+	.shopforge-modal-backdrop {
+		position: fixed; inset: 0;
+		background: rgba(0,0,0,.55);
+		z-index: 99998;
+		display: flex; align-items: center; justify-content: center;
+		padding: 16px;
+		overflow-y: auto;
+	}
+	.shopforge-modal {
+		background: #fff;
+		border-radius: calc(var(--shopforge-radius) * 1.5);
+		box-shadow: 0 20px 60px rgba(0,0,0,.25);
+		width: 100%; max-width: 640px;
+		max-height: 90vh; overflow-y: auto;
+		position: relative;
+	}
+	.shopforge-modal__header {
+		display: flex; align-items: center; justify-content: space-between;
+		padding: 20px 24px 0;
+		border-bottom: 1px solid var(--shopforge-border);
+		padding-bottom: 16px; margin-bottom: 4px;
+	}
+	.shopforge-modal__title {
+		font-size: 17px; font-weight: 700;
+		color: var(--shopforge-text-main);
+		display: flex; align-items: center; gap: 8px; margin: 0;
+	}
+	.shopforge-modal__close {
+		background: none; border: none; cursor: pointer;
+		color: var(--shopforge-text-muted); font-size: 18px;
+		padding: 4px; line-height: 1;
+		transition: color .15s;
+	}
+	.shopforge-modal__close:hover { color: var(--shopforge-text-main); }
+	.shopforge-modal__body { padding: 20px 24px 24px; }
+
+	/* ---- Card recesso ---- */
+	.shopforge-recesso-card {
+		display: flex; align-items: center; gap: 18px;
+		margin-bottom: 20px; padding: 18px 22px;
+		background: #FFFBEB;
+		border: 1px solid #FDE68A;
+		border-radius: var(--shopforge-radius);
+		box-shadow: var(--shopforge-shadow);
+	}
+	.shopforge-recesso-card--done {
+		background: #F0FDF4; border-color: #86EFAC;
+	}
+	.shopforge-recesso-card--expired {
+		background: #FFF7ED; border-color: #FED7AA;
+	}
+	.shopforge-recesso-card--expired .shopforge-recesso-card__icon {
+		background: #FFEDD5; color: #C2410C;
+	}
+	.shopforge-recesso-btn--secondary {
+		background: #64748B; text-decoration: none;
+		display: inline-flex; align-items: center; gap: 7px;
+		padding: 10px 18px; color: #fff;
+		font-size: 13px; font-weight: 700;
+		border-radius: var(--shopforge-radius);
+		white-space: nowrap; transition: background .2s;
+	}
+	.shopforge-recesso-btn--secondary:hover { background: #475569; color: #fff; }
+	.shopforge-recesso-expired-note {
+		flex-shrink: 0; display: flex; align-items: center; gap: 7px;
+		font-size: 13px; font-weight: 600; color: #92400E;
+	}
+	.shopforge-recesso-card__icon {
+		width: 42px; height: 42px; flex-shrink: 0;
+		background: #FEF3C7; border-radius: 10px;
+		display: flex; align-items: center; justify-content: center;
+		color: #B45309; font-size: 18px;
+	}
+	.shopforge-recesso-card--done .shopforge-recesso-card__icon {
+		background: #DCFCE7; color: #15803D;
+	}
+	.shopforge-recesso-card__body { flex: 1; min-width: 0; }
+	.shopforge-recesso-card__title {
+		margin: 0 0 4px; font-size: 13px; font-weight: 800;
+		color: var(--shopforge-text-main);
+		text-transform: uppercase; letter-spacing: .05em;
+	}
+	.shopforge-recesso-card__text {
+		margin: 0; font-size: 13px; color: var(--shopforge-text-muted); line-height: 1.5;
+	}
+	.shopforge-recesso-btn {
+		flex-shrink: 0;
+		display: inline-flex; align-items: center; gap: 8px;
+		padding: 10px 18px;
+		background: #B45309; color: #fff;
+		font-size: 13px; font-weight: 700;
+		border: none; border-radius: var(--shopforge-radius);
+		cursor: pointer; white-space: nowrap;
+		transition: background .2s;
+	}
+	.shopforge-recesso-btn:hover { background: #92400E; }
+
+	/* ---- Step indicator ---- */
+	.shopforge-steps {
+		display: flex; align-items: center;
+		padding: 14px 24px 0;
+		gap: 0;
+	}
+	.shopforge-step {
+		display: flex; align-items: center; gap: 8px;
+		font-size: 12px; font-weight: 600;
+		color: var(--shopforge-text-muted);
+	}
+	.shopforge-step__num {
+		width: 24px; height: 24px; border-radius: 50%;
+		background: var(--shopforge-border-soft);
+		border: 2px solid var(--shopforge-border);
+		display: flex; align-items: center; justify-content: center;
+		font-size: 11px; font-weight: 800;
+		transition: background .2s, border-color .2s, color .2s;
+	}
+	.shopforge-step.is-active .shopforge-step__num {
+		background: var(--shopforge-primary); border-color: var(--shopforge-primary); color: #fff;
+	}
+	.shopforge-step.is-done .shopforge-step__num {
+		background: var(--shopforge-success); border-color: var(--shopforge-success); color: #fff;
+	}
+	.shopforge-step.is-active .shopforge-step__label { color: var(--shopforge-primary); }
+	.shopforge-steps__line { flex: 1; height: 2px; background: var(--shopforge-border-soft); margin: 0 12px; }
+
+	/* ---- Dichiarazione ---- */
+	.shopforge-declaration-box {
+		white-space: pre-wrap;
+		font-family: monospace; font-size: 12px; line-height: 1.7;
+		background: var(--shopforge-bg-soft);
+		border: 1px solid var(--shopforge-border);
+		border-radius: var(--shopforge-radius);
+		padding: 16px; margin-bottom: 16px;
+		color: var(--shopforge-text-main);
+		max-height: 220px; overflow-y: auto;
+	}
+	.shopforge-declaration-notice {
+		display: flex; align-items: flex-start; gap: 10px;
+		padding: 12px 14px; margin-bottom: 18px;
+		background: #EFF6FF;
+		border: 1px solid #BFDBFE;
+		border-radius: var(--shopforge-radius);
+		font-size: 13px; color: #1E40AF; line-height: 1.5;
+	}
+	.shopforge-declaration-notice i { margin-top: 2px; flex-shrink: 0; }
+
+	/* ---- Radio buttons ---- */
+	.shopforge-radio-group { display: flex; flex-direction: column; gap: 10px; }
+	.shopforge-radio {
+		display: flex !important; align-items: center !important; gap: 10px;
+		cursor: pointer; font-weight: 400 !important;
+		text-transform: none !important; font-size: 13px !important;
+		color: var(--shopforge-text-main) !important; letter-spacing: normal !important;
+	}
+	.shopforge-radio input[type=radio] { display: none; }
+	.shopforge-radio__box {
+		width: 18px; height: 18px; flex-shrink: 0;
+		border-radius: 50%; border: 2px solid var(--shopforge-border);
+		background: #fff; position: relative;
+		transition: border-color .15s;
+	}
+	.shopforge-radio input:checked + .shopforge-radio__box {
+		border-color: var(--shopforge-primary);
+	}
+	.shopforge-radio input:checked + .shopforge-radio__box::after {
+		content: ""; position: absolute;
+		inset: 3px; border-radius: 50%;
+		background: var(--shopforge-primary);
+	}
+
+	/* ---- Step 2 actions ---- */
+	.shopforge-step2-actions {
+		display: flex; gap: 10px; align-items: center;
+	}
+	.shopforge-step2-actions .shopforge-modal__submit { flex: 1; }
+	.shopforge-modal__submit--danger { background: #B45309; }
+	.shopforge-modal__submit--danger:hover:not(:disabled) { background: #92400E; }
+
+	/* ---- Lista resi/ticket in account ---- */
+	.shopforge-returns-section__title {
+		font-size: 15px; font-weight: 700; color: var(--shopforge-text-main);
+		display: flex; align-items: center; gap: 8px;
+		margin: 0 0 14px; padding-bottom: 10px;
+		border-bottom: 1px solid var(--shopforge-border);
+	}
+	.shopforge-returns-section__title i { color: var(--shopforge-primary); font-size: 14px; }
+	.shopforge-return-badge--open   { background:#DBEAFE; color:#1E40AF; }
+	.shopforge-return-badge--closed { background:#F3F4F6; color:#6B7280; }
+	.shopforge-return-row__reply {
+		margin-top: 8px; padding: 8px 10px;
+		background: #EFF6FF; border-left: 3px solid #3B82F6;
+		border-radius: 4px; font-size: 12px; color: var(--shopforge-text-main);
+	}
+	.shopforge-returns-list { display: flex; flex-direction: column; gap: 12px; }
+	.shopforge-return-row {
+		padding: 16px 20px;
+		background: #fff;
+		border: 1px solid var(--shopforge-border);
+		border-radius: var(--shopforge-radius);
+		box-shadow: var(--shopforge-shadow);
+	}
+	.shopforge-return-row__head {
+		display: flex; align-items: center;
+		justify-content: space-between; gap: 10px;
+		margin-bottom: 10px;
+	}
+	.shopforge-return-row__ref { font-size: 13px; font-weight: 700; color: var(--shopforge-text-main); font-family: monospace; }
+	.shopforge-return-badge {
+		padding: 3px 10px; border-radius: 999px;
+		font-size: 11px; font-weight: 700;
+	}
+	.shopforge-return-badge--pending    { background:#FEF9C3; color:#854D0E; }
+	.shopforge-return-badge--processing { background:#DBEAFE; color:#1E40AF; }
+	.shopforge-return-badge--approved   { background:#DCFCE7; color:#166534; }
+	.shopforge-return-badge--refunded   { background:#D1FAE5; color:#065F46; }
+	.shopforge-return-badge--rejected   { background:#FEE2E2; color:#991B1B; }
+	.shopforge-return-row__meta { margin:0 0 4px; font-size:12px; color:var(--shopforge-text-muted); }
+	.shopforge-return-row__reason { margin:0 0 4px; font-size:13px; color:var(--shopforge-text-main); font-weight:600; }
+	.shopforge-return-row__products { margin:0; font-size:12px; color:var(--shopforge-text-muted); font-style:italic; }
+
+	/* ---- Error message ---- */
+	.shopforge-ret-error {
+		padding: 10px 14px; margin: 0 0 12px;
+		background: #FEF2F2; border: 1px solid #FECACA;
+		border-radius: var(--shopforge-radius);
+		color: #991B1B; font-size: 13px; line-height: 1.5;
+	}
+
+	@media (max-width: 600px) {
+		.shopforge-recesso-card { flex-wrap: wrap; }
+		.shopforge-recesso-btn { width: 100%; justify-content: center; }
+		.shopforge-step2-actions { flex-wrap: wrap; }
+	}
+
+	/* ---- Allegati ---- */
+	.shopforge-return-row__attachments {
+		margin: 6px 0 0;
+		font-size: 12px;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 6px;
+		align-items: center;
+	}
+	.shopforge-attachment-link {
+		display: inline-flex;
+		align-items: center;
+		gap: 4px;
+		padding: 3px 8px;
+		background: #EFF6FF;
+		border: 1px solid #BFDBFE;
+		border-radius: 4px;
+		color: #1D4ED8;
+		text-decoration: none;
+		font-size: 12px;
+		transition: background .15s;
+	}
+	.shopforge-attachment-link:hover { background: #DBEAFE; }

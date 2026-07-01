@@ -1,0 +1,68 @@
+/* [wc_price_iva_box] */
+.wc-iva-price-box {
+	display: inline-flex;
+	flex-direction: column;
+	line-height: 1.2;
+	color: #111827;
+}
+.wc-iva-price-main {
+	display: flex;
+	align-items: baseline;
+	gap: 6px;
+	font-size: 26px;
+	font-weight: 800;
+	letter-spacing: 0.2px;
+	color: #111827;
+}
+.wc-iva-price-main .woocommerce-Price-currencySymbol {
+	font-size: 26px;
+	font-weight: 800;
+	margin-right: 3px;
+}
+.wc-iva-label-main {
+	font-size: 11px;
+	font-weight: 500;
+	color: #6b7280;
+	letter-spacing: 0;
+}
+.wc-iva-price-sub {
+	display: flex;
+	align-items: baseline;
+	gap: 5px;
+	margin-top: 6px;
+	font-size: 12px;
+	font-weight: 700;
+	color: #1f2937;
+}
+.wc-iva-price-sub .woocommerce-Price-currencySymbol {
+	font-size: 12px;
+	font-weight: 700;
+	margin-right: 2px;
+}
+.wc-iva-label-sub {
+	font-size: 11px;
+	font-weight: 500;
+	color: #6b7280;
+}
+
+/* [stock_status_text] */
+.stock-status-text {
+	display: inline-flex;
+	align-items: center;
+	gap: 7px;
+	font-family: var(--stock-status-font-family, inherit);
+	font-size: var(--stock-status-font-size, 14px);
+	font-weight: 600;
+	line-height: 1.2;
+}
+.stock-status-dot {
+	width: 9px;
+	height: 9px;
+	display: inline-block;
+	border-radius: 999px;
+	flex-shrink: 0;
+}
+.stock-status-available { color: #16a34a; }
+.stock-status-available .stock-status-dot { background-color: #16a34a; }
+.stock-status-out { color: #dc2626; }
+.stock-status-out .stock-status-dot { background-color: #dc2626; }

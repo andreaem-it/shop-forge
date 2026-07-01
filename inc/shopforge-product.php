@@ -102,6 +102,20 @@ JS;
 
 
 // -------------------------------------------------------------------------
+// CSS — shortcode [wc_price_iva_box] e [stock_status_text]
+// -------------------------------------------------------------------------
+
+add_action( 'wp_enqueue_scripts', function () {
+	wp_enqueue_style(
+		'shopforge-product-extras',
+		SHOPFORGE_URL . 'assets/css/shopforge-product-extras.css',
+		[],
+		SHOPFORGE_VERSION
+	);
+} );
+
+
+// -------------------------------------------------------------------------
 // Shortcode [wc_price_iva_box]
 // Prezzo con/senza IVA. Portato dal functions.php del tema.
 // -------------------------------------------------------------------------
@@ -124,10 +138,6 @@ add_shortcode( 'wc_price_iva_box', function ( $atts ) {
 		return '';
 	}
 
-	// Lo shortcode può comparire più volte per pagina (loop prodotti):
-	// stampa lo <style> una sola volta.
-	static $style_printed = false;
-
 	ob_start();
 	?>
 	<div class="wc-iva-price-box">
@@ -140,55 +150,6 @@ add_shortcode( 'wc_price_iva_box', function ( $atts ) {
 			<span class="wc-iva-label-sub">IVA esclusa</span>
 		</div>
 	</div>
-	<?php if ( ! $style_printed ) : $style_printed = true; ?>
-	<style>
-	.wc-iva-price-box {
-		display: inline-flex;
-		flex-direction: column;
-		line-height: 1.2;
-		color: #111827;
-	}
-	.wc-iva-price-main {
-		display: flex;
-		align-items: baseline;
-		gap: 6px;
-		font-size: 26px;
-		font-weight: 800;
-		letter-spacing: 0.2px;
-		color: #111827;
-	}
-	.wc-iva-price-main .woocommerce-Price-currencySymbol {
-		font-size: 26px;
-		font-weight: 800;
-		margin-right: 3px;
-	}
-	.wc-iva-label-main {
-		font-size: 11px;
-		font-weight: 500;
-		color: #6b7280;
-		letter-spacing: 0;
-	}
-	.wc-iva-price-sub {
-		display: flex;
-		align-items: baseline;
-		gap: 5px;
-		margin-top: 6px;
-		font-size: 12px;
-		font-weight: 700;
-		color: #1f2937;
-	}
-	.wc-iva-price-sub .woocommerce-Price-currencySymbol {
-		font-size: 12px;
-		font-weight: 700;
-		margin-right: 2px;
-	}
-	.wc-iva-label-sub {
-		font-size: 11px;
-		font-weight: 500;
-		color: #6b7280;
-	}
-	</style>
-	<?php endif; ?>
 	<?php
 	return ob_get_clean();
 } );
@@ -380,4 +341,44 @@ add_shortcode( 'buy_now_button', function () {
 		'<a href="%s" class="mp-buy-now-button">Acquista ora</a>',
 		esc_url( $url )
 	);
+} );
+
+
+// -------------------------------------------------------------------------
+// Shortcode [stock_status_text]
+// Etichetta disponibilità (pallino + testo). Portato dal functions.php del
+// tema.
+// -------------------------------------------------------------------------
+
+add_shortcode( 'stock_status_text', function ( $atts ) {
+	$atts = shortcode_atts( [
+		'font_size'   => '',
+		'font_family' => '',
+	], $atts, 'stock_status_text' );
+
+	global $product;
+
+	if ( ! $product || ! is_a( $product, 'WC_Product' ) ) {
+		return '';
+	}
+
+	$is_in_stock = $product->is_in_stock();
+	$class       = $is_in_stock ? 'stock-status-available' : 'stock-status-out';
+	$label       = $is_in_stock ? 'Disponibile' : 'Non disponibile';
+
+	$inline_style = '';
+	if ( ! empty( $atts['font_size'] ) ) {
+		$inline_style .= '--stock-status-font-size:' . esc_attr( $atts['font_size'] ) . ';';
+	}
+	if ( ! empty( $atts['font_family'] ) ) {
+		$inline_style .= '--stock-status-font-family:' . esc_attr( $atts['font_family'] ) . ';';
+	}
+
+	ob_start();
+	?>
+	<span class="stock-status-text <?php echo esc_attr( $class ); ?>"<?php echo $inline_style ? ' style="' . esc_attr( $inline_style ) . '"' : ''; ?>>
+		<span class="stock-status-dot"></span><?php echo esc_html( $label ); ?>
+	</span>
+	<?php
+	return ob_get_clean();
 } );

@@ -151,6 +151,15 @@ function shopforge_admin_tab_shortcodes(): void {
 			'example' => '[buy_now_button]',
 		],
 		[
+			'name'  => 'stock_status_text',
+			'desc'  => 'Etichetta di disponibilità (pallino colorato + testo "Disponibile"/"Non disponibile").',
+			'attrs' => [
+				'font_size'   => 'Dimensione font CSS (opzionale, es. "16px")',
+				'font_family' => 'Font-family CSS (opzionale)',
+			],
+			'example' => '[stock_status_text]',
+		],
+		[
 			'name'  => 'product_faq',
 			'desc'  => 'Domande frequenti del prodotto, gestite dal metabox "FAQ Prodotto" nella scheda prodotto.',
 			'attrs' => [

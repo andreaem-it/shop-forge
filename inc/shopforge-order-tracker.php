@@ -191,8 +191,6 @@ add_action( 'woocommerce_order_details_after_order_table', function ( WC_Order $
 							<option value="">— Seleziona —</option>
 							<option value="Problema con il prodotto">Problema con il prodotto</option>
 							<option value="Spedizione o tracking">Spedizione o tracking</option>
-							<option value="Reso o sostituzione">Reso o sostituzione</option>
-							<option value="Rimborso">Rimborso</option>
 							<option value="Altro">Altro</option>
 						</select>
 					</div>

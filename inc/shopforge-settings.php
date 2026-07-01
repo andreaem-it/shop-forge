@@ -11,21 +11,8 @@
 
 defined( 'ABSPATH' ) || exit;
 
-
-// =============================================================================
-// MENU ADMIN
-// =============================================================================
-
-add_action( 'admin_menu', function () {
-	add_submenu_page(
-		'woocommerce',
-		'ShopForge — Moduli',
-		'ShopForge Moduli',
-		'manage_woocommerce',
-		'shopforge-modules',
-		'shopforge_settings_page_render'
-	);
-} );
+// La registrazione del menu è unica per tutte le tab: vedi
+// inc/shopforge-admin-page.php (add_menu_page + router).
 
 
 // =============================================================================
@@ -39,12 +26,20 @@ add_action( 'admin_post_shopforge_save_modules', function () {
 	}
 
 	// ---- Moduli / feature ----
-	$all_ids = array_keys( shopforge_modules_registry() );
-	$enabled = [];
-	foreach ( $all_ids as $id ) {
-		if ( ! empty( $_POST[ 'module_' . $id ] ) ) {
-			$enabled[] = $id;
+	// Senza licenza valida i moduli (type:'module') non sono attivabili,
+	// anche se il POST li includesse (toggle disabilitati lato UI, ma
+	// questo è il controllo che conta davvero). Le feature restano libere.
+	$has_license = function_exists( 'shopforge_has_valid_license' ) && shopforge_has_valid_license();
+	$registry    = shopforge_modules_registry();
+	$enabled     = [];
+	foreach ( array_keys( $registry ) as $id ) {
+		if ( empty( $_POST[ 'module_' . $id ] ) ) {
+			continue;
 		}
+		if ( ( $registry[ $id ]['type'] ?? 'module' ) === 'module' && ! $has_license ) {
+			continue;
+		}
+		$enabled[] = $id;
 	}
 
 	$old = shopforge_get_enabled_modules();
@@ -70,7 +65,7 @@ add_action( 'admin_post_shopforge_save_modules', function () {
 	}
 	update_option( 'shopforge_colors', $colors );
 
-	wp_redirect( admin_url( 'admin.php?page=shopforge-modules&updated=1' ) );
+	wp_redirect( admin_url( 'admin.php?page=shopforge&tab=modules&updated=1' ) );
 	exit;
 } );
 
@@ -125,9 +120,10 @@ add_action( 'wp_head', function () {
 // RENDER PAGINA
 // =============================================================================
 
-function shopforge_settings_page_render(): void {
-	$registry = shopforge_modules_registry();
-	$enabled  = shopforge_get_enabled_modules();
+function shopforge_admin_tab_modules(): void {
+	$registry    = shopforge_modules_registry();
+	$enabled     = shopforge_get_enabled_modules();
+	$has_license = function_exists( 'shopforge_has_valid_license' ) && shopforge_has_valid_license();
 
 	// Separa feature da moduli
 	$features = array_filter( $registry, fn( $m ) => ( $m['type'] ?? 'module' ) === 'feature' );
@@ -140,22 +136,6 @@ function shopforge_settings_page_render(): void {
 	wp_enqueue_style( 'wp-color-picker' );
 	wp_enqueue_script( 'wp-color-picker' );
 	?>
-	<div class="wrap shopforge-settings-wrap">
-
-		<div class="shopforge-settings-head">
-			<h1>
-				<span class="shopforge-settings-logo">
-					<i class="fa-solid fa-puzzle-piece"></i>
-				</span>
-				ShopForge
-			</h1>
-			<p class="shopforge-settings-sub">
-				Attiva o disattiva funzionalità e moduli del plugin.
-				Ogni voce è completamente indipendente — se attivi solo "Assistenza" e "Resi",
-				tutto il resto rimane invisibile al cliente.
-			</p>
-		</div>
-
 		<?php if ( ! empty( $_GET['updated'] ) ) : ?>
 		<div class="notice notice-success is-dismissible">
 			<p>✓ Impostazioni salvate.
@@ -163,6 +143,14 @@ function shopforge_settings_page_render(): void {
 				<strong>Attenzione:</strong> nessun modulo o funzionalità attiva.
 			<?php endif; ?>
 			</p>
+		</div>
+		<?php endif; ?>
+
+		<?php if ( ! $has_license ) : ?>
+		<div class="shopforge-license-banner">
+			<i class="fa-solid fa-lock" aria-hidden="true"></i>
+			<span>Licenza non valida o non configurata — i moduli non possono essere attivati.</span>
+			<a href="<?php echo esc_url( admin_url( 'admin.php?page=shopforge&tab=license' ) ); ?>" class="button button-small">Configura licenza</a>
 		</div>
 		<?php endif; ?>
 
@@ -206,8 +194,8 @@ function shopforge_settings_page_render(): void {
 				<?php foreach ( $modules as $id => $module ) :
 					$is_active = in_array( $id, $enabled, true );
 				?>
-				<div class="shopforge-module-card <?php echo $is_active ? 'is-active' : 'is-inactive'; ?>">
-					<?php shopforge_settings_card_inner( $id, $module, $is_active ); ?>
+				<div class="shopforge-module-card <?php echo $is_active ? 'is-active' : 'is-inactive'; ?> <?php echo ! $has_license ? 'is-locked' : ''; ?>">
+					<?php shopforge_settings_card_inner( $id, $module, $is_active, ! $has_license ); ?>
 				</div>
 				<?php endforeach; ?>
 			</div>
@@ -325,7 +313,6 @@ function shopforge_settings_page_render(): void {
 				<?php submit_button( 'Salva impostazioni', 'primary large', 'submit', false ); ?>
 			</div>
 		</form>
-	</div>
 
 	<script>
 	jQuery(document).ready(function($){
@@ -356,20 +343,19 @@ function shopforge_settings_page_render(): void {
 	</script>
 
 	<style>
-	/* ---- Wrap ---- */
-	.shopforge-settings-wrap { max-width: 960px; }
-	.shopforge-settings-head { margin: 20px 0 24px; }
-	.shopforge-settings-head h1 {
-		display: flex; align-items: center; gap: 12px;
-		font-size: 22px; font-weight: 800; color: #1d2327; margin: 0 0 6px;
+	/* ---- Banner licenza mancante ---- */
+	.shopforge-license-banner {
+		display: flex; align-items: center; gap: 10px;
+		background: #FEF3C7; border: 1px solid #FDE68A; color: #92400E;
+		border-radius: 8px; padding: 12px 16px; margin: 16px 0 20px;
+		font-size: 13px; font-weight: 600;
 	}
-	.shopforge-settings-logo {
-		width: 38px; height: 38px; border-radius: 10px;
-		background: #2271b1; color: #fff;
-		display: flex; align-items: center; justify-content: center;
-		font-size: 17px; flex-shrink: 0;
-	}
-	.shopforge-settings-sub { margin: 0; color: #646970; font-size: 14px; line-height: 1.6; max-width: 680px; }
+	.shopforge-license-banner i { font-size: 15px; }
+	.shopforge-license-banner .button { margin-left: auto; }
+
+	/* ---- Card modulo bloccata (senza licenza) ---- */
+	.shopforge-module-card.is-locked { opacity: .6; }
+	.shopforge-module-card.is-locked .shopforge-toggle { cursor: not-allowed; }
 
 	/* ---- Etichette sezione ---- */
 	.shopforge-section-label {
@@ -556,7 +542,7 @@ function shopforge_settings_page_render(): void {
  * Emette l'HTML interno di una card (header + descrizione + footer).
  * Usato sia per le feature che per i moduli.
  */
-function shopforge_settings_card_inner( string $id, array $module, bool $is_active ): void {
+function shopforge_settings_card_inner( string $id, array $module, bool $is_active, bool $locked = false ): void {
 	?>
 	<div class="shopforge-module-card__header">
 		<span class="shopforge-module-card__icon">
@@ -574,19 +560,24 @@ function shopforge_settings_card_inner( string $id, array $module, bool $is_acti
 			<?php endif; ?>
 			</span>
 		</div>
-		<label class="shopforge-toggle" title="<?php echo $is_active ? 'Disattiva' : 'Attiva'; ?>">
+		<label class="shopforge-toggle" title="<?php echo $locked ? 'Richiede licenza attiva' : ( $is_active ? 'Disattiva' : 'Attiva' ); ?>">
 			<input type="checkbox"
 			       name="module_<?php echo esc_attr( $id ); ?>"
 			       value="1"
-			       <?php checked( $is_active ); ?>>
+			       <?php checked( $is_active ); ?>
+			       <?php disabled( $locked ); ?>>
 			<span class="shopforge-toggle__slider"></span>
 		</label>
 	</div>
 	<p class="shopforge-module-card__desc"><?php echo esc_html( $module['description'] ); ?></p>
 	<div class="shopforge-module-card__footer">
+		<?php if ( $locked ) : ?>
+		<span class="shopforge-module-status is-off"><i class="fa-solid fa-lock" aria-hidden="true"></i> Richiede licenza</span>
+		<?php else : ?>
 		<span class="shopforge-module-status <?php echo $is_active ? 'is-on' : 'is-off'; ?>">
 			<?php echo $is_active ? '● Attivo' : '○ Inattivo'; ?>
 		</span>
+		<?php endif; ?>
 	</div>
 	<?php
 }

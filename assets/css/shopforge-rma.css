@@ -1,0 +1,161 @@
+/* ShopForge — Assistenza Prodotti (RMA) */
+
+.shopforge-rma-btn {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	padding: 9px 16px;
+	background: var(--shopforge-primary, #006FEF);
+	color: #fff;
+	border: none;
+	border-radius: var(--shopforge-radius, 8px);
+	font-size: 13px;
+	font-weight: 700;
+	text-decoration: none;
+	cursor: pointer;
+}
+.shopforge-rma-btn:hover { opacity: .9; color: #fff; }
+
+.shopforge-rma-btn--secondary {
+	background: var(--shopforge-bg-soft, #F0F7FF);
+	color: var(--shopforge-text-main, #07172F);
+	border: 1px solid var(--shopforge-border, #DCE6F2);
+}
+
+.shopforge-rma-btn--danger { background: #DC2626; }
+
+.shopforge-rma-note {
+	font-size: 12px;
+	color: var(--shopforge-text-muted, #64748B);
+}
+
+.shopforge-rma-order-card {
+	background: #fff;
+	border: 1px solid var(--shopforge-border, #DCE6F2);
+	border-radius: var(--shopforge-radius, 8px);
+	padding: 16px 18px;
+	margin-bottom: 16px;
+}
+.shopforge-rma-order-card__title {
+	font-weight: 700;
+	font-size: 13px;
+	margin: 0 0 10px;
+}
+
+.shopforge-rma-product-row {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+	padding: 10px 0;
+	border-top: 1px solid var(--shopforge-border-soft, #EEF2F7);
+}
+.shopforge-rma-product-row:first-of-type { border-top: none; }
+.shopforge-rma-product-row__name { font-size: 13px; }
+
+.shopforge-rma-request-card {
+	background: #fff;
+	border: 1px solid var(--shopforge-border, #DCE6F2);
+	border-radius: var(--shopforge-radius, 8px);
+	padding: 16px 18px;
+	margin-bottom: 12px;
+}
+.shopforge-rma-request-card__head {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	font-weight: 700;
+	font-size: 13px;
+	margin-bottom: 6px;
+}
+.shopforge-rma-request-card__meta {
+	font-size: 12px;
+	color: var(--shopforge-text-muted, #64748B);
+	margin: 0 0 12px;
+}
+
+.shopforge-rma-badge {
+	display: inline-block;
+	padding: 2px 10px;
+	border-radius: 999px;
+	font-size: 11px;
+	font-weight: 700;
+	background: var(--shopforge-bg-soft, #F0F7FF);
+	color: var(--shopforge-primary, #006FEF);
+}
+
+.shopforge-rma-form {
+	max-width: 560px;
+}
+.shopforge-rma-field {
+	margin-bottom: 16px;
+}
+.shopforge-rma-field label {
+	display: block;
+	font-weight: 700;
+	font-size: 12px;
+	margin-bottom: 6px;
+}
+.shopforge-rma-field input[type="text"],
+.shopforge-rma-field input[type="number"],
+.shopforge-rma-field select,
+.shopforge-rma-field textarea {
+	width: 100%;
+	padding: 8px 10px;
+	border: 1px solid var(--shopforge-border, #DCE6F2);
+	border-radius: 6px;
+	box-sizing: border-box;
+	font-size: 13px;
+}
+.shopforge-rma-radio,
+.shopforge-rma-check {
+	display: block;
+	font-size: 13px;
+	margin: 6px 0;
+	font-weight: 400;
+}
+.shopforge-rma-error {
+	color: #DC2626;
+	font-size: 13px;
+	margin: 10px 0;
+}
+
+.shopforge-rma-request-detail {
+	max-width: 640px;
+}
+
+.shopforge-rma-messages {
+	margin: 20px 0;
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+}
+.shopforge-rma-message {
+	padding: 10px 14px;
+	border-radius: var(--shopforge-radius, 8px);
+	background: var(--shopforge-bg-soft, #F0F7FF);
+	max-width: 80%;
+}
+.shopforge-rma-message.is-admin {
+	background: #F3F4F6;
+	align-self: flex-start;
+}
+.shopforge-rma-message.is-customer {
+	align-self: flex-end;
+}
+.shopforge-rma-message__head {
+	display: flex;
+	justify-content: space-between;
+	gap: 10px;
+	font-size: 11px;
+	color: var(--shopforge-text-muted, #64748B);
+	margin-bottom: 4px;
+}
+.shopforge-rma-message-form textarea {
+	width: 100%;
+	box-sizing: border-box;
+	padding: 8px 10px;
+	border: 1px solid var(--shopforge-border, #DCE6F2);
+	border-radius: 6px;
+	margin-bottom: 8px;
+}

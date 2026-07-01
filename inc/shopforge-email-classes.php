@@ -598,3 +598,218 @@ class ShopForge_Email_Return_Status_Update extends WC_Email {
 	public function get_default_subject(): string { return __( '[{site_title}] Aggiornamento reso — Ordine #{order_number}', 'shopforge' ); }
 	public function get_default_heading(): string { return __( 'Aggiornamento richiesta di reso', 'shopforge' ); }
 }
+
+
+// =============================================================================
+// EMAIL ADMIN — nuova richiesta RMA (assistenza/riparazione/sostituzione)
+// =============================================================================
+
+class ShopForge_Email_RMA_Admin extends WC_Email {
+
+	public WC_Order $order;
+	public array $rma_data = [];
+
+	public function __construct() {
+		$this->id             = 'shopforge_rma_admin';
+		$this->title          = __( 'ShopForge – Nuova richiesta RMA (Admin)', 'shopforge' );
+		$this->description    = __( 'Inviata al gestore del negozio quando un cliente apre una richiesta di assistenza prodotti, o quando la annulla lui stesso.', 'shopforge' );
+		$this->template_html  = 'emails/shopforge-rma-admin.php';
+		$this->template_plain = 'emails/shopforge-rma-admin-plain.php';
+		$this->template_base  = SHOPFORGE_DIR . 'woocommerce/';
+		$this->placeholders   = [ '{site_title}' => $this->get_blogname(), '{order_number}' => '', '{request_id}' => '' ];
+		$this->recipient      = $this->get_option( 'recipient', get_option( 'admin_email' ) );
+		parent::__construct();
+		$this->heading = $this->get_option( 'heading', __( 'Nuova richiesta di assistenza prodotti', 'shopforge' ) );
+		$this->subject = $this->get_option( 'subject', __( '[{site_title}] Richiesta RMA #{request_id} — Ordine #{order_number}', 'shopforge' ) );
+	}
+
+	public function trigger( WC_Order $order, array $rma_data ): void {
+		$this->setup_locale();
+		$this->object   = $order;
+		$this->rma_data = $rma_data;
+		$this->placeholders['{order_number}'] = $order->get_order_number();
+		$this->placeholders['{request_id}']   = $rma_data['request_id'] ?? '';
+		if ( $this->is_enabled() && $this->get_recipient() ) {
+			$this->send( $this->get_recipient(), $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );
+		}
+		$this->restore_locale();
+	}
+
+	public function get_content_html(): string {
+		return wc_get_template_html( $this->template_html, [
+			'order'         => $this->object,
+			'rma_data'      => $this->rma_data,
+			'email_heading' => $this->get_heading(),
+			'sent_to_admin' => true,
+			'plain_text'    => false,
+			'email'         => $this,
+		], '', $this->template_base );
+	}
+
+	public function get_content_plain(): string {
+		return wc_get_template_html( $this->template_plain, [
+			'order'         => $this->object,
+			'rma_data'      => $this->rma_data,
+			'email_heading' => $this->get_heading(),
+			'sent_to_admin' => true,
+			'plain_text'    => true,
+			'email'         => $this,
+		], '', $this->template_base );
+	}
+
+	public function init_form_fields(): void {
+		$this->form_fields = [
+			'enabled'    => [ 'title' => __( 'Abilita/Disabilita', 'shopforge' ), 'type' => 'checkbox', 'label' => __( 'Abilita questa notifica email', 'shopforge' ), 'default' => 'yes' ],
+			'recipient'  => [ 'title' => __( 'Destinatario', 'shopforge' ), 'type' => 'text', 'description' => __( 'Inserisci un indirizzo email. Separane più di uno con virgola.', 'shopforge' ), 'placeholder' => get_option( 'admin_email' ), 'default' => '', 'desc_tip' => true ],
+			'subject'    => [ 'title' => __( 'Oggetto', 'shopforge' ), 'type' => 'text', 'desc_tip' => true, 'placeholder' => $this->get_default_subject(), 'default' => '' ],
+			'heading'    => [ 'title' => __( 'Intestazione', 'shopforge' ), 'type' => 'text', 'desc_tip' => true, 'placeholder' => $this->get_default_heading(), 'default' => '' ],
+			'email_type' => [ 'title' => __( 'Tipo email', 'shopforge' ), 'type' => 'select', 'default' => 'html', 'class' => 'email_type wc-enhanced-select', 'options' => $this->get_email_type_options() ],
+		];
+	}
+
+	public function get_default_subject(): string { return __( '[{site_title}] Richiesta RMA #{request_id} — Ordine #{order_number}', 'shopforge' ); }
+	public function get_default_heading(): string { return __( 'Nuova richiesta di assistenza prodotti', 'shopforge' ); }
+}
+
+
+// =============================================================================
+// EMAIL CLIENTE — ricevuta richiesta RMA
+// =============================================================================
+
+class ShopForge_Email_RMA_Customer extends WC_Email {
+
+	public WC_Order $order;
+	public array $rma_data = [];
+
+	public function __construct() {
+		$this->id             = 'shopforge_rma_customer';
+		$this->customer_email = true;
+		$this->title          = __( 'ShopForge – Ricevuta richiesta RMA (Cliente)', 'shopforge' );
+		$this->description    = __( 'Inviata al cliente quando apre una richiesta di assistenza, riparazione, sostituzione o reso.', 'shopforge' );
+		$this->template_html  = 'emails/shopforge-rma-customer.php';
+		$this->template_plain = 'emails/shopforge-rma-customer-plain.php';
+		$this->template_base  = SHOPFORGE_DIR . 'woocommerce/';
+		$this->placeholders   = [ '{site_title}' => $this->get_blogname(), '{order_number}' => '', '{request_id}' => '' ];
+		parent::__construct();
+		$this->heading = $this->get_option( 'heading', __( 'Abbiamo ricevuto la tua richiesta', 'shopforge' ) );
+		$this->subject = $this->get_option( 'subject', __( '[{site_title}] Richiesta ricevuta — Ordine #{order_number}', 'shopforge' ) );
+	}
+
+	public function trigger( WC_Order $order, array $rma_data ): void {
+		$this->setup_locale();
+		$this->object   = $order;
+		$this->rma_data = $rma_data;
+		$this->placeholders['{order_number}'] = $order->get_order_number();
+		$this->placeholders['{request_id}']   = $rma_data['request_id'] ?? '';
+		$this->recipient = $order->get_billing_email();
+		if ( $this->is_enabled() && $this->get_recipient() ) {
+			$this->send( $this->get_recipient(), $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );
+		}
+		$this->restore_locale();
+	}
+
+	public function get_content_html(): string {
+		return wc_get_template_html( $this->template_html, [
+			'order'         => $this->object,
+			'rma_data'      => $this->rma_data,
+			'email_heading' => $this->get_heading(),
+			'sent_to_admin' => false,
+			'plain_text'    => false,
+			'email'         => $this,
+		], '', $this->template_base );
+	}
+
+	public function get_content_plain(): string {
+		return wc_get_template_html( $this->template_plain, [
+			'order'         => $this->object,
+			'rma_data'      => $this->rma_data,
+			'email_heading' => $this->get_heading(),
+			'sent_to_admin' => false,
+			'plain_text'    => true,
+			'email'         => $this,
+		], '', $this->template_base );
+	}
+
+	public function init_form_fields(): void {
+		$this->form_fields = [
+			'enabled'    => [ 'title' => __( 'Abilita/Disabilita', 'shopforge' ), 'type' => 'checkbox', 'label' => __( 'Abilita questa notifica email', 'shopforge' ), 'default' => 'yes' ],
+			'subject'    => [ 'title' => __( 'Oggetto', 'shopforge' ), 'type' => 'text', 'desc_tip' => true, 'placeholder' => $this->get_default_subject(), 'default' => '' ],
+			'heading'    => [ 'title' => __( 'Intestazione', 'shopforge' ), 'type' => 'text', 'desc_tip' => true, 'placeholder' => $this->get_default_heading(), 'default' => '' ],
+			'email_type' => [ 'title' => __( 'Tipo email', 'shopforge' ), 'type' => 'select', 'default' => 'html', 'class' => 'email_type wc-enhanced-select', 'options' => $this->get_email_type_options() ],
+		];
+	}
+
+	public function get_default_subject(): string { return __( '[{site_title}] Richiesta ricevuta — Ordine #{order_number}', 'shopforge' ); }
+	public function get_default_heading(): string { return __( 'Abbiamo ricevuto la tua richiesta', 'shopforge' ); }
+}
+
+
+// =============================================================================
+// EMAIL CLIENTE — aggiornamento stato richiesta RMA
+// =============================================================================
+
+class ShopForge_Email_RMA_Status_Update extends WC_Email {
+
+	public WC_Order $order;
+	public array $rma_data = [];
+
+	public function __construct() {
+		$this->id             = 'shopforge_rma_status_update';
+		$this->customer_email = true;
+		$this->title          = __( 'ShopForge – Aggiornamento richiesta RMA (Cliente)', 'shopforge' );
+		$this->description    = __( 'Inviata al cliente quando lo stato della sua richiesta RMA cambia, o quando riceve un nuovo messaggio dal supporto.', 'shopforge' );
+		$this->template_html  = 'emails/shopforge-rma-status-update.php';
+		$this->template_plain = 'emails/shopforge-rma-status-update-plain.php';
+		$this->template_base  = SHOPFORGE_DIR . 'woocommerce/';
+		$this->placeholders   = [ '{site_title}' => $this->get_blogname(), '{order_number}' => '' ];
+		parent::__construct();
+		$this->heading = $this->get_option( 'heading', __( 'Aggiornamento richiesta RMA', 'shopforge' ) );
+		$this->subject = $this->get_option( 'subject', __( '[{site_title}] Aggiornamento richiesta — Ordine #{order_number}', 'shopforge' ) );
+	}
+
+	public function trigger( WC_Order $order, array $rma_data ): void {
+		$this->setup_locale();
+		$this->object   = $order;
+		$this->rma_data = $rma_data;
+		$this->placeholders['{order_number}'] = $order->get_order_number();
+		$this->recipient = $order->get_billing_email();
+		if ( $this->is_enabled() && $this->get_recipient() ) {
+			$this->send( $this->get_recipient(), $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );
+		}
+		$this->restore_locale();
+	}
+
+	public function get_content_html(): string {
+		return wc_get_template_html( $this->template_html, [
+			'order'         => $this->object,
+			'rma_data'      => $this->rma_data,
+			'email_heading' => $this->get_heading(),
+			'sent_to_admin' => false,
+			'plain_text'    => false,
+			'email'         => $this,
+		], '', $this->template_base );
+	}
+
+	public function get_content_plain(): string {
+		return wc_get_template_html( $this->template_plain, [
+			'order'         => $this->object,
+			'rma_data'      => $this->rma_data,
+			'email_heading' => $this->get_heading(),
+			'sent_to_admin' => false,
+			'plain_text'    => true,
+			'email'         => $this,
+		], '', $this->template_base );
+	}
+
+	public function init_form_fields(): void {
+		$this->form_fields = [
+			'enabled'    => [ 'title' => __( 'Abilita/Disabilita', 'shopforge' ), 'type' => 'checkbox', 'label' => __( 'Abilita questa notifica email', 'shopforge' ), 'default' => 'yes' ],
+			'subject'    => [ 'title' => __( 'Oggetto', 'shopforge' ), 'type' => 'text', 'desc_tip' => true, 'placeholder' => $this->get_default_subject(), 'default' => '' ],
+			'heading'    => [ 'title' => __( 'Intestazione', 'shopforge' ), 'type' => 'text', 'desc_tip' => true, 'placeholder' => $this->get_default_heading(), 'default' => '' ],
+			'email_type' => [ 'title' => __( 'Tipo email', 'shopforge' ), 'type' => 'select', 'default' => 'html', 'class' => 'email_type wc-enhanced-select', 'options' => $this->get_email_type_options() ],
+		];
+	}
+
+	public function get_default_subject(): string { return __( '[{site_title}] Aggiornamento richiesta — Ordine #{order_number}', 'shopforge' ); }
+	public function get_default_heading(): string { return __( 'Aggiornamento richiesta RMA', 'shopforge' ); }
+}

@@ -3,7 +3,7 @@
  * Plugin Name:  ShopForge
  * Plugin URI:   https://www.andreaem.it
  * Description:  Plugin modulare per WooCommerce — account area, tracking, wishlist, resi, preventivi, notifiche e UX improvements.
- * Version:      1.5.5
+ * Version:      1.6.0
  * Author:       Andrea Emili
  * Author URI:   https://www.andreaem.it
  * Text Domain:  shopforge
@@ -44,6 +44,12 @@ add_action( 'before_woocommerce_init', function () {
 
 // Licensing (controlla prima di caricare il plugin)
 require_once SHOPFORGE_DIR . 'inc/shopforge-license.php';
+require_once SHOPFORGE_DIR . 'inc/shopforge-modules-check.php';
+
+// Pagina admin unificata (menu + router Licenza/Moduli/Shortcode): non
+// dipende da WooCommerce, così la tab Licenza resta raggiungibile anche se
+// WooCommerce non è (ancora) attivo — le altre tab lo segnalano a runtime.
+require_once SHOPFORGE_DIR . 'inc/shopforge-admin-page.php';
 
 // Carica solo se WooCommerce è attivo
 add_action( 'plugins_loaded', function () {
@@ -57,6 +63,7 @@ add_action( 'plugins_loaded', function () {
     // Core (sempre caricati)
     require_once SHOPFORGE_DIR . 'inc/shopforge-account.php';
     require_once SHOPFORGE_DIR . 'inc/shopforge-product.php';
+    require_once SHOPFORGE_DIR . 'inc/shopforge-product-info.php';
     require_once SHOPFORGE_DIR . 'inc/shopforge-thankyou.php';
     require_once SHOPFORGE_DIR . 'inc/shopforge-order-statuses.php';
     require_once SHOPFORGE_DIR . 'inc/shopforge-order-tracker.php';
@@ -70,7 +77,7 @@ add_action( 'plugins_loaded', function () {
     require_once SHOPFORGE_DIR . 'inc/shopforge-modules.php';
     shopforge_load_modules();
 
-    // Settings page admin
+    // Settings page admin (tab Moduli, usata dal router in shopforge-admin-page.php)
     require_once SHOPFORGE_DIR . 'inc/shopforge-settings.php';
 } );
 

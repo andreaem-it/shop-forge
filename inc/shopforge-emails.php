@@ -27,6 +27,9 @@ add_filter( 'woocommerce_email_classes', function ( array $emails ): array {
 	$emails['ShopForge_Email_Ticket_Status_Update'] = new ShopForge_Email_Ticket_Status_Update();
 	$emails['ShopForge_Email_Quote_Admin']          = new ShopForge_Email_Quote_Admin();
 	$emails['ShopForge_Email_Quote_Customer']       = new ShopForge_Email_Quote_Customer();
+	$emails['ShopForge_Email_RMA_Admin']            = new ShopForge_Email_RMA_Admin();
+	$emails['ShopForge_Email_RMA_Customer']         = new ShopForge_Email_RMA_Customer();
+	$emails['ShopForge_Email_RMA_Status_Update']    = new ShopForge_Email_RMA_Status_Update();
 
 	return $emails;
 } );

@@ -31,6 +31,7 @@ function shopforge_nav_icons(): array {
         'shopforge-wishlist'          => 'fa-solid fa-heart',
         'shopforge-products'          => 'fa-solid fa-box',
         'shopforge-returns'           => 'fa-solid fa-rotate-left',
+        'shopforge-rma'               => 'fa-solid fa-screwdriver-wrench',
         'shopforge-notices'           => 'fa-solid fa-bell',
 
         // Plugin italiani / YITH / WooCommerce estensioni (endpoint comuni)

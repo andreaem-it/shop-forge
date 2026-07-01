@@ -96,6 +96,18 @@ function shopforge_modules_registry(): array {
 			'menu_label'  => 'Assistenza e Resi',
 		],
 
+		'rma' => [
+			'id'          => 'rma',
+			'type'        => 'module',
+			'label'       => 'Assistenza Prodotti (RMA)',
+			'description' => 'Richieste strutturate di riparazione, sostituzione o rimborso per difetti/garanzia: selezione rimedio, tracciamento quantità, rimborso WooCommerce automatico, thread messaggi.',
+			'icon'        => 'fa-solid fa-screwdriver-wrench',
+			'file'        => 'shopforge-mod-rma.php',
+			'menu_item'   => true,
+			'endpoint'    => 'shopforge-rma',
+			'menu_label'  => 'Assistenza Prodotti',
+		],
+
 		'notifications' => [
 			'id'          => 'notifications',
 			'type'        => 'module',
@@ -147,6 +159,12 @@ function shopforge_is_module_active( string $id ): bool {
 // =============================================================================
 
 function shopforge_load_modules(): void {
+	// Gate a monte: senza licenza valida nessun modulo (type:'module') si carica.
+	// Le feature di base (styles/dashboard) non passano da qui — restano libere.
+	if ( ! function_exists( 'shopforge_has_valid_license' ) || ! shopforge_has_valid_license() ) {
+		return;
+	}
+
 	foreach ( shopforge_modules_registry() as $id => $module ) {
 		if ( ( $module['type'] ?? 'module' ) === 'feature' ) continue; // nessun file
 		if ( shopforge_is_module_active( $id ) ) {

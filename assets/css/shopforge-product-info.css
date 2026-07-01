@@ -1,0 +1,256 @@
+/* FAQ */
+.shopforge-faq-section {
+	margin: 30px 0;
+}
+
+.shopforge-faq-section h2 {
+	font-size: 24px;
+	font-weight: 600;
+	margin-bottom: 20px;
+	color: #333;
+}
+
+.shopforge-faq-list {
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	overflow: hidden;
+}
+
+.shopforge-faq-item {
+	border-bottom: 1px solid #ddd;
+}
+
+.shopforge-faq-item:last-child {
+	border-bottom: none;
+}
+
+.shopforge-faq-accordion .shopforge-faq-question {
+	cursor: pointer;
+	padding: 15px;
+	background-color: #f9f9f9;
+	border: none;
+	transition: background-color 0.3s ease;
+	user-select: none;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.shopforge-faq-accordion .shopforge-faq-question:hover {
+	background-color: #f0f0f0;
+}
+
+.shopforge-faq-accordion .shopforge-faq-question h3 {
+	margin: 0;
+	font-size: 16px;
+	font-weight: 600;
+	color: #333;
+	flex: 1;
+}
+
+.shopforge-faq-accordion .shopforge-faq-toggle {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 30px;
+	font-size: 20px;
+	font-weight: bold;
+	color: #666;
+	transition: transform 0.3s ease;
+}
+
+.shopforge-faq-accordion .shopforge-faq-answer {
+	max-height: 0;
+	overflow: hidden;
+	transition: max-height 0.3s ease;
+	background-color: #fff;
+}
+
+.shopforge-faq-accordion .shopforge-faq-item.active .shopforge-faq-answer {
+	max-height: 2000px;
+	padding: 15px;
+	border-top: 1px solid #ddd;
+}
+
+.shopforge-faq-accordion .shopforge-faq-item.active .shopforge-faq-toggle {
+	transform: rotate(45deg);
+}
+
+.shopforge-faq-accordion .shopforge-faq-answer p {
+	margin: 0 0 10px 0;
+}
+
+.shopforge-faq-accordion .shopforge-faq-answer p:last-child {
+	margin-bottom: 0;
+}
+
+.shopforge-faq-list .shopforge-faq-question {
+	cursor: pointer;
+	padding: 15px;
+	background-color: #f9f9f9;
+	border: none;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.shopforge-faq-list .shopforge-faq-question h3 {
+	margin: 0;
+	font-size: 16px;
+	font-weight: 600;
+	color: #333;
+	flex: 1;
+}
+
+.shopforge-faq-list .shopforge-faq-toggle {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 30px;
+	font-size: 20px;
+	font-weight: bold;
+	color: #666;
+}
+
+.shopforge-faq-list .shopforge-faq-answer {
+	display: none;
+	padding: 15px;
+	background-color: #fff;
+	border-top: 1px solid #ddd;
+}
+
+.shopforge-faq-list .shopforge-faq-item.active .shopforge-faq-answer {
+	display: block;
+}
+
+.shopforge-faq-list .shopforge-faq-answer p {
+	margin: 0 0 10px 0;
+}
+
+.shopforge-faq-list .shopforge-faq-answer p:last-child {
+	margin-bottom: 0;
+}
+
+/* Compatibilità */
+.shopforge-compat-section {
+	margin: 30px 0;
+}
+
+.shopforge-compat-section h2 {
+	font-size: 24px;
+	font-weight: 600;
+	margin-bottom: 20px;
+	color: #333;
+}
+
+.shopforge-compat-list {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 12px;
+}
+
+.shopforge-compat-list li {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	padding: 8px 12px;
+	background-color: #f0f8f0;
+	border: 1px solid #d0e8d0;
+	border-radius: 4px;
+	color: #333;
+	font-size: 14px;
+}
+
+.shopforge-compat-list .dashicons {
+	width: 18px;
+	height: 18px;
+	font-size: 16px;
+	color: #27ae60;
+}
+
+/* Schede tecniche */
+.shopforge-datasheets-section {
+	margin: 30px 0;
+}
+
+.shopforge-datasheets-section h2 {
+	font-size: 24px;
+	font-weight: 600;
+	margin-bottom: 20px;
+	color: #333;
+}
+
+.shopforge-datasheets-list {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 10px;
+}
+
+.shopforge-datasheet-btn {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	padding: 12px 16px;
+	background-color: #f5f5f5;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	color: #333;
+	text-decoration: none;
+	font-weight: 600;
+	transition: all 0.3s ease;
+}
+
+.shopforge-datasheet-btn:hover {
+	background-color: #e8e8e8;
+	border-color: #999;
+	color: #000;
+}
+
+.shopforge-datasheet-btn .dashicons {
+	width: 24px;
+	height: 24px;
+	font-size: 20px;
+	color: #666;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+	.shopforge-faq-question h3 {
+		font-size: 14px;
+	}
+
+	.shopforge-faq-toggle {
+		min-width: 25px;
+		font-size: 18px;
+	}
+
+	.shopforge-faq-question,
+	.shopforge-faq-answer {
+		padding: 12px !important;
+	}
+
+	.shopforge-datasheets-section h2,
+	.shopforge-compat-section h2 {
+		font-size: 20px;
+	}
+
+	.shopforge-datasheets-list {
+		flex-direction: column;
+	}
+
+	.shopforge-datasheet-btn {
+		width: 100%;
+		justify-content: center;
+	}
+
+	.shopforge-compat-list {
+		flex-direction: column;
+	}
+
+	.shopforge-compat-list li {
+		width: 100%;
+	}
+}

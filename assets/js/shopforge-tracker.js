@@ -131,7 +131,7 @@
 	document.addEventListener('DOMContentLoaded', function () {
 		var sel = document.getElementById('shopforge-ticket-subject');
 		if ( sel && sel.options.length <= 1 ) {
-			['Problema con il prodotto','Spedizione o tracking','Reso o sostituzione','Rimborso','Altro']
+			['Problema con il prodotto','Spedizione o tracking','Altro']
 			.forEach(function(label) {
 				var o = document.createElement('option');
 				o.value = label; o.textContent = label;

@@ -1,0 +1,102 @@
+/* ShopForge — Assistenza Prodotti (RMA) — Admin */
+
+.shopforge-rma-admin-status-select {
+	min-width: 200px;
+}
+
+.shopforge-rma-status-message {
+	font-size: 13px;
+}
+
+.column-shopforge_rma_tipo {
+	width: 8%;
+}
+
+.column-shopforge_rma_cliente,
+.column-shopforge_rma_ordine,
+.column-shopforge_rma_prodotto,
+.column-shopforge_rma_stato,
+.column-shopforge_rma_data {
+	width: 12%;
+}
+
+.shopforge-rma-admin-badge {
+	display: inline-block;
+	padding: 4px 8px;
+	border-radius: 3px;
+	font-size: 11px;
+	font-weight: 600;
+	text-transform: uppercase;
+}
+
+.shopforge-rma-admin-badge--assistenza { background-color: #2196F3; color: #fff; }
+.shopforge-rma-admin-badge--reso       { background-color: #FF9800; color: #fff; }
+
+.shopforge-rma-admin-status-aperta            { background-color: #f0ad4e; color: #fff; }
+.shopforge-rma-admin-status-in_lavorazione    { background-color: #5bc0de; color: #fff; }
+.shopforge-rma-admin-status-approvata         { background-color: #5bc0de; color: #fff; }
+.shopforge-rma-admin-status-attesa_spedizione { background-color: #5bc0de; color: #fff; }
+.shopforge-rma-admin-status-prodotto_ricevuto { background-color: #5bc0de; color: #fff; }
+.shopforge-rma-admin-status-rimborsata        { background-color: #5cb85c; color: #fff; }
+.shopforge-rma-admin-status-sostituita        { background-color: #5cb85c; color: #fff; }
+.shopforge-rma-admin-status-rifiutata         { background-color: #d9534f; color: #fff; }
+.shopforge-rma-admin-status-annullata         { background-color: #999; color: #fff; }
+.shopforge-rma-admin-status-chiusa            { background-color: #5cb85c; color: #fff; }
+
+.shopforge-rma-attachments {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 10px;
+}
+
+.shopforge-rma-attachment-item {
+	border: 1px solid #ddd;
+	padding: 5px;
+	border-radius: 4px;
+}
+
+.shopforge-rma-attachment-item img {
+	max-width: 100px;
+	height: auto;
+	display: block;
+}
+
+/* Conversazione (metabox admin) */
+.shopforge-rma-admin-messages {
+	margin-top: 20px;
+}
+
+.shopforge-rma-admin-message-item {
+	margin-bottom: 15px;
+	padding: 15px;
+	background: #fff;
+	border-left: 4px solid #ddd;
+	border-radius: 4px;
+}
+
+.shopforge-rma-admin-message-item.is-admin    { border-left-color: #0073aa; background: #f0f8ff; }
+.shopforge-rma-admin-message-item.is-customer { border-left-color: #4caf50; background: #f1f8f4; }
+
+.shopforge-rma-admin-message-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 10px;
+	font-size: 13px;
+}
+.shopforge-rma-admin-message-header strong { color: #333; }
+
+.shopforge-rma-admin-message-content {
+	color: #333;
+	line-height: 1.6;
+}
+
+.shopforge-rma-add-admin-message {
+	margin-top: 20px;
+	padding-top: 20px;
+	border-top: 1px solid #ddd;
+}
+.shopforge-rma-add-admin-message h4 { margin-top: 0; }
+
+#shopforge_rma_details .form-table th { width: 200px; }
+#shopforge_rma_details .form-table td { padding: 15px 10px; }

@@ -146,8 +146,10 @@ function shopforge_has_active_return( WC_Order $order ): bool {
 add_action( 'wp_enqueue_scripts', function () {
 	if ( ! is_account_page() ) return;
 	if ( ! function_exists( 'shopforge_is_module_active' ) ) return;
-	// CSS caricato su view-order (card + modal) e sull'endpoint lista resi
-	if ( is_wc_endpoint_url( 'view-order' ) || is_wc_endpoint_url( 'shopforge-returns' ) ) {
+	// CSS caricato su view-order (card + modal) e sull'endpoint lista resi.
+	// ponytail: 'shopforge-returns' è un endpoint custom del plugin, mai nel
+	// registro interno di WC — is_wc_endpoint_url() non lo vede, get_query_var() sì.
+	if ( is_wc_endpoint_url( 'view-order' ) || false !== get_query_var( 'shopforge-returns', false ) ) {
 		wp_enqueue_style(
 			'shopforge-returns',
 			SHOPFORGE_URL . 'assets/css/shopforge-returns.css',

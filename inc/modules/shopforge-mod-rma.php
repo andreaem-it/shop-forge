@@ -1038,7 +1038,10 @@ add_action( 'wp_enqueue_scripts', function () {
 	if ( ! is_account_page() ) return;
 	if ( ! function_exists( 'shopforge_is_module_active' ) ) return;
 
-	if ( is_wc_endpoint_url( 'shopforge-rma' ) ) {
+	// ponytail: is_wc_endpoint_url() non riconosce gli endpoint custom del plugin
+	// (mai registrati nel registro interno di WC via woocommerce_get_query_vars).
+	// get_query_var() legge i query var di WP direttamente, sempre affidabile.
+	if ( false !== get_query_var( 'shopforge-rma', false ) ) {
 		wp_enqueue_style( 'shopforge-rma', SHOPFORGE_URL . 'assets/css/shopforge-rma.css', [], SHOPFORGE_VERSION );
 	}
 	wp_register_script( 'shopforge-rma', SHOPFORGE_URL . 'assets/js/shopforge-rma.js', [], SHOPFORGE_VERSION, true );

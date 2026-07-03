@@ -426,7 +426,9 @@ add_action( 'wp_ajax_shopforge_admin_quote_update', function () {
 // =============================================================================
 
 add_action( 'wp_head', function () {
-	if ( ! is_wc_endpoint_url( 'shopforge-quotes' ) ) return;
+	// ponytail: is_wc_endpoint_url() non vede gli endpoint custom del plugin
+	// (mai nel registro interno di WC) — get_query_var() legge WP direttamente.
+	if ( false === get_query_var( 'shopforge-quotes', false ) ) return;
 	?>
 	<style id="shopforge-quotes-css">
 	.shopforge-quote-new-card {

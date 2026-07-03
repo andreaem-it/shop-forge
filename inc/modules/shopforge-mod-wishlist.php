@@ -271,7 +271,10 @@ add_action( 'wp_footer', function () {
 add_action( 'wp_head', function () {
 	if ( ! is_account_page() && ! is_shop() && ! is_product_category() && ! is_product_tag() && ! is_product() && ! is_search() ) return;
 
-	if ( is_wc_endpoint_url( 'shopforge-wishlist' ) || ! is_account_page() ) : ?>
+	// ponytail: is_wc_endpoint_url() non vede gli endpoint custom del plugin
+	// (mai nel registro interno di WC) — get_query_var() legge WP direttamente.
+	$shopforge_on_wishlist = false !== get_query_var( 'shopforge-wishlist', false );
+	if ( $shopforge_on_wishlist || ! is_account_page() ) : ?>
 	<style id="shopforge-wishlist-btn-css">
 	/* ---- Pulsante wishlist sul catalogo ---- */
 	.shopforge-wl-btn {
@@ -305,7 +308,7 @@ add_action( 'wp_head', function () {
 	</style>
 	<?php endif;
 
-	if ( ! is_wc_endpoint_url( 'shopforge-wishlist' ) ) return;
+	if ( ! $shopforge_on_wishlist ) return;
 	?>
 	<style id="shopforge-wishlist-css">
 	.shopforge-wishlist-grid { display: flex; flex-direction: column; gap: 12px; }

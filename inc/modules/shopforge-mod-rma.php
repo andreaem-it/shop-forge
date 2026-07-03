@@ -696,6 +696,7 @@ function shopforge_rma_render_orders_list(): void {
 
 			echo '<div class="shopforge-rma-product-row">';
 			echo '<span class="shopforge-rma-product-row__name">' . esc_html( $item->get_name() ) . ' × ' . esc_html( $item->get_quantity() ) . '</span>';
+			echo '<div class="shopforge-rma-product-row__actions">';
 
 			if ( isset( $open_map[ $key ] ) ) {
 				echo '<a href="' . esc_url( add_query_arg( [ 'request_id' => $open_map[ $key ] ], wc_get_account_endpoint_url( 'shopforge-rma' ) ) ) . '" class="shopforge-rma-btn shopforge-rma-btn--secondary">Richiesta già aperta</a>';
@@ -704,11 +705,13 @@ function shopforge_rma_render_orders_list(): void {
 			} elseif ( shopforge_rma_get_remaining_quantity( $order_id, $product_id ) <= 0 ) {
 				echo '<span class="shopforge-rma-note">Tutte le unità già coperte da una richiesta</span>';
 			} else {
-				echo '<a href="' . esc_url( shopforge_rma_get_request_url( $order_id, $product_id, 'assistenza' ) ) . '" class="shopforge-rma-btn">Richiedi assistenza</a> ';
+				echo '<a href="' . esc_url( shopforge_rma_get_request_url( $order_id, $product_id, 'assistenza' ) ) . '" class="shopforge-rma-btn">Richiedi assistenza</a>';
 				if ( ! shopforge_rma_is_return_period_expired( $order, $product ) ) {
 					echo '<a href="' . esc_url( shopforge_rma_get_request_url( $order_id, $product_id, 'reso' ) ) . '" class="shopforge-rma-btn shopforge-rma-btn--secondary">Richiedi reso</a>';
 				}
 			}
+
+			echo '</div>';
 			echo '</div>';
 		}
 		echo '</div>';

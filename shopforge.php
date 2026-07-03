@@ -3,7 +3,7 @@
  * Plugin Name:  ShopForge
  * Plugin URI:   https://www.andreaem.it
  * Description:  Plugin modulare per WooCommerce — account area, tracking, wishlist, resi, preventivi, notifiche e UX improvements.
- * Version:      1.7.1
+ * Version:      1.7.2
  * Author:       Andrea Emili
  * Author URI:   https://www.andreaem.it
  * Text Domain:  shopforge

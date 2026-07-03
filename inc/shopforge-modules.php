@@ -27,11 +27,31 @@ function shopforge_modules_registry(): array {
 		// type:'feature' → nessun endpoint, nessun file separato, nessuna voce menu.
 		// Controllano il comportamento trasversale del plugin.
 
-		'styles' => [
-			'id'          => 'styles',
+		'styles-account' => [
+			'id'          => 'styles-account',
 			'type'        => 'feature',
-			'label'       => 'Stili personalizzati',
-			'description' => 'CSS dell\'area account e del catalogo: layout moderno, badge stati ordine, tipografia, card. Disattiva per affidarti interamente al tema.',
+			'label'       => 'Stili area account',
+			'description' => 'CSS di bacheca, ordini, indirizzi e moduli (resi, assistenza, notifiche): layout a card, badge stato, tipografia. Disattiva per affidarti interamente al tema anche nell\'area account.',
+			'icon'        => 'fa-solid fa-user-gear',
+			'file'        => null,
+			'menu_item'   => false,
+		],
+
+		'styles-shop' => [
+			'id'          => 'styles-shop',
+			'type'        => 'feature',
+			'label'       => 'Stili catalogo/negozio',
+			'description' => 'CSS della vetrina prodotti e delle pagine shop. Disattiva per affidarti interamente al tema sul catalogo.',
+			'icon'        => 'fa-solid fa-shop',
+			'file'        => null,
+			'menu_item'   => false,
+		],
+
+		'styles-colors' => [
+			'id'          => 'styles-colors',
+			'type'        => 'feature',
+			'label'       => 'Colori personalizzati',
+			'description' => 'Palette colori (pulsanti, badge, testo) iniettata come variabili CSS, inclusa la configurazione qui sotto. Disattivandola, anche le modali di resi/assistenza tornano allo stile di default del tema.',
 			'icon'        => 'fa-solid fa-palette',
 			'file'        => null,
 			'menu_item'   => false,
@@ -132,17 +152,36 @@ function shopforge_modules_registry(): array {
  * Restituisce gli ID di moduli e feature attivi.
  * Default: tutti attivi (primo avvio senza impostazioni salvate).
  * Se l'opzione è salvata, restituisce esattamente quello che l'utente ha scelto —
- * nessuna auto-migrazione che potrebbe ri-abilitare feature disattivate intenzionalmente.
+ * nessuna auto-migrazione che potrebbe ri-abilitare feature disattivate intenzionalmente,
+ * a parte l'espansione una-tantum del vecchio id 'styles' (vedi sotto).
+ *
+ * Filtra sempre i moduli (type:'module') se la licenza non è valida — sia sul
+ * default di prima installazione sia su un'opzione già salvata, così i moduli
+ * a pagamento non compaiono mai (menu account, endpoint) senza licenza attiva.
  */
 function shopforge_get_enabled_modules(): array {
+	$registry   = shopforge_modules_registry();
+	$module_ids = array_keys( array_filter( $registry, fn( $m ) => ( $m['type'] ?? 'module' ) === 'module' ) );
+
 	$saved = get_option( 'shopforge_modules_enabled', null );
 
 	// Prima installazione: nessuna opzione salvata → tutto abilitato
-	if ( $saved === null ) {
-		return array_keys( shopforge_modules_registry() );
+	$enabled = $saved === null ? array_keys( $registry ) : (array) $saved;
+
+	// Migrazione una-tantum: il vecchio id unico 'styles' diventa i 3 nuovi toggle granulari.
+	if ( in_array( 'styles', $enabled, true ) ) {
+		$enabled = array_diff( $enabled, [ 'styles' ] );
+		$enabled = array_merge( $enabled, [ 'styles-account', 'styles-shop', 'styles-colors' ] );
+		$enabled = array_values( array_unique( $enabled ) );
+		update_option( 'shopforge_modules_enabled', $enabled );
 	}
 
-	return (array) $saved;
+	$has_license = function_exists( 'shopforge_has_valid_license' ) && shopforge_has_valid_license();
+	if ( ! $has_license ) {
+		$enabled = array_diff( $enabled, $module_ids );
+	}
+
+	return array_values( $enabled );
 }
 
 /**

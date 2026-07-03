@@ -119,6 +119,7 @@ body.shopforge-account-page .entry-content {
 
 .woocommerce-account .woocommerce-MyAccount-navigation li {
   margin: 0;
+  padding: 0;
 }
 
 .woocommerce-account .woocommerce-MyAccount-navigation a {
@@ -773,10 +774,14 @@ body.shopforge-account-page .entry-content {
   }
 }
 
-.woocommerce-MyAccount-navigation {
-    float: left;
-    width: 260px!important;
-    padding-right: 0px!important;
+/* Larghezza fissa sidebar: solo desktop — sotto 860px vince il layout
+   colonna/nav-orizzontale del blocco @media sopra. */
+@media (min-width: 861px) {
+  .woocommerce-MyAccount-navigation {
+      float: left;
+      width: 260px;
+      padding-right: 0px;
+  }
 }
 
 /* ==========================================================================
@@ -976,16 +981,27 @@ body.shopforge-account-page .entry-content {
   padding: 28px 32px;
 }
 
-/* Layout 2 colonne per i campi nome/cognome */
+/* Layout 2 colonne per i campi nome/cognome.
+   !important necessario: WooCommerce/tema impostano già float + padding sulle
+   classi classiche .form-row-first/.form-row-last (compresenti sullo stesso
+   elemento insieme a quelle BEM qui sotto). Va ridichiarato l'intero box
+   model (non solo width/float) — altrimenti il padding residuo del tema fa
+   traboccare la somma delle due colonne oltre il 100% e le spezza su righe
+   separate invece di affiancarle. */
 .woocommerce-account form.woocommerce-EditAccountForm .woocommerce-form-row--first,
 .woocommerce-account form.woocommerce-EditAccountForm .woocommerce-form-row--last {
-  display: inline-block;
-  width: 48%;
+  box-sizing: border-box !important;
+  display: block !important;
+  float: left !important;
+  width: 47% !important;
+  margin: 0 0 15px !important;
+  padding: 0 !important;
   vertical-align: top;
 }
 
 .woocommerce-account form.woocommerce-EditAccountForm .woocommerce-form-row--last {
-  margin-left: 3%;
+  float: right !important;
+  margin: 0 0 15px !important;
 }
 
 /* Label */
@@ -1272,8 +1288,9 @@ body.shopforge-account-page .entry-content {
 
   .woocommerce-account form.woocommerce-EditAccountForm .woocommerce-form-row--first,
   .woocommerce-account form.woocommerce-EditAccountForm .woocommerce-form-row--last {
-    display: block;
-    width: 100%;
+    display: block !important;
+    float: none !important;
+    width: 100% !important;
     margin-left: 0;
   }
 }

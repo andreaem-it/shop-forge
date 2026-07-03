@@ -92,17 +92,19 @@ add_action( 'wp', function () {
 
 
 // =========================================================================
-// CSS VARIABLES — sempre iniettate su pagine account (priority 5)
+// CSS VARIABLES — iniettate su pagine account se 'styles-colors' è attivo
+// (priority 5, prima di wp_print_styles a priority 8).
 //
-// Le variabili vengono emesse PRIMA di wp_print_styles (priority 8).
-// Se 'styles' è attivo, shopforge-woo-account.css (caricato a priority 8)
-// le ridefinisce con gli stessi valori → nessun conflitto.
-// Se 'styles' è OFF, queste defaults garantiscono che il modal di assistenza
-// e il modal di recesso siano visivamente corretti anche senza il CSS principale.
+// Se 'styles-colors' è attivo, shopforge-woo-account.css (priority 8) le
+// ridefinisce con gli stessi valori di default → nessun conflitto.
+// Se 'styles-colors' è OFF, sparisce anche questo fallback: le modali di
+// assistenza/recesso tornano allo stile di default del tema (kill switch
+// totale, per design).
 // =========================================================================
 
 add_action( 'wp_head', function () {
     if ( ! function_exists( 'is_account_page' ) || ! is_account_page() ) return;
+    if ( ! function_exists( 'shopforge_is_module_active' ) || ! shopforge_is_module_active( 'styles-colors' ) ) return;
     ?>
     <style id="shopforge-css-vars">
     :root {
@@ -132,15 +134,15 @@ add_action( 'wp_head', function () {
  * Registra e carica i CSS del plugin.
  * Usa tre approcci in cascata per coprire WordPress standard, Elementor e Cart Block.
  *
- * Entrambi i CSS sono condizionali alla feature 'styles'.
- * Se 'styles' è disattivata il plugin non inietta nessun CSS sul sito.
+ * CSS negozio → 'styles-shop'. CSS account + FontAwesome → 'styles-account'.
+ * Se il rispettivo toggle è disattivato il plugin non inietta nulla in quell'area.
  */
 function shopforge_enqueue_shop_css() {
     if ( ! class_exists( 'WooCommerce' ) ) return;
     // Fail-safe: se il sistema moduli non è caricato, non iniettare nulla
     if ( ! function_exists( 'shopforge_is_module_active' ) ) return;
-    // Carica solo se la feature "Stili personalizzati" è attiva
-    if ( ! shopforge_is_module_active( 'styles' ) ) return;
+    // Carica solo se la feature "Stili catalogo/negozio" è attiva
+    if ( ! shopforge_is_module_active( 'styles-shop' ) ) return;
 
     if ( ! wp_style_is( 'shopforge-woo-shop', 'enqueued' ) && ! wp_style_is( 'shopforge-woo-shop', 'done' ) ) {
         wp_enqueue_style( 'shopforge-woo-shop', SHOPFORGE_URL . 'assets/css/shopforge-woo-shop.css', [], SHOPFORGE_VERSION );
@@ -150,15 +152,13 @@ function shopforge_enqueue_shop_css() {
 function shopforge_enqueue_account_css() {
     if ( ! class_exists( 'WooCommerce' ) ) return;
     if ( ! function_exists( 'is_account_page' ) || ! is_account_page() ) return;
+    if ( ! function_exists( 'shopforge_is_module_active' ) || ! shopforge_is_module_active( 'styles-account' ) ) return;
 
-    // FontAwesome: sempre caricato su pagine account (necessario per le icone dei moduli)
+    // FontAwesome: caricato solo se lo stile account è attivo (unico consumer lato frontend)
     wp_enqueue_script( 'fontawesome-kit', SHOPFORGE_FA_KIT_URL, [], null, false );
     wp_script_add_data( 'fontawesome-kit', 'crossorigin', 'anonymous' );
 
-    // CSS account: solo se il sistema moduli è caricato E 'styles' è attiva
-    if ( function_exists( 'shopforge_is_module_active' ) && shopforge_is_module_active( 'styles' ) ) {
-        wp_enqueue_style( 'shopforge-woo-account', SHOPFORGE_URL . 'assets/css/shopforge-woo-account.css', [], SHOPFORGE_VERSION );
-    }
+    wp_enqueue_style( 'shopforge-woo-account', SHOPFORGE_URL . 'assets/css/shopforge-woo-account.css', [], SHOPFORGE_VERSION );
 }
 
 // 1. Hook WordPress standard
@@ -169,11 +169,11 @@ add_action( 'wp_enqueue_scripts', 'shopforge_enqueue_shop_css', 20 );
 add_action( 'elementor/frontend/after_enqueue_styles', 'shopforge_enqueue_shop_css' );
 
 // 3. Fallback wp_head — stampa il tag direttamente se nessuno dei metodi precedenti ha funzionato
-//    Solo se il sistema moduli è caricato E la feature 'styles' è attiva.
+//    Solo se il sistema moduli è caricato E la feature 'styles-shop' è attiva.
 add_action( 'wp_head', function () {
     if ( ! class_exists( 'WooCommerce' ) ) return;
     if ( ! function_exists( 'shopforge_is_module_active' ) ) return;
-    if ( ! shopforge_is_module_active( 'styles' ) ) return;
+    if ( ! shopforge_is_module_active( 'styles-shop' ) ) return;
     if ( wp_style_is( 'shopforge-woo-shop', 'done' ) || wp_style_is( 'shopforge-woo-shop', 'enqueued' ) ) return;
 
     $url = esc_url( SHOPFORGE_URL . 'assets/css/shopforge-woo-shop.css?v=' . SHOPFORGE_VERSION );
@@ -184,9 +184,9 @@ add_action( 'wp_head', function () {
 //    così le CSS custom properties sovrascrivono quelle di Elementor.
 add_action( 'wp_head', function () {
     if ( ! is_account_page() ) return;
-    // Il width-fix è un layout override: solo se 'styles' è attivo
+    // Il width-fix è un layout override dell'area account: solo se 'styles-account' è attivo
     if ( ! function_exists( 'shopforge_is_module_active' ) ) return;
-    if ( ! shopforge_is_module_active( 'styles' ) ) return;
+    if ( ! shopforge_is_module_active( 'styles-account' ) ) return;
     ?>
     <style id="shopforge-account-width-fix">
     /* Forza il widget Elementor a occupare tutta la larghezza disponibile
@@ -207,11 +207,11 @@ add_action( 'wp_head', function () {
     <?php
 }, 999 );
 
-// 5. JS fallback width-fix — solo se 'styles' è attivo
+// 5. JS fallback width-fix — solo se 'styles-account' è attivo
 add_action( 'wp_footer', function () {
     if ( ! is_account_page() ) return;
     if ( ! function_exists( 'shopforge_is_module_active' ) ) return;
-    if ( ! shopforge_is_module_active( 'styles' ) ) return;
+    if ( ! shopforge_is_module_active( 'styles-account' ) ) return;
     ?>
     <script id="shopforge-width-fix-js">
     (function() {
@@ -295,12 +295,12 @@ add_filter( 'woocommerce_my_account_my_orders_actions_button_html', function ( s
 
 // =========================================================================
 // COLONNE TABELLA ORDINI
-// Condizionale alla feature 'styles' — senza CSS custom le colonne WC native
+// Condizionale alla feature 'styles-account' — senza CSS custom le colonne WC native
 // sono più adatte perché vengono stilizzate dal tema.
 // =========================================================================
 
 add_filter( 'woocommerce_account_orders_columns', function ( $columns ) {
-    if ( function_exists( 'shopforge_is_module_active' ) && ! shopforge_is_module_active( 'styles' ) ) {
+    if ( function_exists( 'shopforge_is_module_active' ) && ! shopforge_is_module_active( 'styles-account' ) ) {
         return $columns; // usa le colonne WooCommerce predefinite
     }
     return [
@@ -316,11 +316,11 @@ add_filter( 'woocommerce_account_orders_columns', function ( $columns ) {
 // =========================================================================
 // STATUS BADGE nella tabella ordini
 // WooCommerce 7+ emette testo puro — questo hook lo wrappa in mark.order-status
-// Condizionale a 'styles': senza CSS il badge non è stilizzato.
+// Condizionale a 'styles-account': senza CSS il badge non è stilizzato.
 // =========================================================================
 
 add_action( 'woocommerce_my_account_my_orders_column_order-status', function ( $order ) {
-    if ( function_exists( 'shopforge_is_module_active' ) && ! shopforge_is_module_active( 'styles' ) ) {
+    if ( function_exists( 'shopforge_is_module_active' ) && ! shopforge_is_module_active( 'styles-account' ) ) {
         // Fallback: output WC nativo
         echo esc_html( wc_get_order_status_name( $order->get_status() ) );
         return;

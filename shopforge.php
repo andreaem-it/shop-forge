@@ -3,7 +3,7 @@
  * Plugin Name:  ShopForge
  * Plugin URI:   https://www.andreaem.it
  * Description:  Plugin modulare per WooCommerce — account area, tracking, wishlist, resi, preventivi, notifiche e UX improvements.
- * Version:      1.6.1
+ * Version:      1.7.0
  * Author:       Andrea Emili
  * Author URI:   https://www.andreaem.it
  * Text Domain:  shopforge
@@ -85,20 +85,22 @@ add_action( 'plugins_loaded', function () {
 //
 // Condizioni di esclusione (feature disattivate):
 //   - myaccount/dashboard.php  → non ovverridato se la feature 'dashboard' è OFF
-//   - myaccount/navigation.php → non ovverridato se la feature 'styles' è OFF
-//     (la nav custom aggiunge icone FA e classi CSS che dipendono dagli stili)
+//   - myaccount/navigation.php → non ovverridato se 'styles-account' è OFF
+//     (la nav custom aggiunge icone FA e classi CSS che dipendono da quello stile)
+//   - cart/*                   → non ovverridato se 'styles-shop' è OFF
 add_filter( 'woocommerce_locate_template', function ( $template, $template_name, $template_path ) {
     // Se il sistema moduli non è ancora caricato, usa sempre il default WC (fail-safe)
     if ( ! function_exists( 'shopforge_is_module_active' ) ) {
         return $template;
     }
 
-    $styles_on    = shopforge_is_module_active( 'styles' );
-    $dashboard_on = shopforge_is_module_active( 'dashboard' );
+    $styles_shop_on    = shopforge_is_module_active( 'styles-shop' );
+    $styles_account_on = shopforge_is_module_active( 'styles-account' );
+    $dashboard_on      = shopforge_is_module_active( 'dashboard' );
 
     // Cart/shop templates: usano HTML custom con classi shopforge-*.
-    // Senza CSS rompono il layout → serviti SOLO se 'styles' è attivo.
-    if ( str_starts_with( $template_name, 'cart/' ) && ! $styles_on ) {
+    // Senza CSS rompono il layout → serviti SOLO se 'styles-shop' è attivo.
+    if ( str_starts_with( $template_name, 'cart/' ) && ! $styles_shop_on ) {
         return $template;
     }
 
@@ -107,8 +109,8 @@ add_filter( 'woocommerce_locate_template', function ( $template, $template_name,
         return $template;
     }
 
-    // Navigazione: usa WC default se la feature 'styles' è disattivata
-    if ( 'myaccount/navigation.php' === $template_name && ! $styles_on ) {
+    // Navigazione: usa WC default se 'styles-account' è disattivata
+    if ( 'myaccount/navigation.php' === $template_name && ! $styles_account_on ) {
         return $template;
     }
 

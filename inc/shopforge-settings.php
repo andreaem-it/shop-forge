@@ -98,7 +98,7 @@ function shopforge_get_colors(): array {
 add_action( 'wp_head', function () {
 	if ( ! is_account_page() ) return;
 	if ( ! function_exists( 'shopforge_is_module_active' ) ) return;
-	if ( ! shopforge_is_module_active( 'styles' ) ) return;
+	if ( ! shopforge_is_module_active( 'styles-colors' ) ) return;
 
 	$c = shopforge_get_colors();
 	echo '<style id="shopforge-colors">:root{'
@@ -564,7 +564,7 @@ function shopforge_settings_card_inner( string $id, array $module, bool $is_acti
 			<input type="checkbox"
 			       name="module_<?php echo esc_attr( $id ); ?>"
 			       value="1"
-			       <?php checked( $is_active ); ?>
+			       <?php checked( $is_active && ! $locked ); ?>
 			       <?php disabled( $locked ); ?>>
 			<span class="shopforge-toggle__slider"></span>
 		</label>

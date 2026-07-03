@@ -106,9 +106,9 @@ function shopforge_render_order_tracker( WC_Order $order ): void {
 
 add_action( 'woocommerce_order_details_before_order_table', function ( WC_Order $order ) {
 	if ( is_wc_endpoint_url( 'order-received' ) ) return;
-	// Il tracker è grafico: renderizzato solo se 'styles' è attivo
+	// Il tracker è grafico: renderizzato solo se 'styles-account' è attivo
 	if ( ! function_exists( 'shopforge_is_module_active' ) ) return;
-	if ( ! shopforge_is_module_active( 'styles' ) ) return;
+	if ( ! shopforge_is_module_active( 'styles-account' ) ) return;
 	shopforge_render_order_tracker( $order );
 }, 5 );
 
@@ -120,7 +120,7 @@ add_action( 'woocommerce_order_details_before_order_table', function ( WC_Order 
 add_action( 'wp_enqueue_scripts', function () {
 	if ( ! is_account_page() ) return;
 	if ( ! function_exists( 'shopforge_is_module_active' ) ) return;
-	if ( ! shopforge_is_module_active( 'styles' ) ) return;
+	if ( ! shopforge_is_module_active( 'styles-account' ) ) return;
 	wp_enqueue_style(
 		'shopforge-tracker',
 		SHOPFORGE_URL . 'assets/css/shopforge-tracker.css',
@@ -398,9 +398,9 @@ function shopforge_submit_ticket_handler(): void {
 
 add_action( 'woocommerce_order_details_after_order_table', function ( WC_Order $order ) {
 	if ( is_wc_endpoint_url( 'order-received' ) ) return;
-	// Lo storico richieste ha layout custom: solo se 'styles' è attivo
+	// Lo storico richieste ha layout custom: solo se 'styles-account' è attivo
 	if ( ! function_exists( 'shopforge_is_module_active' ) ) return;
-	if ( ! shopforge_is_module_active( 'styles' ) ) return;
+	if ( ! shopforge_is_module_active( 'styles-account' ) ) return;
 
 	$tickets = $order->get_meta( '_shopforge_tickets' ) ?: [];
 	if ( empty( $tickets ) ) return;

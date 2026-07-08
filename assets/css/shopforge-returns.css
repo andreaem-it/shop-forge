@@ -1,13 +1,19 @@
 /* ShopForge — Returns Module CSS */
 
-	/* ---- Modal backdrop (recesso wizard) ---- */
+	/* ---- Modal backdrop (recesso wizard) ----
+	   JS imposta display direttamente su apertura/chiusura (vince sull'inline
+	   style="display:none" di partenza). .is-open rinforza il caso in cui il
+	   markup non abbia quello style inline. */
 	.shopforge-modal-backdrop {
 		position: fixed; inset: 0;
 		background: rgba(0,0,0,.55);
 		z-index: 99998;
-		display: flex; align-items: center; justify-content: center;
+		align-items: center; justify-content: center;
 		padding: 16px;
 		overflow-y: auto;
+	}
+	.shopforge-modal-backdrop.is-open {
+		display: flex;
 	}
 	.shopforge-modal {
 		background: #fff;
@@ -24,13 +30,13 @@
 		padding-bottom: 16px; margin-bottom: 4px;
 	}
 	.shopforge-modal__title {
-		font-size: 17px; font-weight: 700;
+		font-size: 15px; font-weight: 700;
 		color: var(--shopforge-text-main);
 		display: flex; align-items: center; gap: 8px; margin: 0;
 	}
 	.shopforge-modal__close {
 		background: none; border: none; cursor: pointer;
-		color: var(--shopforge-text-muted); font-size: 18px;
+		color: var(--shopforge-text-muted); font-size: 16px;
 		padding: 4px; line-height: 1;
 		transition: color .15s;
 	}

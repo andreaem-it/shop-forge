@@ -22,7 +22,7 @@ defined( 'ABSPATH' ) || exit;
 add_action( 'admin_post_shopforge_save_modules', function () {
 	if ( ! current_user_can( 'manage_woocommerce' )
 	     || ! check_admin_referer( 'shopforge_save_modules' ) ) {
-		wp_die( 'Accesso non autorizzato.' );
+		wp_die( esc_html__( 'Unauthorized access.', 'shopforge' ) );
 	}
 
 	// ---- Moduli / feature ----
@@ -55,6 +55,25 @@ add_action( 'admin_post_shopforge_save_modules', function () {
 
 	$contact_url = esc_url_raw( trim( $_POST['shopforge_contact_url'] ?? '' ) );
 	update_option( 'shopforge_contact_url', $contact_url );
+
+	update_option( 'shopforge_17track_key', sanitize_text_field( $_POST['shopforge_17track_key'] ?? '' ) );
+
+	// ---- Tema (skin) ----
+	$theme = sanitize_key( $_POST['shopforge_theme'] ?? 'boxed' );
+	if ( ! isset( shopforge_theme_presets()[ $theme ] ) ) {
+		$theme = 'boxed';
+	}
+	update_option( 'shopforge_theme', $theme );
+
+	// ---- Override tema per pagina ('' = usa tema globale) ----
+	$overrides = [];
+	foreach ( array_keys( shopforge_theme_contexts() ) as $ctx ) {
+		$skin = sanitize_key( $_POST[ 'shopforge_theme_ctx_' . $ctx ] ?? '' );
+		if ( isset( shopforge_theme_presets()[ $skin ] ) ) {
+			$overrides[ $ctx ] = $skin;
+		}
+	}
+	update_option( 'shopforge_theme_overrides', $overrides );
 
 	// ---- Colori personalizzati ----
 	$color_defaults = shopforge_color_defaults();
@@ -94,9 +113,80 @@ function shopforge_get_colors(): array {
 	return array_merge( shopforge_color_defaults(), is_array( $saved ) ? $saved : [] );
 }
 
-// Output CSS vars dinamici in frontend (sovrascrive i default del file CSS)
+
+// =============================================================================
+// TEMI (SKIN) — disposizione ed elementi diversi, non solo colori
+// =============================================================================
+
+/**
+ * Ogni skin cambia layout, elementi e stile di carrello/checkout/account.
+ * La base CSS è "clean"; le altre skin sovrascrivono tramite la classe
+ * body .shopforge-skin-{slug} (vedi sezione SKIN in shopforge-woo-shop.css).
+ * I colori restano personalizzabili a parte nella sezione Colori.
+ */
+function shopforge_theme_presets(): array {
+	return [
+		'clean' => [
+			'label' => __( 'Clean', 'shopforge' ),
+			'desc'  => __( 'Minimal on a white background: cards with a plain border, no shadows. Matches the WooCommerce block checkout.', 'shopforge' ),
+		],
+		'boxed' => [
+			'label' => __( 'Boxed', 'shopforge' ),
+			'desc'  => __( 'Content wrapped in a soft gray panel, elevated cards with subtle shadows and a highlighted footer.', 'shopforge' ),
+		],
+		'cards' => [
+			'label' => __( 'Cards', 'shopforge' ),
+			'desc'  => __( 'Every product is a separate rounded card with a shadow: airy layout, detached elements.', 'shopforge' ),
+		],
+	];
+}
+
+function shopforge_get_theme(): string {
+	$theme = get_option( 'shopforge_theme', 'boxed' );
+	return isset( shopforge_theme_presets()[ $theme ] ) ? $theme : 'boxed';
+}
+
+/**
+ * Contesti a cui è possibile assegnare una skin diversa da quella globale.
+ * 'other' copre le pagine non-WooCommerce dove vengono usati gli shortcode.
+ */
+function shopforge_theme_contexts(): array {
+	return [
+		'cart'     => __( 'Cart', 'shopforge' ),
+		'checkout' => __( 'Checkout', 'shopforge' ),
+		'account'  => __( 'Account area', 'shopforge' ),
+		'other'    => __( 'Shortcodes and other pages', 'shopforge' ),
+	];
+}
+
+/** Skin effettiva per un contesto: override specifico o tema globale. */
+function shopforge_get_theme_for_context( string $context ): string {
+	$overrides = get_option( 'shopforge_theme_overrides', [] );
+	$skin      = is_array( $overrides ) ? ( $overrides[ $context ] ?? '' ) : '';
+	return isset( shopforge_theme_presets()[ $skin ] ) ? $skin : shopforge_get_theme();
+}
+
+// Classe skin sul body in base alla pagina corrente: aggancio per il CSS
+add_filter( 'body_class', function ( $classes ) {
+	if ( ! function_exists( 'is_cart' ) ) {
+		return $classes;
+	}
+	if ( is_cart() ) {
+		$context = 'cart';
+	} elseif ( is_checkout() ) {
+		$context = 'checkout';
+	} elseif ( is_account_page() ) {
+		$context = 'account';
+	} else {
+		$context = 'other';
+	}
+	$classes[] = 'shopforge-skin-' . shopforge_get_theme_for_context( $context );
+	return $classes;
+} );
+
+// Output CSS vars dinamici in frontend (sovrascrive i default del file CSS).
+// Copre tutte le pagine shop, non solo l'account: carrello, checkout, prodotto.
 add_action( 'wp_head', function () {
-	if ( ! is_account_page() ) return;
 	if ( ! function_exists( 'shopforge_is_module_active' ) ) return;
 	if ( ! shopforge_is_module_active( 'styles-colors' ) ) return;
 
@@ -130,17 +220,16 @@ function shopforge_admin_tab_modules(): void {
 	$modules  = array_filter( $registry, fn( $m ) => ( $m['type'] ?? 'module' ) === 'module' );
 
 	// FontAwesome per le icone nella pagina admin
-	wp_enqueue_script( 'fontawesome-kit', SHOPFORGE_FA_KIT_URL, [], null, false );
-	wp_script_add_data( 'fontawesome-kit', 'crossorigin', 'anonymous' );
+	shopforge_enqueue_fontawesome();
 	// Color picker WordPress
 	wp_enqueue_style( 'wp-color-picker' );
 	wp_enqueue_script( 'wp-color-picker' );
 	?>
 		<?php if ( ! empty( $_GET['updated'] ) ) : ?>
 		<div class="notice notice-success is-dismissible">
-			<p>✓ Impostazioni salvate.
+			<p>✓ <?php esc_html_e( 'Settings saved.', 'shopforge' ); ?>
 			<?php if ( count( $enabled ) === 0 ) : ?>
-				<strong>Attenzione:</strong> nessun modulo o funzionalità attiva.
+				<strong><?php esc_html_e( 'Warning:', 'shopforge' ); ?></strong> <?php esc_html_e( 'no module or feature is active.', 'shopforge' ); ?>
 			<?php endif; ?>
 			</p>
 		</div>
@@ -149,8 +238,8 @@ function shopforge_admin_tab_modules(): void {
 		<?php if ( ! $has_license ) : ?>
 		<div class="shopforge-license-banner">
 			<i class="fa-solid fa-lock" aria-hidden="true"></i>
-			<span>Licenza non valida o non configurata — i moduli non possono essere attivati.</span>
-			<a href="<?php echo esc_url( admin_url( 'admin.php?page=shopforge&tab=license' ) ); ?>" class="button button-small">Configura licenza</a>
+			<span><?php esc_html_e( 'License missing or invalid — modules cannot be enabled.', 'shopforge' ); ?></span>
+			<a href="<?php echo esc_url( admin_url( 'admin.php?page=shopforge&tab=license' ) ); ?>" class="button button-small"><?php esc_html_e( 'Configure license', 'shopforge' ); ?></a>
 		</div>
 		<?php endif; ?>
 
@@ -163,10 +252,9 @@ function shopforge_admin_tab_modules(): void {
 			     ═══════════════════════════════════════════ -->
 			<div class="shopforge-section-label">
 				<i class="fa-solid fa-sliders" aria-hidden="true"></i>
-				Funzionalità di base
+				<?php esc_html_e( 'Core features', 'shopforge' ); ?>
 				<span class="shopforge-section-hint">
-					Controllano il comportamento trasversale del plugin: stili CSS globali e dashboard.
-					Disattivale se vuoi un'integrazione "zero impatto visivo".
+					<?php esc_html_e( 'They control cross-cutting plugin behavior: global CSS styles and the dashboard. Disable them for a "zero visual impact" integration.', 'shopforge' ); ?>
 				</span>
 			</div>
 			<div class="shopforge-modules-grid shopforge-modules-grid--features">
@@ -184,10 +272,9 @@ function shopforge_admin_tab_modules(): void {
 			     ═══════════════════════════════════════════ -->
 			<div class="shopforge-section-label">
 				<i class="fa-solid fa-puzzle-piece" aria-hidden="true"></i>
-				Moduli
+				<?php esc_html_e( 'Modules', 'shopforge' ); ?>
 				<span class="shopforge-section-hint">
-					Ogni modulo aggiunge funzionalità specifiche: endpoint nell'area account,
-					integrazioni, email automatiche, gestione admin.
+					<?php esc_html_e( 'Each module adds specific functionality: account area endpoints, integrations, automatic emails, admin management.', 'shopforge' ); ?>
 				</span>
 			</div>
 			<div class="shopforge-modules-grid">
@@ -205,9 +292,9 @@ function shopforge_admin_tab_modules(): void {
 			     ═══════════════════════════════════════════ -->
 			<div class="shopforge-section-label">
 				<i class="fa-solid fa-gear" aria-hidden="true"></i>
-				Configurazione
+				<?php esc_html_e( 'Configuration', 'shopforge' ); ?>
 				<span class="shopforge-section-hint">
-					Parametri globali che influenzano il comportamento dei moduli.
+					<?php esc_html_e( 'Global parameters that affect module behavior.', 'shopforge' ); ?>
 				</span>
 			</div>
 			<div class="shopforge-config-grid">
@@ -215,7 +302,7 @@ function shopforge_admin_tab_modules(): void {
 				<div class="shopforge-config-field">
 					<label for="shopforge_return_window_days">
 						<i class="fa-solid fa-clock-rotate-left" aria-hidden="true"></i>
-						Finestra di recesso (giorni)
+						<?php esc_html_e( 'Withdrawal window (days)', 'shopforge' ); ?>
 					</label>
 					<input type="number"
 					       id="shopforge_return_window_days"
@@ -224,39 +311,109 @@ function shopforge_admin_tab_modules(): void {
 					       min="1" max="365" step="1"
 					       class="shopforge-config-input">
 					<p class="shopforge-config-desc">
-						Numero di giorni dalla consegna entro cui il cliente può esercitare il diritto di recesso.
-						Default: 14 giorni (termine legale minimo per il consumatore in UE).
+						<?php esc_html_e( 'Number of days after delivery during which the customer can exercise the right of withdrawal. Default: 14 days (minimum legal term for EU consumers).', 'shopforge' ); ?>
 					</p>
 				</div>
 
 				<div class="shopforge-config-field">
 					<label for="shopforge_contact_url">
 						<i class="fa-solid fa-headset" aria-hidden="true"></i>
-						URL pagina contatti (opzionale)
+						<?php esc_html_e( 'Contact page URL (optional)', 'shopforge' ); ?>
 					</label>
 					<input type="url"
 					       id="shopforge_contact_url"
 					       name="shopforge_contact_url"
 					       value="<?php echo esc_attr( get_option( 'shopforge_contact_url', '' ) ); ?>"
-					       placeholder="https://esempio.it/contatti"
+					       placeholder="https://example.com/contact"
 					       class="shopforge-config-input">
 					<p class="shopforge-config-desc">
-						URL mostrato nel messaggio "recesso scaduto".
-						Se lasciato vuoto, viene mostrato solo il testo senza link.
+						<?php esc_html_e( 'URL shown in the "withdrawal window expired" message. If left empty, only the text is shown without a link.', 'shopforge' ); ?>
+					</p>
+				</div>
+
+				<div class="shopforge-config-field">
+					<label for="shopforge_17track_key">
+						<i class="fa-solid fa-truck-fast" aria-hidden="true"></i>
+						<?php esc_html_e( '17track API key', 'shopforge' ); ?>
+					</label>
+					<input type="text"
+					       id="shopforge_17track_key"
+					       name="shopforge_17track_key"
+					       value="<?php echo esc_attr( get_option( 'shopforge_17track_key', '' ) ); ?>"
+					       autocomplete="off"
+					       class="shopforge-config-input">
+					<p class="shopforge-config-desc">
+						<?php esc_html_e( 'Required by the Shipment tracking module. Get a free key at api.17track.net. Without a key the tracking widget is not shown.', 'shopforge' ); ?>
 					</p>
 				</div>
 
 			</div>
 
 			<!-- ═══════════════════════════════════════════
-			     SEZIONE 4: COLORI
+			     SEZIONE 4: TEMA
+			     ═══════════════════════════════════════════ -->
+			<div class="shopforge-section-label">
+				<i class="fa-solid fa-swatchbook" aria-hidden="true"></i>
+				<?php esc_html_e( 'Theme', 'shopforge' ); ?>
+				<span class="shopforge-section-hint">
+					<?php esc_html_e( 'Each theme changes the layout, elements and style of cart, checkout and shortcodes. Pick the global theme, then optionally a different theme per page.', 'shopforge' ); ?>
+				</span>
+			</div>
+
+			<?php $current_theme = shopforge_get_theme(); ?>
+			<div class="shopforge-theme-grid">
+				<?php foreach ( shopforge_theme_presets() as $slug => $preset ) : ?>
+				<label class="shopforge-theme-card <?php echo $slug === $current_theme ? 'is-selected' : ''; ?>">
+					<input type="radio"
+					       name="shopforge_theme"
+					       value="<?php echo esc_attr( $slug ); ?>"
+					       <?php checked( $slug, $current_theme ); ?>>
+					<span class="shopforge-theme-card__mock shopforge-theme-card__mock--<?php echo esc_attr( $slug ); ?>">
+						<span class="mock-main"><i></i><i></i><i></i></span>
+						<span class="mock-side"><i></i><b></b></span>
+					</span>
+					<span class="shopforge-theme-card__name"><?php echo esc_html( $preset['label'] ); ?></span>
+					<span class="shopforge-theme-card__desc"><?php echo esc_html( $preset['desc'] ); ?></span>
+				</label>
+				<?php endforeach; ?>
+			</div>
+
+			<?php
+			$overrides = get_option( 'shopforge_theme_overrides', [] );
+			$overrides = is_array( $overrides ) ? $overrides : [];
+			?>
+			<div class="shopforge-theme-ctx">
+				<p class="shopforge-theme-ctx__title">
+					<i class="fa-solid fa-layer-group" aria-hidden="true"></i>
+					<?php esc_html_e( 'Theme per page', 'shopforge' ); ?>
+					<span class="shopforge-section-hint"><?php esc_html_e( 'Leave "Global theme" to apply the same theme everywhere.', 'shopforge' ); ?></span>
+				</p>
+				<div class="shopforge-theme-ctx__grid">
+					<?php foreach ( shopforge_theme_contexts() as $ctx => $ctx_label ) : ?>
+					<div class="shopforge-theme-ctx__field">
+						<label for="shopforge_theme_ctx_<?php echo esc_attr( $ctx ); ?>"><?php echo esc_html( $ctx_label ); ?></label>
+						<select id="shopforge_theme_ctx_<?php echo esc_attr( $ctx ); ?>"
+						        name="shopforge_theme_ctx_<?php echo esc_attr( $ctx ); ?>">
+							<option value=""><?php esc_html_e( 'Global theme', 'shopforge' ); ?></option>
+							<?php foreach ( shopforge_theme_presets() as $slug => $preset ) : ?>
+							<option value="<?php echo esc_attr( $slug ); ?>" <?php selected( $overrides[ $ctx ] ?? '', $slug ); ?>>
+								<?php echo esc_html( $preset['label'] ); ?>
+							</option>
+							<?php endforeach; ?>
+						</select>
+					</div>
+					<?php endforeach; ?>
+				</div>
+			</div>
+
+			<!-- ═══════════════════════════════════════════
+			     SEZIONE 5: COLORI
 			     ═══════════════════════════════════════════ -->
 			<div class="shopforge-section-label">
 				<i class="fa-solid fa-palette" aria-hidden="true"></i>
-				Colori
+				<?php esc_html_e( 'Colors', 'shopforge' ); ?>
 				<span class="shopforge-section-hint">
-					Personalizza la palette ShopForge per adattarla al tuo tema.
-					I colori vengono iniettati come variabili CSS e sovrascrivono i default del plugin.
+					<?php esc_html_e( 'Customize the ShopForge palette to match your site. Colors are injected as CSS variables and override the plugin defaults.', 'shopforge' ); ?>
 				</span>
 			</div>
 
@@ -264,16 +421,16 @@ function shopforge_admin_tab_modules(): void {
 			$colors   = shopforge_get_colors();
 			$defaults = shopforge_color_defaults();
 			$color_labels = [
-				'primary'       => [ 'label' => 'Colore primario',        'desc' => 'Pulsanti, link attivi, elementi in evidenza' ],
-				'primary_hover' => [ 'label' => 'Primario — hover',        'desc' => 'Tonalità più chiara per gli stati hover' ],
-				'text_main'     => [ 'label' => 'Testo principale',        'desc' => 'Titoli e testo ad alto contrasto' ],
-				'text_muted'    => [ 'label' => 'Testo secondario',        'desc' => 'Date, etichette, note a piè di campo' ],
-				'border'        => [ 'label' => 'Bordo',                   'desc' => 'Bordi di card, tabelle e input' ],
-				'border_soft'   => [ 'label' => 'Bordo morbido',           'desc' => 'Separatori interni leggeri' ],
-				'bg_soft'       => [ 'label' => 'Sfondo neutro',           'desc' => 'Sfondo di card e sezioni secondarie' ],
-				'success'       => [ 'label' => 'Successo',                'desc' => 'Badge "Completato", messaggi positivi' ],
-				'warning'       => [ 'label' => 'Avviso',                  'desc' => 'Badge "In attesa", messaggi di avviso' ],
-				'danger'        => [ 'label' => 'Errore / Pericolo',       'desc' => 'Messaggi di errore, azioni irreversibili' ],
+				'primary'       => [ 'label' => __( 'Primary color', 'shopforge' ),   'desc' => __( 'Buttons, active links, highlighted elements', 'shopforge' ) ],
+				'primary_hover' => [ 'label' => __( 'Primary — hover', 'shopforge' ), 'desc' => __( 'Lighter shade for hover states', 'shopforge' ) ],
+				'text_main'     => [ 'label' => __( 'Main text', 'shopforge' ),       'desc' => __( 'Headings and high-contrast text', 'shopforge' ) ],
+				'text_muted'    => [ 'label' => __( 'Muted text', 'shopforge' ),      'desc' => __( 'Dates, labels, footnotes', 'shopforge' ) ],
+				'border'        => [ 'label' => __( 'Border', 'shopforge' ),          'desc' => __( 'Borders of cards, tables and inputs', 'shopforge' ) ],
+				'border_soft'   => [ 'label' => __( 'Soft border', 'shopforge' ),     'desc' => __( 'Light internal separators', 'shopforge' ) ],
+				'bg_soft'       => [ 'label' => __( 'Neutral background', 'shopforge' ), 'desc' => __( 'Background of cards and secondary sections', 'shopforge' ) ],
+				'success'       => [ 'label' => __( 'Success', 'shopforge' ),         'desc' => __( '"Completed" badges, positive messages', 'shopforge' ) ],
+				'warning'       => [ 'label' => __( 'Warning', 'shopforge' ),         'desc' => __( '"Pending" badges, warning messages', 'shopforge' ) ],
+				'danger'        => [ 'label' => __( 'Error / Danger', 'shopforge' ),  'desc' => __( 'Error messages, irreversible actions', 'shopforge' ) ],
 			];
 			?>
 
@@ -300,17 +457,17 @@ function shopforge_admin_tab_modules(): void {
 			<div class="shopforge-color-preview" id="shopforge-color-preview">
 				<p class="shopforge-color-preview__label">
 					<i class="fa-solid fa-eye" aria-hidden="true"></i>
-					Anteprima
+					<?php esc_html_e( 'Preview', 'shopforge' ); ?>
 				</p>
 				<div class="shopforge-color-preview__card" id="shopforge-preview-card">
-					<div class="shopforge-color-preview__btn" id="shopforge-preview-btn">Pulsante primario</div>
-					<div class="shopforge-color-preview__text" id="shopforge-preview-text">Testo principale — <span id="shopforge-preview-muted">testo secondario</span></div>
-					<div class="shopforge-color-preview__border" id="shopforge-preview-border">Bordo card</div>
+					<div class="shopforge-color-preview__btn" id="shopforge-preview-btn"><?php esc_html_e( 'Primary button', 'shopforge' ); ?></div>
+					<div class="shopforge-color-preview__text" id="shopforge-preview-text"><?php esc_html_e( 'Main text', 'shopforge' ); ?> — <span id="shopforge-preview-muted"><?php esc_html_e( 'muted text', 'shopforge' ); ?></span></div>
+					<div class="shopforge-color-preview__border" id="shopforge-preview-border"><?php esc_html_e( 'Card border', 'shopforge' ); ?></div>
 				</div>
 			</div>
 
 			<div class="shopforge-settings-actions">
-				<?php submit_button( 'Salva impostazioni', 'primary large', 'submit', false ); ?>
+				<?php submit_button( __( 'Save settings', 'shopforge' ), 'primary large', 'submit', false ); ?>
 			</div>
 		</form>
 
@@ -339,6 +496,12 @@ function shopforge_admin_tab_modules(): void {
 			$('#shopforge-preview-border').css({ 'border-top':'1px solid ' + border, 'margin-top':'12px', 'padding-top':'10px', 'font-size':'12px', 'color': textMuted });
 		}
 		shopforgeUpdatePreview();
+
+		// Selezione tema: evidenzia la card scelta
+		$('input[name="shopforge_theme"]').on('change', function(){
+			$('.shopforge-theme-card').removeClass('is-selected');
+			$(this).closest('.shopforge-theme-card').addClass('is-selected');
+		});
 	});
 	</script>
 
@@ -490,6 +653,72 @@ function shopforge_admin_tab_modules(): void {
 		margin: 8px 0 0; font-size: 12px; color: #646970; line-height: 1.5;
 	}
 
+	/* ---- Card tema ---- */
+	.shopforge-theme-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+		gap: 14px;
+		margin-bottom: 24px;
+	}
+	.shopforge-theme-card {
+		display: block;
+		background: #fff;
+		border: 1px solid #dcdcde;
+		border-radius: 8px;
+		padding: 14px 16px;
+		cursor: pointer;
+		transition: border-color .2s, box-shadow .2s;
+	}
+	.shopforge-theme-card:hover { border-color: #2271b1; }
+	.shopforge-theme-card.is-selected {
+		border-color: #2271b1;
+		box-shadow: 0 0 0 1px #2271b1;
+		background: #f0f6fc;
+	}
+	.shopforge-theme-card input { position: absolute; opacity: 0; pointer-events: none; }
+	.shopforge-theme-card__name {
+		display: block; font-size: 13px; font-weight: 700; color: #1d2327;
+	}
+	.shopforge-theme-card__desc {
+		display: block; font-size: 12px; color: #646970; line-height: 1.4; margin: 3px 0 0;
+	}
+
+	/* Mini-anteprima layout della skin */
+	.shopforge-theme-card__mock {
+		display: flex; gap: 6px;
+		height: 64px; margin-bottom: 10px; padding: 7px;
+		border: 1px solid #dcdcde; border-radius: 6px; background: #fff;
+	}
+	.shopforge-theme-card__mock .mock-main { flex: 2; display: flex; flex-direction: column; gap: 4px; }
+	.shopforge-theme-card__mock .mock-side { flex: 1; display: flex; flex-direction: column; gap: 4px; }
+	.shopforge-theme-card__mock i, .shopforge-theme-card__mock b { display: block; flex: 1; }
+	.shopforge-theme-card__mock b { background: #2271b1; border-radius: 3px; flex: 0 0 10px; }
+	/* clean: righe con solo bordo */
+	.shopforge-theme-card__mock--clean i { border: 1px solid #dcdcde; border-radius: 3px; background: #fff; }
+	/* boxed: pannello grigio, righe bianche in rilievo */
+	.shopforge-theme-card__mock--boxed { background: #eef1f5; }
+	.shopforge-theme-card__mock--boxed i { background: #fff; border-radius: 3px; box-shadow: 0 1px 3px rgba(0,0,0,.14); }
+	/* cards: card staccate molto arrotondate */
+	.shopforge-theme-card__mock--cards i { background: #fff; border: 1px solid #dcdcde; border-radius: 6px; box-shadow: 0 1px 3px rgba(0,0,0,.10); }
+
+	/* ---- Tema per pagina ---- */
+	.shopforge-theme-ctx {
+		background: #fff; border: 1px solid #dcdcde; border-radius: 8px;
+		padding: 14px 18px; margin-bottom: 24px;
+	}
+	.shopforge-theme-ctx__title {
+		display: flex; align-items: baseline; gap: 8px;
+		font-size: 13px; font-weight: 700; color: #1d2327; margin: 0 0 12px;
+	}
+	.shopforge-theme-ctx__title i { color: #2271b1; }
+	.shopforge-theme-ctx__grid {
+		display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px;
+	}
+	.shopforge-theme-ctx__field label {
+		display: block; font-size: 12px; font-weight: 600; color: #1d2327; margin-bottom: 4px;
+	}
+	.shopforge-theme-ctx__field select { width: 100%; }
+
 	/* ---- Griglia colori ---- */
 	.shopforge-color-grid {
 		display: grid;
@@ -552,15 +781,15 @@ function shopforge_settings_card_inner( string $id, array $module, bool $is_acti
 			<h3 class="shopforge-module-card__title"><?php echo esc_html( $module['label'] ); ?></h3>
 			<span class="shopforge-module-card__meta">
 			<?php if ( ( $module['type'] ?? 'module' ) === 'feature' ) : ?>
-				funzionalità base
+				<?php esc_html_e( 'core feature', 'shopforge' ); ?>
 			<?php elseif ( ! empty( $module['endpoint'] ) ) : ?>
-				endpoint: <code><?php echo esc_html( $module['endpoint'] ); ?></code>
+				<?php esc_html_e( 'endpoint:', 'shopforge' ); ?> <code><?php echo esc_html( $module['endpoint'] ); ?></code>
 			<?php else : ?>
-				modulo (nessun endpoint)
+				<?php esc_html_e( 'module (no endpoint)', 'shopforge' ); ?>
 			<?php endif; ?>
 			</span>
 		</div>
-		<label class="shopforge-toggle" title="<?php echo $locked ? 'Richiede licenza attiva' : ( $is_active ? 'Disattiva' : 'Attiva' ); ?>">
+		<label class="shopforge-toggle" title="<?php echo esc_attr( $locked ? __( 'Requires an active license', 'shopforge' ) : ( $is_active ? __( 'Disable', 'shopforge' ) : __( 'Enable', 'shopforge' ) ) ); ?>">
 			<input type="checkbox"
 			       name="module_<?php echo esc_attr( $id ); ?>"
 			       value="1"
@@ -572,10 +801,10 @@ function shopforge_settings_card_inner( string $id, array $module, bool $is_acti
 	<p class="shopforge-module-card__desc"><?php echo esc_html( $module['description'] ); ?></p>
 	<div class="shopforge-module-card__footer">
 		<?php if ( $locked ) : ?>
-		<span class="shopforge-module-status is-off"><i class="fa-solid fa-lock" aria-hidden="true"></i> Richiede licenza</span>
+		<span class="shopforge-module-status is-off"><i class="fa-solid fa-lock" aria-hidden="true"></i> <?php esc_html_e( 'Requires license', 'shopforge' ); ?></span>
 		<?php else : ?>
 		<span class="shopforge-module-status <?php echo $is_active ? 'is-on' : 'is-off'; ?>">
-			<?php echo $is_active ? '● Attivo' : '○ Inattivo'; ?>
+			<?php echo $is_active ? '● ' . esc_html__( 'Active', 'shopforge' ) : '○ ' . esc_html__( 'Inactive', 'shopforge' ); ?>
 		</span>
 		<?php endif; ?>
 	</div>

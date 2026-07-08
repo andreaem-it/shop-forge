@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>ShopForge — Documentation</title>
+<style>
+  body { font-family: -apple-system, Segoe UI, Roboto, sans-serif; max-width: 860px; margin: 40px auto; padding: 0 20px; color: #1d2327; line-height: 1.6; }
+  h1 { font-size: 28px; border-bottom: 3px solid #2271b1; padding-bottom: 10px; }
+  h2 { font-size: 20px; margin-top: 40px; color: #2271b1; }
+  h3 { font-size: 16px; margin-top: 24px; }
+  code { background: #f6f7f7; padding: 2px 6px; border-radius: 3px; font-size: 13px; }
+  pre { background: #f6f7f7; padding: 12px 16px; border-radius: 6px; overflow-x: auto; }
+  table { border-collapse: collapse; width: 100%; margin: 16px 0; }
+  th, td { text-align: left; padding: 8px 12px; border: 1px solid #dcdcde; font-size: 14px; }
+  th { background: #f6f7f7; }
+  .toc { background: #f6f7f7; padding: 16px 24px; border-radius: 8px; }
+  .toc a { display: block; margin: 4px 0; }
+</style>
+</head>
+<body>
+
+<h1>ShopForge — Documentation</h1>
+<p>Version 1.8.0 — a modular WooCommerce plugin for account area, tracking, wishlist, returns, quotes and notifications.</p>
+
+<div class="toc">
+  <strong>Contents</strong>
+  <a href="#install">1. Installation</a>
+  <a href="#license">2. License activation</a>
+  <a href="#modules">3. Modules and core features</a>
+  <a href="#themes">4. Themes (skins)</a>
+  <a href="#colors">5. Colors</a>
+  <a href="#shortcodes">6. Shortcodes</a>
+  <a href="#tracking">7. Shipment tracking setup</a>
+  <a href="#faq">8. FAQ &amp; troubleshooting</a>
+</div>
+
+<h2 id="install">1. Installation</h2>
+<ol>
+  <li>In WordPress admin go to <strong>Plugins → Add New → Upload Plugin</strong>.</li>
+  <li>Select <code>shopforge.zip</code> and click <strong>Install Now</strong>, then <strong>Activate</strong>.</li>
+  <li>WooCommerce must be installed and active — ShopForge shows an admin notice if it is not.</li>
+  <li>A new <strong>ShopForge</strong> menu item appears in the WordPress admin sidebar.</li>
+</ol>
+
+<h2 id="license">2. License activation</h2>
+<ol>
+  <li>Go to <strong>ShopForge → License</strong>.</li>
+  <li>Paste the license key you received at purchase and click <strong>Validate license</strong>.</li>
+  <li>Once valid, all modules become available for activation under the Modules tab. Core features (styles, dashboard) work without a license.</li>
+</ol>
+
+<h2 id="modules">3. Modules and core features</h2>
+<p>Go to <strong>ShopForge → Modules</strong>. Two sections are shown:</p>
+<ul>
+  <li><strong>Core features</strong> — cross-cutting behavior: account area styles, shop/catalog styles, custom colors, custom dashboard. No license required.</li>
+  <li><strong>Modules</strong> — self-contained features with their own account endpoint. Require an active license.</li>
+</ul>
+<table>
+  <tr><th>Module</th><th>What it does</th></tr>
+  <tr><td>Shipment tracking</td><td>Tracking widget on the order detail page, powered by 17track.net. See <a href="#tracking">section 7</a>.</td></tr>
+  <tr><td>Wishlist</td><td>Heart button on catalog and product pages; saved products list in the account.</td></tr>
+  <tr><td>Quotes</td><td>Customers request a quote for a list of products; you reply from ShopForge → Quotes.</td></tr>
+  <tr><td>Support &amp; Returns</td><td>Two-step withdrawal request flow with an automatic receipt email, compliant with EU consumer law.</td></tr>
+  <tr><td>Product Support (RMA)</td><td>Structured repair/replacement/refund requests per order line, with message thread, refund automation, CSV export and stats.</td></tr>
+  <tr><td>Notifications</td><td>In-account notification center for order, ticket, return and quote events.</td></tr>
+</table>
+<p>Toggling a module off immediately removes its account menu entry, its endpoint, and stops loading its PHP file — zero footprint when disabled.</p>
+
+<h2 id="themes">4. Themes (skins)</h2>
+<p>Under <strong>ShopForge → Modules → Theme</strong> you can pick one of three layouts:</p>
+<ul>
+  <li><strong>Clean</strong> — flat, white background, bordered cards, no shadows. Matches the WooCommerce block checkout style.</li>
+  <li><strong>Boxed</strong> — content in a soft gray panel, elevated cards with shadows.</li>
+  <li><strong>Cards</strong> — every item is a separate rounded card with more spacing.</li>
+</ul>
+<p>You can also assign a different theme per context (Cart, Checkout, Account area, Shortcodes/other pages) — leave "Global theme" to inherit the main selection.</p>
+
+<h2 id="colors">5. Colors</h2>
+<p>Under the same Modules screen, the <strong>Colors</strong> section lets you edit the full palette (primary, hover, text, borders, backgrounds, success/warning/danger). Colors are injected as CSS variables on the front end, so any custom CSS you add using <code>var(--shopforge-primary)</code> etc. stays in sync.</p>
+
+<h2 id="shortcodes">6. Shortcodes</h2>
+<p>A live reference with copy-to-clipboard examples is available under <strong>ShopForge → Shortcodes</strong>. Summary:</p>
+<table>
+  <tr><th>Shortcode</th><th>Attributes</th><th>Purpose</th></tr>
+  <tr><td><code>[shopforge_variation_description]</code></td><td>—</td><td>Selected variation description on the product page.</td></tr>
+  <tr><td><code>[wc_price_iva_box]</code></td><td><code>id</code> (optional)</td><td>Price box, tax included/excluded.</td></tr>
+  <tr><td><code>[data_consegna_prodotto]</code></td><td>—</td><td>Estimated delivery date.</td></tr>
+  <tr><td><code>[buy_now_button]</code></td><td>—</td><td>Add to cart + redirect to checkout.</td></tr>
+  <tr><td><code>[stock_status_text]</code></td><td><code>font_size</code>, <code>font_family</code> (optional)</td><td>Availability label.</td></tr>
+  <tr><td><code>[product_faq]</code></td><td><code>product_id</code>, <code>style</code></td><td>Product FAQ (managed via metabox).</td></tr>
+  <tr><td><code>[product_compatibility]</code></td><td><code>product_id</code></td><td>Compatibility list (managed via metabox).</td></tr>
+  <tr><td><code>[product_datasheets]</code></td><td><code>product_id</code></td><td>PDF datasheets (managed via metabox).</td></tr>
+</table>
+
+<h2 id="tracking">7. Shipment tracking setup</h2>
+<ol>
+  <li>Create a free account at <a href="https://api.17track.net" target="_blank" rel="noopener">api.17track.net</a> and get an API key.</li>
+  <li>Go to <strong>ShopForge → Modules → Configuration</strong> and paste the key into <strong>17track API key</strong>.</li>
+  <li>Enable the <strong>Shipment tracking</strong> module.</li>
+  <li>On each order's edit screen, enter the carrier name and tracking number in the "Shipment Tracking" metabox.</li>
+  <li>The customer sees a live tracking widget on their order detail page in the account area.</li>
+</ol>
+<p>Without an API key the module loads but the tracking widget is not shown.</p>
+
+<h2 id="faq">8. FAQ &amp; troubleshooting</h2>
+<p><strong>The cart/checkout layout looks broken with my theme.</strong> The plugin's CSS uses <code>!important</code> on the layout-critical rules specifically to override theme interference; if you still see issues, check whether your theme injects layout CSS after ShopForge's stylesheet (inspect the load order in browser dev tools) and increase specificity in your child theme if needed.</p>
+<p><strong>A module doesn't appear even though I enabled it.</strong> Modules require a valid, active license. Check ShopForge → License.</p>
+<p><strong>I need support.</strong> Contact us through the item's comment page on CodeCanyon or via the author URL in the plugin header.</p>
+
+</body>
+</html>

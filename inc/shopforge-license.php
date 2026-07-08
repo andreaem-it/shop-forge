@@ -33,7 +33,7 @@ add_action( 'admin_notices', function () {
 	if ( function_exists( 'shopforge_has_valid_license' ) && shopforge_has_valid_license() ) {
 		return;
 	}
-	echo '<div class="notice notice-warning"><p><strong>ShopForge</strong> – <a href="' . esc_url( admin_url( 'admin.php?page=shopforge&tab=license' ) ) . '">Configura la licenza</a></p></div>';
+	echo '<div class="notice notice-warning"><p><strong>ShopForge</strong> – <a href="' . esc_url( admin_url( 'admin.php?page=shopforge&tab=license' ) ) . '">' . esc_html__( 'Configure the license', 'shopforge' ) . '</a></p></div>';
 } );
 
 /**
@@ -46,7 +46,7 @@ add_action( 'wp_ajax_shopforge_validate_license', function () {
 	$site = home_url();
 
 	if ( ! $key ) {
-		wp_send_json( [ 'valid' => false, 'message' => 'Chiave mancante' ], 400 );
+		wp_send_json( [ 'valid' => false, 'message' => __( 'Missing key', 'shopforge' ) ], 400 );
 	}
 
 	// Chiama il server di licensing
@@ -59,7 +59,7 @@ add_action( 'wp_ajax_shopforge_validate_license', function () {
 	if ( is_wp_error( $response ) ) {
 		wp_send_json( [
 			'valid'   => false,
-			'message' => 'Errore di connessione: ' . $response->get_error_message(),
+			'message' => __( 'Connection error:', 'shopforge' ) . ' ' . $response->get_error_message(),
 		], 500 );
 	}
 
@@ -71,23 +71,23 @@ add_action( 'wp_ajax_shopforge_validate_license', function () {
 		shopforge_set_license_key( $key );
 		shopforge_set_license_data( $body );
 
-		$message = 'Licenza valida ✓';
+		$message = __( 'License valid ✓', 'shopforge' );
 		$details = [];
 
 		if ( ! empty( $body['reseller_name'] ) ) {
-			$details[] = 'Reseller: <strong>' . htmlspecialchars( $body['reseller_name'] ) . '</strong>';
+			$details[] = __( 'Reseller:', 'shopforge' ) . ' <strong>' . htmlspecialchars( $body['reseller_name'] ) . '</strong>';
 		}
 
 		if ( ! empty( $body['product_name'] ) ) {
-			$details[] = 'Prodotto: <strong>' . htmlspecialchars( $body['product_name'] ) . '</strong>';
+			$details[] = __( 'Product:', 'shopforge' ) . ' <strong>' . htmlspecialchars( $body['product_name'] ) . '</strong>';
 		}
 
 		if ( ! empty( $body['activated_domain'] ) ) {
-			$details[] = 'Attivato su: <strong>' . htmlspecialchars( $body['activated_domain'] ) . '</strong>';
+			$details[] = __( 'Activated on:', 'shopforge' ) . ' <strong>' . htmlspecialchars( $body['activated_domain'] ) . '</strong>';
 		}
 
 		if ( ! empty( $body['expires_at'] ) ) {
-			$details[] = 'Scade il: <strong>' . htmlspecialchars( $body['expires_at'] ) . '</strong>';
+			$details[] = __( 'Expires on:', 'shopforge' ) . ' <strong>' . htmlspecialchars( $body['expires_at'] ) . '</strong>';
 		}
 
 		wp_send_json( [
@@ -98,7 +98,7 @@ add_action( 'wp_ajax_shopforge_validate_license', function () {
 	} else {
 		wp_send_json( [
 			'valid'   => false,
-			'message' => $body['reason'] ?? 'Licenza non valida',
+			'message' => $body['reason'] ?? __( 'License not valid', 'shopforge' ),
 		], 403 );
 	}
 } );
@@ -109,7 +109,7 @@ add_action( 'wp_ajax_shopforge_validate_license', function () {
  */
 function shopforge_admin_tab_license(): void {
 	if ( ! current_user_can( 'manage_options' ) ) {
-		echo '<p>Non hai i permessi per gestire la licenza.</p>';
+		echo '<p>' . esc_html__( 'You do not have permission to manage the license.', 'shopforge' ) . '</p>';
 		return;
 	}
 
@@ -119,14 +119,14 @@ function shopforge_admin_tab_license(): void {
 	?>
 	<div class="shopforge-license-card">
 		<div class="shopforge-license-card__field">
-			<label for="shopforge_license_key">Chiave di licenza</label>
+			<label for="shopforge_license_key"><?php esc_html_e( 'License key', 'shopforge' ); ?></label>
 			<input type="text" id="shopforge_license_key" placeholder="SHOP-ABC123XYZ"
 			       value="<?php echo esc_attr( $current_key ); ?>" autocomplete="off">
-			<p class="shopforge-license-card__hint">Inserisci la chiave di licenza fornita al momento dell'acquisto.</p>
+			<p class="shopforge-license-card__hint"><?php esc_html_e( 'Enter the license key provided at purchase.', 'shopforge' ); ?></p>
 		</div>
 
 		<button type="button" id="shopforge_validate_btn" class="button button-primary" onclick="shopforgeValidateLicense()">
-			Valida licenza
+			<?php esc_html_e( 'Validate license', 'shopforge' ); ?>
 		</button>
 
 		<div id="shopforge_status" class="shopforge-license-result" style="display:none">
@@ -135,7 +135,7 @@ function shopforge_admin_tab_license(): void {
 		</div>
 
 		<div id="shopforge_loading" class="shopforge-license-loading" style="display:none">
-			<span>Validazione in corso…</span>
+			<span><?php esc_html_e( 'Validating…', 'shopforge' ); ?></span>
 		</div>
 	</div>
 
@@ -146,21 +146,21 @@ function shopforge_admin_tab_license(): void {
 				<i class="fa-solid <?php echo $is_valid ? 'fa-circle-check' : 'fa-circle-xmark'; ?>" aria-hidden="true"></i>
 			</span>
 			<div class="shopforge-module-card__title-wrap">
-				<h3 class="shopforge-module-card__title"><?php echo $is_valid ? 'Licenza attiva' : 'Licenza non valida o scaduta'; ?></h3>
+				<h3 class="shopforge-module-card__title"><?php echo $is_valid ? esc_html__( 'License active', 'shopforge' ) : esc_html__( 'License invalid or expired', 'shopforge' ); ?></h3>
 			</div>
 		</div>
 		<div class="shopforge-module-card__desc" style="line-height:1.8">
 			<?php if ( ! empty( $license_data['reseller_name'] ) ) : ?>
-				Reseller: <strong><?php echo esc_html( $license_data['reseller_name'] ); ?></strong><br>
+				<?php esc_html_e( 'Reseller:', 'shopforge' ); ?> <strong><?php echo esc_html( $license_data['reseller_name'] ); ?></strong><br>
 			<?php endif; ?>
 			<?php if ( ! empty( $license_data['product_name'] ) ) : ?>
-				Prodotto: <strong><?php echo esc_html( $license_data['product_name'] ); ?></strong><br>
+				<?php esc_html_e( 'Product:', 'shopforge' ); ?> <strong><?php echo esc_html( $license_data['product_name'] ); ?></strong><br>
 			<?php endif; ?>
 			<?php if ( ! empty( $license_data['activated_domain'] ) ) : ?>
-				Attivato su: <strong><?php echo esc_html( $license_data['activated_domain'] ); ?></strong><br>
+				<?php esc_html_e( 'Activated on:', 'shopforge' ); ?> <strong><?php echo esc_html( $license_data['activated_domain'] ); ?></strong><br>
 			<?php endif; ?>
 			<?php if ( ! empty( $license_data['expires_at'] ) ) : ?>
-				Scade il: <strong><?php echo esc_html( $license_data['expires_at'] ); ?></strong>
+				<?php esc_html_e( 'Expires on:', 'shopforge' ); ?> <strong><?php echo esc_html( $license_data['expires_at'] ); ?></strong>
 			<?php endif; ?>
 		</div>
 	</div>
@@ -199,7 +199,7 @@ function shopforge_admin_tab_license(): void {
 		if (!key) {
 			message.style.background = '#fee';
 			message.style.color = '#c33';
-			message.textContent = '✗ Inserisci una chiave';
+			message.textContent = '✗ ' + <?php echo wp_json_encode( __( 'Enter a key', 'shopforge' ) ); ?>;
 			status.style.display = 'block';
 			return;
 		}
@@ -227,13 +227,13 @@ function shopforge_admin_tab_license(): void {
 			if (data.valid) {
 				message.style.background = '#eef';
 				message.style.color = '#060';
-				message.textContent = '✓ ' + (data.message || 'Licenza valida');
+				message.textContent = '✓ ' + (data.message || <?php echo wp_json_encode( __( 'License valid', 'shopforge' ) ); ?>);
 				details.innerHTML = data.details || '';
 				setTimeout(() => location.reload(), 1500);
 			} else {
 				message.style.background = '#fee';
 				message.style.color = '#c33';
-				message.textContent = '✗ ' + (data.message || 'Licenza non valida');
+				message.textContent = '✗ ' + (data.message || <?php echo wp_json_encode( __( 'License not valid', 'shopforge' ) ); ?>);
 				details.innerHTML = '';
 			}
 
@@ -244,7 +244,7 @@ function shopforge_admin_tab_license(): void {
 			status.style.display = 'block';
 			message.style.background = '#fee';
 			message.style.color = '#c33';
-			message.textContent = '✗ Errore: ' + err.message;
+			message.textContent = '✗ ' + <?php echo wp_json_encode( __( 'Error:', 'shopforge' ) ); ?> + ' ' + err.message;
 			details.innerHTML = '';
 			btn.disabled = false;
 		});

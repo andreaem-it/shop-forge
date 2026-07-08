@@ -1,0 +1,2528 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: ShopForge 1.8.0\n"
+"Language: it_IT\n"
+"PO-Revision-Date: 2026-07-08 12:00+0000\n"
+"Last-Translator: Andrea Emili\n"
+"Language-Team: Italian\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Domain: shopforge\n"
+
+#: inc/modules/shopforge-mod-notifications.php:78
+msgid "Awaiting payment"
+msgstr "In attesa di pagamento"
+
+#: inc/modules/shopforge-mod-notifications.php:79
+msgid "Payment confirmed — preparing"
+msgstr "Pagamento confermato — in preparazione"
+
+#: inc/modules/shopforge-mod-notifications.php:80
+msgid "Awaiting verification"
+msgstr "In attesa di verifica"
+
+#: inc/modules/shopforge-mod-notifications.php:81
+#: inc/modules/shopforge-mod-tracking.php:243
+msgid "Delivered"
+msgstr "Consegnati"
+
+#: inc/modules/shopforge-mod-notifications.php:82
+msgid "Cancelled"
+msgstr "Annullato"
+
+#: inc/modules/shopforge-mod-notifications.php:83
+#: inc/modules/shopforge-mod-returns.php:223
+msgid "Refunded"
+msgstr "Rimborsata"
+
+#: inc/modules/shopforge-mod-notifications.php:84
+msgid "Payment failed"
+msgstr "Pagamento fallito"
+
+#: inc/modules/shopforge-mod-notifications.php:95
+#: inc/modules/shopforge-mod-rma.php:688
+msgid "Order #%1$s — %2$s"
+msgstr "Ordine #%1$s — %2$s"
+
+#: inc/modules/shopforge-mod-notifications.php:104
+msgid "Support request %1$s sent for order #%2$d"
+msgstr "Richiesta assistenza %1$s inviata per l'ordine #%2$d"
+
+#: inc/modules/shopforge-mod-notifications.php:133
+#: inc/modules/shopforge-mod-notifications.php:152
+msgid "Notifications"
+msgstr "Notifiche"
+
+#: inc/modules/shopforge-mod-notifications.php:156
+msgid "%d unread"
+msgid_plural "%d unread"
+msgstr[0] "%d non letta"
+msgstr[1] "%d non lette"
+
+#: inc/modules/shopforge-mod-notifications.php:157
+msgid "All read"
+msgstr "Tutte lette"
+
+#: inc/modules/shopforge-mod-notifications.php:163
+msgid "No notifications"
+msgstr "Nessuna notifica"
+
+#: inc/modules/shopforge-mod-notifications.php:164
+msgid "You will receive updates about orders, shipments, support tickets and quotes."
+msgstr "Riceverai aggiornamenti su ordini, spedizioni, ticket di assistenza e preventivi."
+
+#: inc/modules/shopforge-mod-notifications.php:175
+msgid "Mark all as read"
+msgstr "Segna tutte come lette"
+
+#: inc/modules/shopforge-mod-quotes.php:27
+#: inc/modules/shopforge-mod-quotes.php:286
+msgid "Quotes"
+msgstr "Preventivi"
+
+#: inc/modules/shopforge-mod-quotes.php:30
+msgid "%d request"
+msgid_plural "%d requests"
+msgstr[0] "%d richiesta"
+msgstr[1] "%d richieste"
+
+#: inc/modules/shopforge-mod-quotes.php:34
+#: inc/modules/shopforge-mod-quotes.php:291
+msgid "Pending"
+msgstr "In attesa"
+
+#: inc/modules/shopforge-mod-quotes.php:35
+#: inc/modules/shopforge-mod-quotes.php:292
+msgid "Sent"
+msgstr "Inviato"
+
+#: inc/modules/shopforge-mod-quotes.php:36
+#: inc/modules/shopforge-mod-quotes.php:293
+msgid "Accepted"
+msgstr "Accettato"
+
+#: inc/modules/shopforge-mod-quotes.php:37
+#: inc/modules/shopforge-mod-quotes.php:294
+msgid "Declined"
+msgstr "Rifiutato"
+
+#: inc/modules/shopforge-mod-quotes.php:38
+#: inc/modules/shopforge-mod-quotes.php:295
+msgid "Expired"
+msgstr "Scaduto"
+
+#: inc/modules/shopforge-mod-quotes.php:46
+#: inc/shopforge-email-classes.php:339
+msgid "New quote request"
+msgstr "Nuova richiesta di preventivo"
+
+#: inc/modules/shopforge-mod-quotes.php:51
+msgid "List the products you would like a quote for. We will reply by email as soon as possible."
+msgstr "Elenca i prodotti per i quali desideri ricevere un preventivo. Ti risponderemo via email nel più breve tempo possibile."
+
+#: inc/modules/shopforge-mod-quotes.php:56
+msgid "Product name / SKU"
+msgstr "Nome prodotto / codice SKU"
+
+#: inc/modules/shopforge-mod-quotes.php:57
+msgid "Qty"
+msgstr "Qtà"
+
+#: inc/modules/shopforge-mod-quotes.php:58
+#: inc/shopforge-product-info.php:230
+msgid "Remove"
+msgstr "Rimuovi"
+
+#: inc/modules/shopforge-mod-quotes.php:65
+msgid "Add product"
+msgstr "Aggiungi prodotto"
+
+#: inc/modules/shopforge-mod-quotes.php:69
+msgid "Notes / special requests"
+msgstr "Note / richieste speciali"
+
+#: inc/modules/shopforge-mod-quotes.php:69
+#: inc/modules/shopforge-mod-returns.php:408
+msgid "optional"
+msgstr "opzionale"
+
+#: inc/modules/shopforge-mod-quotes.php:70
+msgid "Variants, alternative quantities, timing…"
+msgstr "Varianti, quantità alternative, tempistiche…"
+
+#: inc/modules/shopforge-mod-quotes.php:76
+#: inc/modules/shopforge-mod-quotes.php:142
+msgid "Send request"
+msgstr "Invia richiesta"
+
+#: inc/modules/shopforge-mod-quotes.php:82
+msgid "Request sent"
+msgstr "Richiesta inviata"
+
+#: inc/modules/shopforge-mod-quotes.php:117
+msgid "Seller reply:"
+msgstr "Risposta del venditore:"
+
+#: inc/modules/shopforge-mod-quotes.php:129
+msgid "No quote requests"
+msgstr "Nessuna richiesta di preventivo"
+
+#: inc/modules/shopforge-mod-quotes.php:130
+msgid "Use the form above to request a custom quote."
+msgstr "Usa il modulo qui sopra per richiedere un preventivo personalizzato."
+
+#: inc/modules/shopforge-mod-quotes.php:140
+#: inc/modules/shopforge-mod-quotes.php:245
+msgid "Enter at least one product."
+msgstr "Inserisci almeno un prodotto."
+
+#: inc/modules/shopforge-mod-quotes.php:141
+msgid "Sending…"
+msgstr "Invio in corso…"
+
+#: inc/modules/shopforge-mod-quotes.php:143
+msgid "Error. Try again."
+msgstr "Errore. Riprova."
+
+#: inc/modules/shopforge-mod-quotes.php:144
+msgid "Ref. %1$s — you will receive a confirmation at %2$s"
+msgstr "Rif. %1$s — riceverai conferma a %2$s"
+
+#: inc/modules/shopforge-mod-quotes.php:228
+#: inc/modules/shopforge-mod-returns.php:510
+msgid "Unauthorized access."
+msgstr "Accesso non autorizzato."
+
+#: inc/modules/shopforge-mod-quotes.php:231
+msgid "Session expired. Reload and try again."
+msgstr "Sessione scaduta. Ricarica e riprova."
+
+#: inc/modules/shopforge-mod-quotes.php:236
+msgid "You already sent a quote request recently. Wait a few minutes and try again."
+msgstr "Hai già inviato una richiesta di preventivo di recente. Attendi qualche minuto e riprova."
+
+#: inc/modules/shopforge-mod-quotes.php:273
+msgid "Your quote request %s has been received."
+msgstr "La tua richiesta di preventivo %s è stata ricevuta."
+
+#: inc/modules/shopforge-mod-quotes.php:286
+#: inc/modules/shopforge-mod-quotes.php:308
+msgid "Customer quotes"
+msgstr "Preventivi clienti"
+
+#: inc/modules/shopforge-mod-quotes.php:310
+msgid "No requests received."
+msgstr "Nessuna richiesta ricevuta."
+
+#: inc/modules/shopforge-mod-quotes.php:314
+#: inc/shopforge-order-tracker.php:760
+msgid "Reference"
+msgstr "Riferimento"
+
+#: inc/modules/shopforge-mod-quotes.php:315
+#: inc/modules/shopforge-mod-rma-admin.php:61
+msgid "Customer"
+msgstr "Cliente"
+
+#: inc/modules/shopforge-mod-quotes.php:316
+#: woocommerce/emails/shopforge-return-admin.php:48
+msgid "Products"
+msgstr "Prodotti"
+
+#: inc/modules/shopforge-mod-quotes.php:317
+#: inc/shopforge-account.php:307
+msgid "Date"
+msgstr "Data"
+
+#: inc/modules/shopforge-mod-quotes.php:318
+#: inc/modules/shopforge-mod-returns.php:653
+msgid "Status"
+msgstr "Stato"
+
+#: inc/modules/shopforge-mod-quotes.php:319
+#: inc/shopforge-account.php:310
+msgid "Actions"
+msgstr "Azioni"
+
+#: inc/modules/shopforge-mod-quotes.php:335
+#: inc/modules/shopforge-mod-quotes.php:371
+msgid "Manage"
+msgstr "Gestisci"
+
+#: inc/modules/shopforge-mod-quotes.php:339
+#: inc/modules/shopforge-mod-returns.php:236
+msgid "Status:"
+msgstr "Stato:"
+
+#: inc/modules/shopforge-mod-quotes.php:346
+#: inc/shopforge-order-tracker.php:739
+msgid "Reply to customer:"
+msgstr "Risposta al cliente:"
+
+#: inc/modules/shopforge-mod-quotes.php:349
+msgid "Send reply by email"
+msgstr "Invia risposta via email"
+
+#: inc/modules/shopforge-mod-quotes.php:357
+#: inc/shopforge-order-tracker.php:745
+msgid "Save"
+msgstr "Salva"
+
+#: inc/modules/shopforge-mod-quotes.php:371
+#: inc/modules/shopforge-mod-returns.php:321
+msgid "Close"
+msgstr "Chiudi"
+
+#: inc/modules/shopforge-mod-quotes.php:386
+msgid "Saved"
+msgstr "Salvato"
+
+#: inc/modules/shopforge-mod-quotes.php:386
+#: inc/modules/shopforge-mod-tracking.php:108
+msgid "Error"
+msgstr "Errore"
+
+#: inc/modules/shopforge-mod-quotes.php:422
+msgid "[%1$s] Quote reply — Ref. %2$s"
+msgstr "[%1$s] Risposta preventivo — Rif. %2$s"
+
+#: inc/modules/shopforge-mod-quotes.php:424
+msgid "Dear %1$s,\n\nWe processed your quote request (ref. %2$s).\n\n--- Reply ---\n%3$s\n---\n\nThank you,\n%4$s"
+msgstr "Gentile %1$s,\n\nAbbiamo elaborato la tua richiesta di preventivo (rif. %2$s).\n\n--- Risposta ---\n%3$s\n---\n\nGrazie,\n%4$s"
+
+#: inc/modules/shopforge-mod-quotes.php:430
+msgid "Your quote %s received a reply."
+msgstr "Il tuo preventivo %s ha ricevuto una risposta."
+
+#: inc/modules/shopforge-mod-returns.php:220
+#: inc/modules/shopforge-mod-returns.php:639
+msgid "Received"
+msgstr "Ricevuto"
+
+#: inc/modules/shopforge-mod-returns.php:221
+#: inc/modules/shopforge-mod-returns.php:640
+msgid "Processing"
+msgstr "In lavorazione"
+
+#: inc/modules/shopforge-mod-returns.php:222
+#: inc/modules/shopforge-mod-returns.php:641
+msgid "Approved"
+msgstr "Approvata"
+
+#: inc/modules/shopforge-mod-returns.php:232
+msgid "Withdrawal request sent"
+msgstr "Richiesta di recesso inviata"
+
+#: inc/modules/shopforge-mod-returns.php:235
+msgid "Ref."
+msgstr "Rif."
+
+#: inc/modules/shopforge-mod-returns.php:241
+msgid "Message from the store:"
+msgstr "Messaggio dal negozio:"
+
+#: inc/modules/shopforge-mod-returns.php:249
+msgid "All my returns"
+msgstr "Tutti i miei resi"
+
+#: inc/modules/shopforge-mod-returns.php:261
+msgid "Withdrawal window expired"
+msgstr "Termine di recesso scaduto"
+
+#: inc/modules/shopforge-mod-returns.php:265
+msgid "The %d-day period to exercise the right of withdrawal has expired. For any need, contact our store."
+msgstr "Il periodo di %d giorni per esercitare il diritto di recesso è scaduto. Per qualsiasi necessità, contatta il nostro negozio."
+
+#: inc/modules/shopforge-mod-returns.php:272
+msgid "Contact the store"
+msgstr "Contatta il negozio"
+
+#: inc/modules/shopforge-mod-returns.php:277
+msgid "Contact the store for assistance"
+msgstr "Contatta il negozio per assistenza"
+
+#: inc/modules/shopforge-mod-returns.php:289
+msgid "Right of withdrawal"
+msgstr "Diritto di recesso"
+
+#: inc/modules/shopforge-mod-returns.php:293
+msgid "You have the right to withdraw from the contract within %d days of receiving the goods, without giving any reason."
+msgstr "Hai il diritto di recedere dal contratto entro %d giorni dalla ricezione della merce, senza fornire alcuna motivazione."
+
+#: inc/modules/shopforge-mod-returns.php:298
+msgid "You still have %d day."
+msgid_plural "You still have %d days."
+msgstr[0] "Hai ancora %d giorno."
+msgstr[1] "Hai ancora %d giorni."
+
+#: inc/modules/shopforge-mod-returns.php:307
+msgid "Withdraw from the contract"
+msgstr "Recedi dal contratto"
+
+#: inc/modules/shopforge-mod-returns.php:319
+msgid "Contract withdrawal"
+msgstr "Recesso dal contratto"
+
+#: inc/modules/shopforge-mod-returns.php:330
+msgid "Details"
+msgstr "Dettagli"
+
+#: inc/modules/shopforge-mod-returns.php:335
+msgid "Confirm"
+msgstr "Conferma"
+
+#: inc/modules/shopforge-mod-returns.php:346
+msgid "Order <strong>#%1$s</strong> of %2$s"
+msgstr "Ordine <strong>#%1$s</strong> del %2$s"
+
+#: inc/modules/shopforge-mod-returns.php:351
+msgid "Products to return"
+msgstr "Prodotti da restituire"
+
+#: inc/modules/shopforge-mod-returns.php:379
+msgid "Reason for withdrawal"
+msgstr "Motivo del recesso"
+
+#: inc/modules/shopforge-mod-returns.php:381
+#: inc/modules/shopforge-mod-rma.php:827
+msgid "Select"
+msgstr "Seleziona"
+
+#: inc/modules/shopforge-mod-returns.php:382
+msgid "Changed my mind"
+msgstr "Ripensamento"
+
+#: inc/modules/shopforge-mod-returns.php:382
+msgid "Changed my mind (no longer interested)"
+msgstr "Ripensamento (non sono più interessato)"
+
+#: inc/modules/shopforge-mod-returns.php:383
+#: inc/modules/shopforge-mod-returns.php:383
+msgid "Product not as described"
+msgstr "Prodotto non conforme alla descrizione"
+
+#: inc/modules/shopforge-mod-returns.php:384
+#: inc/modules/shopforge-mod-returns.php:384
+msgid "Defective or damaged product"
+msgstr "Prodotto difettoso o danneggiato"
+
+#: inc/modules/shopforge-mod-returns.php:385
+#: inc/modules/shopforge-mod-returns.php:385
+msgid "Wrong product received"
+msgstr "Prodotto errato ricevuto"
+
+#: inc/modules/shopforge-mod-returns.php:386
+#: inc/modules/shopforge-mod-returns.php:386
+msgid "Delivery delay"
+msgstr "Ritardo nella consegna"
+
+#: inc/modules/shopforge-mod-returns.php:387
+#: inc/modules/shopforge-mod-returns.php:387
+msgid "Other"
+msgstr "Altro"
+
+#: inc/modules/shopforge-mod-returns.php:392
+msgid "Preferred refund method"
+msgstr "Metodo di rimborso preferito"
+
+#: inc/modules/shopforge-mod-returns.php:395
+#: inc/modules/shopforge-mod-returns.php:397
+msgid "Refund to the original payment method"
+msgstr "Rimborso sul metodo di pagamento originale"
+
+#: inc/modules/shopforge-mod-returns.php:400
+msgid "Store credit"
+msgstr "Buono sconto"
+
+#: inc/modules/shopforge-mod-returns.php:402
+msgid "Store credit to use on the site"
+msgstr "Buono sconto da utilizzare sul sito"
+
+#: inc/modules/shopforge-mod-returns.php:408
+msgid "Additional notes"
+msgstr "Note aggiuntive"
+
+#: inc/modules/shopforge-mod-returns.php:409
+msgid "Enter further details…"
+msgstr "Inserisci ulteriori dettagli…"
+
+#: inc/modules/shopforge-mod-returns.php:413
+#: inc/modules/shopforge-mod-rma.php:854
+msgid "Photos or documents"
+msgstr "Foto o documenti"
+
+#: inc/modules/shopforge-mod-returns.php:413
+msgid "optional — max 5 MB per file"
+msgstr "opzionale — max 5 MB per file"
+
+#: inc/modules/shopforge-mod-returns.php:420
+msgid "On the next screen you can read the full text of your withdrawal declaration before confirming."
+msgstr "Nella schermata successiva potrai leggere il testo completo della tua dichiarazione di recesso prima di confermare."
+
+#: inc/modules/shopforge-mod-returns.php:426
+msgid "Next — Review and confirm"
+msgstr "Avanti — Rivedi e conferma"
+
+#: inc/modules/shopforge-mod-returns.php:439
+msgid "By confirming, we will send this declaration to the seller and you will receive an automatic email receipt with the date and time of transmission."
+msgstr "Confermando, invieremo questa dichiarazione al venditore e riceverai una ricevuta automatica via email con data e ora della trasmissione."
+
+#: inc/modules/shopforge-mod-returns.php:446
+msgid "Back"
+msgstr "Indietro"
+
+#: inc/modules/shopforge-mod-returns.php:449
+msgid "I confirm the withdrawal"
+msgstr "Confermo il recesso"
+
+#: inc/modules/shopforge-mod-returns.php:458
+msgid "Withdrawal recorded"
+msgstr "Recesso registrato"
+
+#: inc/modules/shopforge-mod-returns.php:497
+#: inc/modules/shopforge-mod-rma.php:951
+msgid "Session expired. Reload the page and try again."
+msgstr "Sessione scaduta. Ricarica la pagina e riprova."
+
+#: inc/modules/shopforge-mod-returns.php:502
+msgid "You already sent a withdrawal request recently. Wait a few minutes and try again."
+msgstr "Hai già inviato una richiesta di recesso di recente. Attendi qualche minuto e riprova."
+
+#: inc/modules/shopforge-mod-returns.php:506
+#: inc/shopforge-order-tracker.php:312
+msgid "Order not found."
+msgstr "Ordine non trovato."
+
+#: inc/modules/shopforge-mod-returns.php:515
+msgid "The %d-day withdrawal period has expired."
+msgstr "Il termine di %d giorni per esercitare il recesso è scaduto."
+
+#: inc/modules/shopforge-mod-returns.php:519
+msgid "A withdrawal request already exists for this order."
+msgstr "Esiste già una richiesta di recesso per questo ordine."
+
+#: inc/modules/shopforge-mod-returns.php:530
+#: inc/shopforge-order-tracker.php:327
+msgid "Missing or invalid data."
+msgstr "Dati mancanti o non validi."
+
+#: inc/modules/shopforge-mod-returns.php:618
+#: inc/modules/shopforge-mod-returns.php:867
+msgid "Withdrawal requests"
+msgstr "Richieste di recesso"
+
+#: inc/modules/shopforge-mod-returns.php:634
+msgid "No withdrawal requests for this order."
+msgstr "Nessuna richiesta di recesso per questo ordine."
+
+#: inc/modules/shopforge-mod-returns.php:643
+#: inc/modules/shopforge-mod-returns.php:813
+msgid "Rejected"
+msgstr "Rifiutata"
+
+#: inc/modules/shopforge-mod-returns.php:650
+msgid "Ref. / Date"
+msgstr "Rif. / Data"
+
+#: inc/modules/shopforge-mod-returns.php:651
+msgid "Products / Reason"
+msgstr "Prodotti / Motivo"
+
+#: inc/modules/shopforge-mod-returns.php:652
+msgid "Declaration"
+msgstr "Dichiarazione"
+
+#: inc/modules/shopforge-mod-returns.php:675
+msgid "Refund:"
+msgstr "Rimborso:"
+
+#: inc/modules/shopforge-mod-returns.php:677
+msgid "Notes:"
+msgstr "Note:"
+
+#: inc/modules/shopforge-mod-returns.php:690
+#: inc/modules/shopforge-mod-returns.php:853
+msgid "Store reply:"
+msgstr "Risposta negozio:"
+
+#: inc/modules/shopforge-mod-returns.php:693
+msgid "Message to customer (optional)…"
+msgstr "Messaggio al cliente (opzionale)…"
+
+#: inc/modules/shopforge-mod-returns.php:708
+#: inc/shopforge-order-tracker.php:564
+msgid "Save &amp; Notify"
+msgstr "Salva &amp; Notifica"
+
+#: inc/modules/shopforge-mod-returns.php:765
+#: inc/shopforge-modules.php:110
+msgid "Support & Returns"
+msgstr "Assistenza e Resi"
+
+#: inc/modules/shopforge-mod-returns.php:793
+#: inc/modules/shopforge-mod-rma.php:739
+msgid "No requests"
+msgstr "Nessuna richiesta"
+
+#: inc/modules/shopforge-mod-returns.php:795
+msgid "From the orders area you can open a support ticket or request a withdrawal (within %d days of delivery)."
+msgstr "Dall'area ordini puoi aprire un ticket di assistenza o richiedere il recesso (entro %d giorni dalla consegna)."
+
+#: inc/modules/shopforge-mod-returns.php:805
+#: inc/modules/shopforge-mod-rma.php:79
+msgid "Open"
+msgstr "Aperto"
+
+#: inc/modules/shopforge-mod-returns.php:806
+#: inc/modules/shopforge-mod-rma.php:88
+msgid "Closed"
+msgstr "Chiuso"
+
+#: inc/modules/shopforge-mod-returns.php:821
+#: inc/shopforge-order-tracker.php:469
+msgid "Support requests"
+msgstr "Richieste assistenza"
+
+#: inc/modules/shopforge-mod-returns.php:837
+#: inc/modules/shopforge-mod-returns.php:883
+msgid "Order"
+msgstr "Ordine"
+
+#: inc/modules/shopforge-mod-returns.php:843
+#: inc/modules/shopforge-mod-returns.php:892
+msgid "Attachments:"
+msgstr "Allegati:"
+
+#: inc/modules/shopforge-mod-rma-admin.php:19
+#: inc/shopforge-modules.php:122
+msgid "Product Support (RMA)"
+msgstr "Assistenza Prodotti (RMA)"
+
+#: inc/modules/shopforge-mod-rma-admin.php:20
+#: inc/modules/shopforge-mod-rma.php:50
+msgid "Product Support"
+msgstr "Assistenza Prodotti"
+
+#: inc/modules/shopforge-mod-rma-admin.php:31
+#: inc/modules/shopforge-mod-rma-admin.php:31
+msgid "All Requests"
+msgstr "Tutte le Richieste"
+
+#: inc/modules/shopforge-mod-rma-admin.php:59
+#: woocommerce/emails/shopforge-ticket-status-update.php:25
+msgid "Request"
+msgstr "Richiesta"
+
+#: inc/modules/shopforge-mod-rma-admin.php:60
+#: inc/modules/shopforge-mod-rma-export.php:34
+msgid "Type"
+msgstr "Tipo"
+
+#: inc/modules/shopforge-mod-rma-admin.php:63
+#: inc/modules/shopforge-mod-rma-admin.php:303
+msgid "Product"
+msgstr "Prodotto"
+
+#: inc/modules/shopforge-mod-rma-admin.php:65
+#: inc/modules/shopforge-mod-rma-admin.php:270
+msgid "Assigned to"
+msgstr "Assegnata a"
+
+#: inc/modules/shopforge-mod-rma-admin.php:66
+#: inc/modules/shopforge-mod-rma-export.php:34
+msgid "Created"
+msgstr "Data Creazione"
+
+#: inc/modules/shopforge-mod-rma-admin.php:74
+#: inc/modules/shopforge-mod-rma-admin.php:280
+msgid "Return"
+msgstr "Reso"
+
+#: inc/modules/shopforge-mod-rma-admin.php:74
+#: inc/modules/shopforge-mod-rma-admin.php:280
+msgid "Support"
+msgstr "Assistenza"
+
+#: inc/modules/shopforge-mod-rma-admin.php:117
+msgid "All statuses"
+msgstr "Tutti gli stati"
+
+#: inc/modules/shopforge-mod-rma-admin.php:125
+msgid "Filter by Order ID"
+msgstr "Filtra per ID Ordine"
+
+#: inc/modules/shopforge-mod-rma-admin.php:128
+msgid "All users"
+msgstr "Tutti gli utenti"
+
+#: inc/modules/shopforge-mod-rma-admin.php:134
+msgid "All operators"
+msgstr "Tutti gli operatori"
+
+#: inc/modules/shopforge-mod-rma-admin.php:139
+msgid "Export CSV"
+msgstr "Esporta CSV"
+
+#: inc/modules/shopforge-mod-rma-admin.php:173
+msgid "Change status: %s"
+msgstr "Cambia stato: %s"
+
+#: inc/modules/shopforge-mod-rma-admin.php:178
+msgid "Assign to: %s"
+msgstr "Assegna a: %s"
+
+#: inc/modules/shopforge-mod-rma-admin.php:217
+msgid "%d requests updated."
+msgstr "%d richieste aggiornate."
+
+#: inc/modules/shopforge-mod-rma-admin.php:221
+msgid "%d requests assigned."
+msgstr "%d richieste assegnate."
+
+#: inc/modules/shopforge-mod-rma-admin.php:231
+msgid "Request Details"
+msgstr "Dettagli Richiesta"
+
+#: inc/modules/shopforge-mod-rma-admin.php:232
+msgid "Conversation"
+msgstr "Conversazione"
+
+#: inc/modules/shopforge-mod-rma-admin.php:256
+msgid "Print request"
+msgstr "Stampa richiesta"
+
+#: inc/modules/shopforge-mod-rma-admin.php:260
+msgid "Request Status"
+msgstr "Stato Richiesta"
+
+#: inc/modules/shopforge-mod-rma-admin.php:273
+msgid "Unassigned"
+msgstr "Non assegnata"
+
+#: inc/modules/shopforge-mod-rma-admin.php:280
+msgid "Request Type"
+msgstr "Tipo Richiesta"
+
+#: inc/modules/shopforge-mod-rma-admin.php:281
+#: inc/modules/shopforge-mod-rma-export.php:34
+msgid "Quantity"
+msgstr "Quantità"
+
+#: inc/modules/shopforge-mod-rma-admin.php:288
+msgid "Edit user"
+msgstr "Modifica utente"
+
+#: inc/modules/shopforge-mod-rma-admin.php:311
+msgid "Problem Description"
+msgstr "Descrizione Problema"
+
+#: inc/modules/shopforge-mod-rma-admin.php:313
+msgid "Chosen Remedy"
+msgstr "Rimedio Scelto"
+
+#: inc/modules/shopforge-mod-rma-admin.php:318
+msgid "WooCommerce Refund"
+msgstr "Rimborso WooCommerce"
+
+#: inc/modules/shopforge-mod-rma-admin.php:324
+msgid "Refund #%1$d created (%2$s)"
+msgstr "Rimborso #%1$d creato (%2$s)"
+
+#: inc/modules/shopforge-mod-rma-admin.php:326
+msgid "Create WooCommerce refund"
+msgstr "Crea rimborso WooCommerce"
+
+#: inc/modules/shopforge-mod-rma-admin.php:327
+msgid "Creates a real refund on the order for this request quantity and restores stock."
+msgstr "Crea un rimborso reale sull'ordine per la quantità di questa richiesta e ripristina lo stock."
+
+#: inc/modules/shopforge-mod-rma-admin.php:329
+msgid "You do not have permission to create a refund."
+msgstr "Non hai i permessi per creare un rimborso."
+
+#: inc/modules/shopforge-mod-rma-admin.php:336
+msgid "Attachments"
+msgstr "Allegati"
+
+#: inc/modules/shopforge-mod-rma-admin.php:341
+#: inc/modules/shopforge-mod-rma-export.php:34
+msgid "Reason"
+msgstr "Motivo"
+
+#: inc/modules/shopforge-mod-rma-admin.php:344
+msgid "Acceptances"
+msgstr "Accettazioni"
+
+#: inc/modules/shopforge-mod-rma-admin.php:347
+msgid "Terms and conditions"
+msgstr "Termini e condizioni"
+
+#: inc/modules/shopforge-mod-rma-admin.php:348
+msgid "Privacy policy"
+msgstr "Informativa privacy"
+
+#: inc/modules/shopforge-mod-rma-admin.php:349
+msgid "Return procedure and conditions"
+msgstr "Procedura di reso e condizioni"
+
+#: inc/modules/shopforge-mod-rma-admin.php:354
+#: inc/modules/shopforge-mod-tracking.php:382
+msgid "Shipment tracking"
+msgstr "Tracking spedizioni"
+
+#: inc/modules/shopforge-mod-rma-admin.php:356
+#: inc/modules/shopforge-mod-tracking.php:78
+msgid "Carrier"
+msgstr "Corriere"
+
+#: inc/modules/shopforge-mod-rma-admin.php:357
+#: inc/modules/shopforge-mod-tracking.php:83
+msgid "Tracking number"
+msgstr "Numero tracking"
+
+#: inc/modules/shopforge-mod-rma-admin.php:358
+msgid "If filled in, it will be shown to the customer in the request detail."
+msgstr "Se compilato, verrà mostrato al cliente nel dettaglio della richiesta."
+
+#: inc/modules/shopforge-mod-rma-admin.php:363
+msgid "Status History"
+msgstr "Storico Stati"
+
+#: inc/modules/shopforge-mod-rma-admin.php:403
+msgid "No messages yet."
+msgstr "Nessun messaggio ancora."
+
+#: inc/modules/shopforge-mod-rma-admin.php:420
+msgid "Add Message"
+msgstr "Aggiungi Messaggio"
+
+#: inc/modules/shopforge-mod-rma-admin.php:424
+#: woocommerce/emails/shopforge-ticket-admin.php:44
+msgid "Message"
+msgstr "Messaggio"
+
+#: inc/modules/shopforge-mod-rma-admin.php:427
+msgid "Attachments (optional)"
+msgstr "Allegati (opzionale)"
+
+#: inc/modules/shopforge-mod-rma-admin.php:430
+msgid "Send Message"
+msgstr "Invia Messaggio"
+
+#: inc/modules/shopforge-mod-rma-admin.php:494
+#: inc/modules/shopforge-mod-rma-admin.php:517
+msgid "Security: invalid nonce."
+msgstr "Sicurezza: nonce non valido."
+
+#: inc/modules/shopforge-mod-rma-admin.php:497
+#: inc/modules/shopforge-mod-rma-export.php:14
+msgid "Insufficient permissions."
+msgstr "Permessi insufficienti."
+
+#: inc/modules/shopforge-mod-rma-admin.php:504
+#: inc/modules/shopforge-mod-rma-admin.php:525
+msgid "Invalid request."
+msgstr "Richiesta non valida."
+
+#: inc/modules/shopforge-mod-rma-admin.php:507
+msgid "Invalid status."
+msgstr "Stato non valido."
+
+#: inc/modules/shopforge-mod-rma-admin.php:520
+msgid "Insufficient permissions to create a refund."
+msgstr "Permessi insufficienti per creare un rimborso."
+
+#: inc/modules/shopforge-mod-rma-admin.php:528
+msgid "A refund was already created for this request."
+msgstr "È già stato creato un rimborso per questa richiesta."
+
+#: inc/modules/shopforge-mod-rma-admin.php:537
+#: inc/modules/shopforge-mod-rma.php:538
+msgid "Invalid order."
+msgstr "Ordine non valido."
+
+#: inc/modules/shopforge-mod-rma-admin.php:550
+msgid "Product not found in the order."
+msgstr "Prodotto non trovato nell'ordine."
+
+#: inc/modules/shopforge-mod-rma-admin.php:571
+msgid "Refund for Product Support request #%d"
+msgstr "Rimborso richiesta Assistenza Prodotti #%d"
+
+#: inc/modules/shopforge-mod-rma-admin.php:585
+msgid "Refund of %s created successfully."
+msgstr "Rimborso di %s creato con successo."
+
+#: inc/modules/shopforge-mod-rma-export.php:34
+msgid "Email"
+msgstr "Email"
+
+#: inc/modules/shopforge-mod-rma-export.php:34
+msgid "Remedy"
+msgstr "Rimedio"
+
+#: inc/modules/shopforge-mod-rma-print.php:17
+msgid "Invalid or expired link."
+msgstr "Link non valido o scaduto."
+
+#: inc/modules/shopforge-mod-rma-print.php:23
+msgid "Request not found."
+msgstr "Richiesta non trovata."
+
+#: inc/modules/shopforge-mod-rma-print.php:81
+msgid "No messages."
+msgstr "Nessun messaggio."
+
+#: inc/modules/shopforge-mod-rma-stats.php:71
+msgid "Requests by status"
+msgstr "Richieste per stato"
+
+#: inc/modules/shopforge-mod-rma-stats.php:81
+msgid "Average resolution time"
+msgstr "Tempo medio di risoluzione"
+
+#: inc/modules/shopforge-mod-rma-stats.php:84
+msgid "Most requested products"
+msgstr "Prodotti più richiesti"
+
+#: inc/modules/shopforge-mod-rma-stats.php:89
+#: inc/modules/shopforge-mod-rma-stats.php:105
+msgid "No data available."
+msgstr "Nessun dato disponibile."
+
+#: inc/modules/shopforge-mod-rma-stats.php:100
+msgid "Most frequent reasons (support)"
+msgstr "Motivi più frequenti (assistenza)"
+
+#: inc/modules/shopforge-mod-rma.php:46
+#: inc/modules/shopforge-mod-rma.php:49
+msgid "RMA Request"
+msgstr "Richiesta RMA"
+
+#: inc/modules/shopforge-mod-rma.php:48
+msgid "RMA Requests"
+msgstr "Richieste RMA"
+
+#: inc/modules/shopforge-mod-rma.php:52
+msgid "Search Requests"
+msgstr "Cerca Richieste"
+
+#: inc/modules/shopforge-mod-rma.php:53
+#: inc/modules/shopforge-mod-tracking.php:239
+msgid "Not found"
+msgstr "Non trovato"
+
+#: inc/modules/shopforge-mod-rma.php:82
+msgid "Awaiting shipment"
+msgstr "In attesa di spedizione"
+
+#: inc/modules/shopforge-mod-rma.php:83
+msgid "Product received"
+msgstr "Prodotto ricevuto"
+
+#: inc/modules/shopforge-mod-rma.php:85
+msgid "Replaced"
+msgstr "Sostituita"
+
+#: inc/modules/shopforge-mod-rma.php:87
+msgid "Cancelled by customer"
+msgstr "Annullata dal cliente"
+
+#: inc/modules/shopforge-mod-rma.php:110
+msgid "Damage caused by drop or impact"
+msgstr "Danno causato da caduta o urto"
+
+#: inc/modules/shopforge-mod-rma.php:111
+msgid "Water damage"
+msgstr "Danneggiamento dovuto ad acqua"
+
+#: inc/modules/shopforge-mod-rma.php:112
+msgid "Does not turn on"
+msgstr "Non si accende"
+
+#: inc/modules/shopforge-mod-rma.php:113
+msgid "Does not work properly"
+msgstr "Non funziona correttamente"
+
+#: inc/modules/shopforge-mod-rma.php:114
+msgid "Check / Service / Cleaning"
+msgstr "Controllo / Revisione / Pulizia"
+
+#: inc/modules/shopforge-mod-rma.php:122
+msgid "I want to request a refund and return the product (conditions apply)."
+msgstr "Voglio richiedere un rimborso e restituire il prodotto (si applicano le condizioni)."
+
+#: inc/modules/shopforge-mod-rma.php:123
+msgid "I want to request a replacement of the product (conditions apply)."
+msgstr "Voglio richiedere la sostituzione del prodotto (si applicano le condizioni)."
+
+#: inc/modules/shopforge-mod-rma.php:127
+msgid "I want to receive a repair quote"
+msgstr "Voglio ricevere un preventivo di riparazione"
+
+#: inc/modules/shopforge-mod-rma.php:128
+msgid "The repair service can be processed up to €150 plus shipping, otherwise I want to receive a quote"
+msgstr "Il servizio di riparazione può essere elaborato fino a 150 € più spese di spedizione, altrimenti voglio ricevere un preventivo"
+
+#: inc/modules/shopforge-mod-rma.php:129
+msgid "The repair service can be processed up to €350 plus shipping, otherwise I want to receive a quote"
+msgstr "Il servizio di riparazione può essere elaborato fino a 350 € più spese di spedizione, altrimenti voglio ricevere un preventivo"
+
+#: inc/modules/shopforge-mod-rma.php:130
+msgid "I want to use the European legal warranty of the product (required documents are attached)"
+msgstr "Voglio usufruire della garanzia legale europea del prodotto (documenti richiesti sono allegati)"
+
+#: inc/modules/shopforge-mod-rma.php:532
+msgid "Required fields missing."
+msgstr "Campi obbligatori mancanti."
+
+#: inc/modules/shopforge-mod-rma.php:535
+msgid "You reached the maximum number of requests allowed today. Try again tomorrow."
+msgstr "Hai raggiunto il numero massimo di richieste consentite per oggi. Riprova domani."
+
+#: inc/modules/shopforge-mod-rma.php:541
+msgid "Product not in the order."
+msgstr "Prodotto non presente nell'ordine."
+
+#: inc/modules/shopforge-mod-rma.php:547
+msgid "Invalid data."
+msgstr "Dati non validi."
+
+#: inc/modules/shopforge-mod-rma.php:550
+msgid "This product is not eligible for return or support requests."
+msgstr "Questo prodotto non è idoneo per richieste di reso o assistenza."
+
+#: inc/modules/shopforge-mod-rma.php:557
+msgid "You already requested return/support for all units of this product."
+msgstr "Hai già richiesto reso/assistenza per tutte le unità di questo prodotto."
+
+#: inc/modules/shopforge-mod-rma.php:562
+msgid "The legal warranty period for this order has ended."
+msgstr "Il periodo di garanzia legale per questo ordine è terminato."
+
+#: inc/modules/shopforge-mod-rma.php:569
+msgid "%1$s request - Order #%2$s - %3$s"
+msgstr "Richiesta %1$s - Ordine #%2$s - %3$s"
+
+#: inc/modules/shopforge-mod-rma.php:641
+msgid "Request sent successfully."
+msgstr "Richiesta inviata con successo."
+
+#: inc/modules/shopforge-mod-rma.php:677
+msgid "No eligible orders"
+msgstr "Nessun ordine idoneo"
+
+#: inc/modules/shopforge-mod-rma.php:677
+msgid "Support and returns are available for completed or processing orders."
+msgstr "Assistenza e resi sono disponibili per ordini completati o in lavorazione."
+
+#: inc/modules/shopforge-mod-rma.php:684
+#: inc/modules/shopforge-mod-rma.php:908
+msgid "My requests"
+msgstr "Le mie richieste"
+
+#: inc/modules/shopforge-mod-rma.php:703
+msgid "Request already open"
+msgstr "Richiesta già aperta"
+
+#: inc/modules/shopforge-mod-rma.php:705
+msgid "Not available for this product"
+msgstr "Non disponibile per questo prodotto"
+
+#: inc/modules/shopforge-mod-rma.php:707
+msgid "All units already covered by a request"
+msgstr "Tutte le unità già coperte da una richiesta"
+
+#: inc/modules/shopforge-mod-rma.php:709
+#: inc/modules/shopforge-mod-rma.php:796
+msgid "Request support"
+msgstr "Richiedi assistenza"
+
+#: inc/modules/shopforge-mod-rma.php:711
+#: inc/modules/shopforge-mod-rma.php:796
+msgid "Request return"
+msgstr "Richiedi reso"
+
+#: inc/modules/shopforge-mod-rma.php:726
+msgid "My Requests"
+msgstr "Le mie Richieste"
+
+#: inc/modules/shopforge-mod-rma.php:739
+msgid "Support or return requests you open will appear here."
+msgstr "Le richieste di assistenza o reso che apri appariranno qui."
+
+#: inc/modules/shopforge-mod-rma.php:760
+msgid "View Details"
+msgstr "Visualizza Dettagli"
+
+#: inc/modules/shopforge-mod-rma.php:836
+msgid "Description of the problem"
+msgstr "Descrizione del problema"
+
+#: inc/modules/shopforge-mod-rma.php:841
+msgid "What would you prefer?"
+msgstr "Cosa preferisci?"
+
+#: inc/modules/shopforge-mod-rma.php:848
+msgid "warranty expired"
+msgstr "garanzia scaduta"
+
+#: inc/modules/shopforge-mod-rma.php:858
+msgid "I accept the terms and conditions of the service."
+msgstr "Accetto i termini e condizioni del servizio."
+
+#: inc/modules/shopforge-mod-rma.php:859
+msgid "I have read the privacy policy."
+msgstr "Ho letto l'informativa privacy."
+
+#: inc/modules/shopforge-mod-rma.php:863
+msgid "I declare I understood the return/support procedure of %s and its conditions."
+msgstr "Dichiaro di aver compreso la procedura di reso/assistenza di %s e le relative condizioni."
+
+#: inc/modules/shopforge-mod-rma.php:898
+msgid "Request #%d"
+msgstr "Richiesta #%d"
+
+#: inc/modules/shopforge-mod-rma.php:916
+msgid "Cancel request"
+msgstr "Annulla richiesta"
+
+#: inc/modules/shopforge-mod-rma.php:924
+msgid "Write a message…"
+msgstr "Scrivi un messaggio…"
+
+#: inc/modules/shopforge-mod-rma.php:925
+msgid "Send"
+msgstr "Invia"
+
+#: inc/modules/shopforge-mod-rma.php:955
+msgid "You must be logged in."
+msgstr "Devi essere loggato."
+
+#: inc/modules/shopforge-mod-rma.php:958
+msgid "Wait a few seconds before sending again."
+msgstr "Attendi qualche secondo prima di reinviare."
+
+#: inc/modules/shopforge-mod-rma.php:976
+msgid "You must accept all conditions to proceed."
+msgstr "Devi accettare tutte le condizioni per procedere."
+
+#: inc/modules/shopforge-mod-rma.php:1001
+msgid "Missing data."
+msgstr "Dati mancanti."
+
+#: inc/modules/shopforge-mod-rma.php:1032
+msgid "This request is already being processed and can no longer be cancelled on your own."
+msgstr "Questa richiesta è già in lavorazione e non può più essere annullata autonomamente."
+
+#: inc/modules/shopforge-mod-rma.php:1064
+msgid "Support & Returns (RMA)"
+msgstr "Assistenza & Resi (RMA)"
+
+#: inc/modules/shopforge-mod-tracking.php:36
+#: inc/modules/shopforge-mod-tracking.php:45
+msgid "Shipment Tracking"
+msgstr "Tracking Spedizione"
+
+#: inc/modules/shopforge-mod-tracking.php:81
+msgid "DHL, UPS, FedEx…"
+msgstr "BRT, GLS, DHL, UPS…"
+
+#: inc/modules/shopforge-mod-tracking.php:86
+msgid "Enter tracking number"
+msgstr "Inserisci numero tracking"
+
+#: inc/modules/shopforge-mod-tracking.php:93
+msgid "Refresh cache"
+msgstr "Aggiorna cache"
+
+#: inc/modules/shopforge-mod-tracking.php:102
+msgid "Clearing…"
+msgstr "Pulizia…"
+
+#: inc/modules/shopforge-mod-tracking.php:108
+msgid "Cache cleared"
+msgstr "Cache svuotata"
+
+#: inc/modules/shopforge-mod-tracking.php:240
+msgid "Picked up"
+msgstr "Ritirato"
+
+#: inc/modules/shopforge-mod-tracking.php:241
+#: inc/shopforge-account.php:644
+msgid "In transit"
+msgstr "In transito"
+
+#: inc/modules/shopforge-mod-tracking.php:242
+#: inc/shopforge-account.php:645
+msgid "Delivery attempt failed"
+msgstr "Tentativo di consegna fallito"
+
+#: inc/modules/shopforge-mod-tracking.php:245
+msgid "Alert"
+msgstr "Allerta"
+
+#: inc/modules/shopforge-mod-tracking.php:268
+msgid "Unknown"
+msgstr "Sconosciuto"
+
+#: inc/modules/shopforge-mod-tracking.php:322
+msgid "Tracking number not available yet."
+msgstr "Numero di tracking non ancora disponibile."
+
+#: inc/modules/shopforge-mod-tracking.php:331
+msgid "Unable to fetch tracking right now. Try again in a few minutes."
+msgstr "Impossibile recuperare il tracking al momento. Riprova tra qualche minuto."
+
+#: inc/modules/shopforge-mod-tracking.php:395
+msgid "Loading tracking…"
+msgstr "Caricamento tracking…"
+
+#: inc/modules/shopforge-mod-tracking.php:426
+msgid "Tracking not available."
+msgstr "Tracking non disponibile."
+
+#: inc/modules/shopforge-mod-tracking.php:436
+msgid "No updates available yet. The carrier may take a few hours to update the status."
+msgstr "Nessun aggiornamento disponibile ancora. Il corriere potrebbe impiegare qualche ora ad aggiornare lo stato."
+
+#: inc/modules/shopforge-mod-tracking.php:455
+msgid "Updated"
+msgstr "Aggiornato"
+
+#: inc/modules/shopforge-mod-tracking.php:461
+msgid "Error loading tracking."
+msgstr "Errore nel caricamento del tracking."
+
+#: inc/modules/shopforge-mod-wishlist.php:20
+#: inc/shopforge-modules.php:86
+msgid "Wishlist"
+msgstr "Lista desideri"
+
+#: inc/modules/shopforge-mod-wishlist.php:23
+msgid "%d saved product"
+msgid_plural "%d saved products"
+msgstr[0] "%d prodotto salvato"
+msgstr[1] "%d prodotti salvati"
+
+#: inc/modules/shopforge-mod-wishlist.php:29
+msgid "No saved products"
+msgstr "Nessun prodotto salvato"
+
+#: inc/modules/shopforge-mod-wishlist.php:30
+msgid "Add products to your wishlist to find them easily."
+msgstr "Aggiungi prodotti alla lista desideri per ritrovarli facilmente."
+
+#: inc/modules/shopforge-mod-wishlist.php:62
+msgid "Add to cart"
+msgstr "Aggiungi al carrello"
+
+#: inc/modules/shopforge-mod-wishlist.php:65
+#: inc/shopforge-product.php:371
+msgid "Out of stock"
+msgstr "Non disponibile"
+
+#: inc/modules/shopforge-mod-wishlist.php:163
+#: inc/modules/shopforge-mod-wishlist.php:164
+msgid "Remove from wishlist"
+msgstr "Rimuovi dalla lista desideri"
+
+#: inc/modules/shopforge-mod-wishlist.php:163
+#: inc/modules/shopforge-mod-wishlist.php:164
+msgid "Add to wishlist"
+msgstr "Aggiungi alla lista desideri"
+
+#: inc/modules/shopforge-mod-wishlist.php:197
+#: inc/modules/shopforge-mod-wishlist.php:214
+msgid "In your wishlist"
+msgstr "Nella lista desideri"
+
+#: inc/shopforge-account.php:277
+#: inc/shopforge-account.php:288
+msgid "Reorder"
+msgstr "Riordina"
+
+#: inc/shopforge-account.php:309
+#: inc/shopforge-account.php:529
+msgid "Total"
+msgstr "Totale"
+
+#: inc/shopforge-account.php:438
+msgid "Total orders"
+msgstr "Ordini totali"
+
+#: inc/shopforge-account.php:440
+msgid "View orders"
+msgstr "Visualizza ordini"
+
+#: inc/shopforge-account.php:447
+msgid "Check status"
+msgstr "Controlla stato"
+
+#: inc/shopforge-account.php:454
+msgid "Purchase history"
+msgstr "Storico acquisti"
+
+#: inc/shopforge-account.php:466
+msgid "Go to quotes"
+msgstr "Vai ai preventivi"
+
+#: inc/shopforge-account.php:476
+msgid "Customer area"
+msgstr "Area cliente"
+
+#: inc/shopforge-account.php:479
+msgid "Hi %s"
+msgstr "Ciao %s"
+
+#: inc/shopforge-account.php:481
+msgid "From here you can manage orders, addresses, personal data, payment methods, quotes and sales requests."
+msgstr "Da qui puoi gestire ordini, indirizzi, dati personali, metodi di pagamento, preventivi e richieste commerciali."
+
+#: inc/shopforge-account.php:485
+msgid "Log out"
+msgstr "Esci"
+
+#: inc/shopforge-account.php:512
+msgid "My recent orders"
+msgstr "I miei ordini recenti"
+
+#: inc/shopforge-account.php:515
+msgid "Your latest purchases on %s."
+msgstr "Gli ultimi acquisti effettuati su %s."
+
+#: inc/shopforge-account.php:518
+msgid "View all"
+msgstr "Vedi tutti"
+
+#: inc/shopforge-account.php:549
+msgid "View"
+msgstr "Visualizza"
+
+#: inc/shopforge-account.php:559
+msgid "No orders placed yet."
+msgstr "Nessun ordine ancora effettuato."
+
+#: inc/shopforge-account.php:560
+msgid "When you make a purchase, you will find it here."
+msgstr "Quando effettuerai un acquisto, lo troverai qui."
+
+#: inc/shopforge-account.php:568
+msgid "Saved addresses"
+msgstr "Indirizzi salvati"
+
+#: inc/shopforge-account.php:569
+msgid "Billing and shipping."
+msgstr "Fatturazione e spedizione."
+
+#: inc/shopforge-account.php:571
+msgid "Edit"
+msgstr "Modifica"
+
+#: inc/shopforge-account.php:575
+msgid "Billing"
+msgstr "Fatturazione"
+
+#: inc/shopforge-account.php:579
+#: inc/shopforge-account.php:588
+msgid "No address saved."
+msgstr "Nessun indirizzo salvato."
+
+#: inc/shopforge-account.php:584
+msgid "Shipping"
+msgstr "Spedizione"
+
+#: inc/shopforge-account.php:593
+msgid "Manage addresses"
+msgstr "Gestisci indirizzi"
+
+#: inc/shopforge-account.php:641
+msgid "Awaiting pickup"
+msgstr "In attesa di ritiro"
+
+#: inc/shopforge-account.php:642
+msgid "Tracking not found"
+msgstr "Tracking non trovato"
+
+#: inc/shopforge-account.php:643
+msgid "Picked up by carrier"
+msgstr "Ritirato dal corriere"
+
+#: inc/shopforge-account.php:658
+msgid "Shipment in progress"
+msgstr "Spedizione in corso"
+
+#: inc/shopforge-account.php:663
+msgid "Order #%s"
+msgstr "Ordine #%s"
+
+#: inc/shopforge-account.php:684
+msgid "Tracking number:"
+msgstr "Numero tracking:"
+
+#: inc/shopforge-account.php:685
+msgid "Waiting for carrier updates."
+msgstr "In attesa di aggiornamenti dal corriere."
+
+#: inc/shopforge-admin-page.php:41
+#: inc/shopforge-settings.php:275
+msgid "Modules"
+msgstr "Moduli"
+
+#: inc/shopforge-admin-page.php:42
+msgid "License"
+msgstr "Licenza"
+
+#: inc/shopforge-admin-page.php:43
+msgid "Shortcodes"
+msgstr "Shortcode"
+
+#: inc/shopforge-admin-page.php:65
+msgid "License, active modules and available shortcodes in a single panel."
+msgstr "Licenza, moduli attivi e shortcode disponibili in un unico pannello."
+
+#: inc/shopforge-admin-page.php:92
+msgid "This section requires WooCommerce to be active."
+msgstr "Questa sezione richiede WooCommerce attivo."
+
+#: inc/shopforge-admin-page.php:130
+msgid "Shows the description of the selected variation on the product page (updates when the variation changes)."
+msgstr "Mostra la descrizione della variante selezionata nella pagina prodotto (si aggiorna al cambio variante)."
+
+#: inc/shopforge-admin-page.php:136
+msgid "Price box with two amounts, VAT included and excluded."
+msgstr "Box prezzo con doppio importo, IVA inclusa ed esclusa."
+
+#: inc/shopforge-admin-page.php:137
+#: inc/shopforge-admin-page.php:165
+msgid "Product ID (optional, default: current product)"
+msgstr "ID prodotto (opzionale, default: prodotto corrente)"
+
+#: inc/shopforge-admin-page.php:142
+msgid "Estimates the delivery date based on business days, public holidays and the order cutoff time."
+msgstr "Stima la data di consegna in base a giorni lavorativi, festivi e orario di cutoff per l'ordine."
+
+#: inc/shopforge-admin-page.php:148
+msgid "Button that adds the product to the cart and goes straight to checkout."
+msgstr "Pulsante che aggiunge il prodotto al carrello e porta direttamente al checkout."
+
+#: inc/shopforge-admin-page.php:154
+msgid "Availability label (colored dot + \"In stock\"/\"Out of stock\" text)."
+msgstr "Etichetta di disponibilità (pallino colorato + testo \"Disponibile\"/\"Non disponibile\")."
+
+#: inc/shopforge-admin-page.php:156
+msgid "CSS font size (optional, e.g. \"16px\")"
+msgstr "Dimensione font CSS (opzionale, es. \"16px\")"
+
+#: inc/shopforge-admin-page.php:157
+msgid "CSS font-family (optional)"
+msgstr "Font-family CSS (opzionale)"
+
+#: inc/shopforge-admin-page.php:163
+msgid "Product FAQ, managed from the \"Product FAQ\" metabox on the product edit screen."
+msgstr "Domande frequenti del prodotto, gestite dal metabox \"FAQ Prodotto\" nella scheda prodotto."
+
+#: inc/shopforge-admin-page.php:166
+msgid "\"accordion\" (default) or \"list\""
+msgstr "\"accordion\" (default) oppure \"list\""
+
+#: inc/shopforge-admin-page.php:172
+msgid "Product compatibility list, managed from the \"Compatibility\" metabox on the product edit screen."
+msgstr "Lista di compatibilità del prodotto, gestita dal metabox \"Compatibilità\" nella scheda prodotto."
+
+#: inc/shopforge-admin-page.php:178
+msgid "Product PDF datasheets, managed from the \"Datasheets (PDF)\" metabox on the product edit screen."
+msgstr "Schede tecniche PDF del prodotto, gestite dal metabox \"Schede Tecniche (PDF)\" nella scheda prodotto."
+
+#: inc/shopforge-admin-page.php:186
+msgid "Available shortcodes"
+msgstr "Shortcode disponibili"
+
+#: inc/shopforge-admin-page.php:188
+msgid "Use them in pages, posts, product descriptions or Elementor shortcode widgets."
+msgstr "Usali in pagine, articoli, descrizioni prodotto o widget shortcode di Elementor."
+
+#: inc/shopforge-admin-page.php:213
+msgid "Copied!"
+msgstr "Copiato!"
+
+#: inc/shopforge-admin-page.php:214
+msgid "Copy"
+msgstr "Copia"
+
+#: inc/shopforge-email-classes.php:29
+msgid "ShopForge – New withdrawal request (Admin)"
+msgstr "ShopForge – Nuova richiesta di recesso (Admin)"
+
+#: inc/shopforge-email-classes.php:30
+msgid "Sent to the store manager when a customer submits a withdrawal declaration."
+msgstr "Inviata al gestore del negozio quando un cliente invia una dichiarazione di recesso."
+
+#: inc/shopforge-email-classes.php:46
+#: inc/shopforge-email-classes.php:96
+msgid "New withdrawal request"
+msgstr "Nuova richiesta di recesso"
+
+#: inc/shopforge-email-classes.php:48
+#: inc/shopforge-email-classes.php:95
+msgid "[{site_title}] Withdrawal — Order #{order_number} — Ref. {ref}"
+msgstr "[{site_title}] Recesso — Ordine #{order_number} — Rif. {ref}"
+
+#: inc/shopforge-email-classes.php:87
+#: inc/shopforge-email-classes.php:166
+msgid "Enable/Disable"
+msgstr "Abilita/Disabilita"
+
+#: inc/shopforge-email-classes.php:87
+#: inc/shopforge-email-classes.php:166
+msgid "Enable this email notification"
+msgstr "Abilita questa notifica email"
+
+#: inc/shopforge-email-classes.php:88
+#: inc/shopforge-email-classes.php:237
+msgid "Recipient"
+msgstr "Destinatario"
+
+#: inc/shopforge-email-classes.php:88
+#: inc/shopforge-email-classes.php:663
+msgid "Enter an email address. Separate multiple with commas."
+msgstr "Inserisci un indirizzo email. Separane più di uno con virgola."
+
+#: inc/shopforge-email-classes.php:89
+#: inc/shopforge-email-classes.php:167
+msgid "Subject"
+msgstr "Oggetto"
+
+#: inc/shopforge-email-classes.php:89
+#: inc/shopforge-email-classes.php:90
+msgid "Available placeholders: %s"
+msgstr "Placeholder disponibili: %s"
+
+#: inc/shopforge-email-classes.php:90
+#: inc/shopforge-email-classes.php:168
+msgid "Email heading"
+msgstr "Intestazione email"
+
+#: inc/shopforge-email-classes.php:91
+#: inc/shopforge-email-classes.php:169
+msgid "Email type"
+msgstr "Tipo email"
+
+#: inc/shopforge-email-classes.php:91
+#: inc/shopforge-email-classes.php:169
+msgid "Choose the format for this email."
+msgstr "Scegli il formato per questa email."
+
+#: inc/shopforge-email-classes.php:112
+msgid "ShopForge – Withdrawal receipt (Customer)"
+msgstr "ShopForge – Ricevuta di recesso (Cliente)"
+
+#: inc/shopforge-email-classes.php:113
+msgid "Sent to the customer as confirmation of the withdrawal declaration, as required by EU consumer law."
+msgstr "Inviata al cliente come conferma della dichiarazione di recesso, come richiesto dalla normativa europea sui consumatori."
+
+#: inc/shopforge-email-classes.php:124
+#: inc/shopforge-email-classes.php:174
+msgid "Withdrawal receipt"
+msgstr "Ricevuta di recesso"
+
+#: inc/shopforge-email-classes.php:125
+#: inc/shopforge-email-classes.php:173
+msgid "[{site_title}] Withdrawal receipt — Order #{order_number} — Ref. {ref}"
+msgstr "[{site_title}] Ricevuta di recesso — Ordine #{order_number} — Rif. {ref}"
+
+#: inc/shopforge-email-classes.php:189
+msgid "ShopForge – New support ticket (Admin)"
+msgstr "ShopForge – Nuovo ticket assistenza (Admin)"
+
+#: inc/shopforge-email-classes.php:190
+msgid "Sent to the store manager when a customer opens a support request."
+msgstr "Inviata al gestore del negozio quando un cliente apre una richiesta di assistenza."
+
+#: inc/shopforge-email-classes.php:197
+#: inc/shopforge-email-classes.php:245
+msgid "New support request"
+msgstr "Nuova richiesta di assistenza"
+
+#: inc/shopforge-email-classes.php:198
+#: inc/shopforge-email-classes.php:244
+msgid "[{site_title}] Support — Order #{order_number}"
+msgstr "[{site_title}] Assistenza — Ordine #{order_number}"
+
+#: inc/shopforge-email-classes.php:237
+#: inc/shopforge-email-classes.php:378
+msgid "Separate multiple addresses with commas."
+msgstr "Separa più indirizzi con virgola."
+
+#: inc/shopforge-email-classes.php:238
+#: inc/shopforge-email-classes.php:239
+msgid "Placeholders: %s"
+msgstr "Placeholder: %s"
+
+#: inc/shopforge-email-classes.php:239
+#: inc/shopforge-email-classes.php:310
+msgid "Heading"
+msgstr "Intestazione"
+
+#: inc/shopforge-email-classes.php:240
+#: inc/shopforge-email-classes.php:311
+msgid "Email format."
+msgstr "Formato email."
+
+#: inc/shopforge-email-classes.php:261
+msgid "ShopForge – Support ticket confirmation (Customer)"
+msgstr "ShopForge – Conferma ticket assistenza (Cliente)"
+
+#: inc/shopforge-email-classes.php:262
+msgid "Sent to the customer as confirmation the ticket was opened."
+msgstr "Inviata al cliente come conferma dell'apertura del ticket."
+
+#: inc/shopforge-email-classes.php:268
+#: inc/shopforge-email-classes.php:316
+msgid "Support request received"
+msgstr "Richiesta di assistenza ricevuta"
+
+#: inc/shopforge-email-classes.php:269
+#: inc/shopforge-email-classes.php:315
+msgid "[{site_title}] We received your request — Order #{order_number}"
+msgstr "[{site_title}] Abbiamo ricevuto la tua richiesta — Ordine #{order_number}"
+
+#: inc/shopforge-email-classes.php:331
+msgid "ShopForge – New quote (Admin)"
+msgstr "ShopForge – Nuovo preventivo (Admin)"
+
+#: inc/shopforge-email-classes.php:332
+msgid "Sent to the store manager when a customer requests a quote."
+msgstr "Inviata al gestore del negozio quando un cliente richiede un preventivo."
+
+#: inc/shopforge-email-classes.php:340
+#: inc/shopforge-email-classes.php:385
+msgid "[{site_title}] Quote requested"
+msgstr "[{site_title}] Preventivo richiesto"
+
+#: inc/shopforge-email-classes.php:402
+msgid "ShopForge – Quote confirmation (Customer)"
+msgstr "ShopForge – Conferma preventivo (Cliente)"
+
+#: inc/shopforge-email-classes.php:403
+msgid "Sent to the customer as confirmation the quote request was submitted."
+msgstr "Inviata al cliente come conferma dell'invio della richiesta di preventivo."
+
+#: inc/shopforge-email-classes.php:409
+#: inc/shopforge-email-classes.php:457
+msgid "Quote received"
+msgstr "Preventivo ricevuto"
+
+#: inc/shopforge-email-classes.php:410
+#: inc/shopforge-email-classes.php:456
+msgid "[{site_title}] We received your quote request"
+msgstr "[{site_title}] Abbiamo ricevuto la tua richiesta di preventivo"
+
+#: inc/shopforge-email-classes.php:473
+msgid "ShopForge – Ticket status update (Customer)"
+msgstr "ShopForge – Aggiornamento stato ticket (Cliente)"
+
+#: inc/shopforge-email-classes.php:474
+msgid "Sent to the customer when the store updates the ticket status."
+msgstr "Inviata al cliente quando il negozio aggiorna lo stato del ticket."
+
+#: inc/shopforge-email-classes.php:480
+#: inc/shopforge-email-classes.php:528
+msgid "Support request update"
+msgstr "Aggiornamento richiesta di assistenza"
+
+#: inc/shopforge-email-classes.php:481
+#: inc/shopforge-email-classes.php:527
+msgid "[{site_title}] Request update — Order #{order_number}"
+msgstr "[{site_title}] Aggiornamento richiesta — Ordine #{order_number}"
+
+#: inc/shopforge-email-classes.php:544
+msgid "ShopForge – Return status update (Customer)"
+msgstr "ShopForge – Aggiornamento stato reso (Cliente)"
+
+#: inc/shopforge-email-classes.php:545
+msgid "Sent to the customer when the store updates the return status."
+msgstr "Inviata al cliente quando il negozio aggiorna lo stato del reso."
+
+#: inc/shopforge-email-classes.php:551
+#: inc/shopforge-email-classes.php:599
+msgid "Return request update"
+msgstr "Aggiornamento richiesta di reso"
+
+#: inc/shopforge-email-classes.php:552
+#: inc/shopforge-email-classes.php:598
+msgid "[{site_title}] Return update — Order #{order_number}"
+msgstr "[{site_title}] Aggiornamento reso — Ordine #{order_number}"
+
+#: inc/shopforge-email-classes.php:614
+msgid "ShopForge – New RMA request (Admin)"
+msgstr "ShopForge – Nuova richiesta RMA (Admin)"
+
+#: inc/shopforge-email-classes.php:615
+msgid "Sent to the store manager when a customer opens a product support request, or cancels it themselves."
+msgstr "Inviata al gestore del negozio quando un cliente apre una richiesta di assistenza prodotti, o quando la annulla lui stesso."
+
+#: inc/shopforge-email-classes.php:622
+#: inc/shopforge-email-classes.php:671
+msgid "New product support request"
+msgstr "Nuova richiesta di assistenza prodotti"
+
+#: inc/shopforge-email-classes.php:623
+#: inc/shopforge-email-classes.php:670
+msgid "[{site_title}] RMA request #{request_id} — Order #{order_number}"
+msgstr "[{site_title}] Richiesta RMA #{request_id} — Ordine #{order_number}"
+
+#: inc/shopforge-email-classes.php:687
+msgid "ShopForge – RMA request receipt (Customer)"
+msgstr "ShopForge – Ricevuta richiesta RMA (Cliente)"
+
+#: inc/shopforge-email-classes.php:688
+msgid "Sent to the customer when they open a support, repair, replacement or return request."
+msgstr "Inviata al cliente quando apre una richiesta di assistenza, riparazione, sostituzione o reso."
+
+#: inc/shopforge-email-classes.php:694
+#: inc/shopforge-email-classes.php:743
+msgid "We received your request"
+msgstr "Abbiamo ricevuto la tua richiesta"
+
+#: inc/shopforge-email-classes.php:695
+#: inc/shopforge-email-classes.php:742
+msgid "[{site_title}] Request received — Order #{order_number}"
+msgstr "[{site_title}] Richiesta ricevuta — Ordine #{order_number}"
+
+#: inc/shopforge-email-classes.php:759
+msgid "ShopForge – RMA request update (Customer)"
+msgstr "ShopForge – Aggiornamento richiesta RMA (Cliente)"
+
+#: inc/shopforge-email-classes.php:760
+msgid "Sent to the customer when their RMA request status changes, or when they receive a new message from support."
+msgstr "Inviata al cliente quando lo stato della sua richiesta RMA cambia, o quando riceve un nuovo messaggio dal supporto."
+
+#: inc/shopforge-email-classes.php:766
+#: inc/shopforge-email-classes.php:814
+msgid "RMA request update"
+msgstr "Aggiornamento richiesta RMA"
+
+#: inc/shopforge-license.php:36
+msgid "Configure the license"
+msgstr "Configura la licenza"
+
+#: inc/shopforge-license.php:49
+msgid "Missing key"
+msgstr "Chiave mancante"
+
+#: inc/shopforge-license.php:62
+msgid "Connection error:"
+msgstr "Errore di connessione:"
+
+#: inc/shopforge-license.php:74
+msgid "License valid ✓"
+msgstr "Licenza valida ✓"
+
+#: inc/shopforge-license.php:78
+#: inc/shopforge-license.php:154
+msgid "Reseller:"
+msgstr "Reseller:"
+
+#: inc/shopforge-license.php:82
+#: inc/shopforge-license.php:157
+msgid "Product:"
+msgstr "Prodotto:"
+
+#: inc/shopforge-license.php:86
+#: inc/shopforge-license.php:160
+msgid "Activated on:"
+msgstr "Attivato su:"
+
+#: inc/shopforge-license.php:90
+#: inc/shopforge-license.php:163
+msgid "Expires on:"
+msgstr "Scade il:"
+
+#: inc/shopforge-license.php:101
+#: inc/shopforge-license.php:236
+msgid "License not valid"
+msgstr "Licenza non valida"
+
+#: inc/shopforge-license.php:112
+msgid "You do not have permission to manage the license."
+msgstr "Non hai i permessi per gestire la licenza."
+
+#: inc/shopforge-license.php:122
+msgid "License key"
+msgstr "Chiave di licenza"
+
+#: inc/shopforge-license.php:125
+msgid "Enter the license key provided at purchase."
+msgstr "Inserisci la chiave di licenza fornita al momento dell'acquisto."
+
+#: inc/shopforge-license.php:129
+msgid "Validate license"
+msgstr "Valida licenza"
+
+#: inc/shopforge-license.php:138
+msgid "Validating…"
+msgstr "Validazione in corso…"
+
+#: inc/shopforge-license.php:149
+msgid "License active"
+msgstr "Licenza attiva"
+
+#: inc/shopforge-license.php:149
+msgid "License invalid or expired"
+msgstr "Licenza non valida o scaduta"
+
+#: inc/shopforge-license.php:202
+msgid "Enter a key"
+msgstr "Inserisci una chiave"
+
+#: inc/shopforge-license.php:230
+msgid "License valid"
+msgstr "Licenza valida"
+
+#: inc/shopforge-license.php:247
+msgid "Error:"
+msgstr "Errore:"
+
+#: inc/shopforge-modules.php:33
+msgid "Account area styles"
+msgstr "Stili area account"
+
+#: inc/shopforge-modules.php:34
+msgid "CSS for the dashboard, orders, addresses and modules (returns, support, notifications): card layout, status badges, typography. Disable to rely entirely on your theme in the account area too."
+msgstr "CSS di bacheca, ordini, indirizzi e moduli (resi, assistenza, notifiche): layout a card, badge stato, tipografia. Disattiva per affidarti interamente al tema anche nell'area account."
+
+#: inc/shopforge-modules.php:43
+msgid "Shop/catalog styles"
+msgstr "Stili catalogo/negozio"
+
+#: inc/shopforge-modules.php:44
+msgid "CSS for the product catalog and shop pages. Disable to rely entirely on your theme for the catalog."
+msgstr "CSS della vetrina prodotti e delle pagine shop. Disattiva per affidarti interamente al tema sul catalogo."
+
+#: inc/shopforge-modules.php:53
+msgid "Custom colors"
+msgstr "Colori personalizzati"
+
+#: inc/shopforge-modules.php:54
+msgid "Color palette (buttons, badges, text) injected as CSS variables, including the configuration below. When disabled, the returns/support modals also fall back to the default theme style."
+msgstr "Palette colori (pulsanti, badge, testo) iniettata come variabili CSS, inclusa la configurazione qui sotto. Disattivandola, anche le modali di resi/assistenza tornano allo stile di default del tema."
+
+#: inc/shopforge-modules.php:63
+msgid "Custom dashboard"
+msgstr "Dashboard personalizzata"
+
+#: inc/shopforge-modules.php:64
+msgid "Replaces the WooCommerce dashboard with a custom one: order statistics, tracking widget, addresses. Disable to use the default WooCommerce dashboard."
+msgstr "Sostituisce la bacheca WooCommerce con una dashboard custom: statistiche ordini, widget tracking, indirizzi. Disattiva per usare la bacheca WooCommerce predefinita."
+
+#: inc/shopforge-modules.php:77
+msgid "Tracking widget on the order detail page with 17track integration. The admin enters the tracking number from the order in the backend."
+msgstr "Widget di tracciamento nella pagina dettaglio ordine con integrazione 17track. L'admin inserisce il numero tracking dall'ordine in backend."
+
+#: inc/shopforge-modules.php:87
+msgid "Lets customers save favorite products and access them from their account. Adds the heart button to the catalog and product page."
+msgstr "Permette ai clienti di salvare prodotti preferiti e accedervi dal proprio account. Aggiunge il pulsante cuore su catalogo e pagina prodotto."
+
+#: inc/shopforge-modules.php:99
+msgid "Dedicated section for quote requests. Customers add products and quantities, the admin replies via email and manages everything from a dedicated page."
+msgstr "Sezione dedicata alle richieste di preventivo. I clienti inseriscono prodotti e quantità, l'admin risponde via email e gestisce dalla pagina dedicata."
+
+#: inc/shopforge-modules.php:111
+msgid "Digital withdrawal procedure compliant with EU consumer law. Button on the order page, 2-step modal, automatic email receipt."
+msgstr "Procedura di recesso digitale conforme alla normativa europea sui consumatori. Pulsante in pagina ordine, modal 2 step, ricevuta automatica via email."
+
+#: inc/shopforge-modules.php:123
+msgid "Structured repair, replacement or refund requests for defects/warranty: remedy selection, quantity tracking, automatic WooCommerce refund, message thread."
+msgstr "Richieste strutturate di riparazione, sostituzione o rimborso per difetti/garanzia: selezione rimedio, tracciamento quantità, rimborso WooCommerce automatico, thread messaggi."
+
+#: inc/shopforge-modules.php:135
+msgid "Notification center fed by real events: order status changes, support tickets, return updates, quote replies. Badge with unread count."
+msgstr "Centro notifiche alimentato da eventi reali: cambio stato ordine, ticket assistenza, aggiornamento reso, risposta preventivo. Badge con conteggio non lette."
+
+#: inc/shopforge-order-statuses.php:20
+#: inc/shopforge-order-statuses.php:46
+msgctxt "Order status"
+msgid "Shipped"
+msgstr "Spedito"
+
+#: inc/shopforge-order-statuses.php:114
+#: inc/shopforge-order-statuses.php:119
+msgid "Change status to: Shipped"
+msgstr "Cambia stato in: Spedito"
+
+#: inc/shopforge-order-tracker.php:48
+msgid "Order <strong>%s</strong> — no progress available."
+msgstr "Ordine <strong>%s</strong> — nessun avanzamento disponibile."
+
+#: inc/shopforge-order-tracker.php:57
+msgid "Paid"
+msgstr "Pagato"
+
+#: inc/shopforge-order-tracker.php:58
+msgid "Preparing"
+msgstr "In Preparazione"
+
+#: inc/shopforge-order-tracker.php:59
+msgid "Shipped"
+msgstr "Spedito"
+
+#: inc/shopforge-order-tracker.php:63
+#: inc/shopforge-order-tracker.php:66
+msgid "Order status"
+msgstr "Stato ordine"
+
+#: inc/shopforge-order-tracker.php:75
+msgid "Completed"
+msgstr "Completato"
+
+#: inc/shopforge-order-tracker.php:78
+msgid "In progress"
+msgstr "In corso"
+
+#: inc/shopforge-order-tracker.php:159
+msgid "Need help with this order?"
+msgstr "Serve aiuto con questo ordine?"
+
+#: inc/shopforge-order-tracker.php:161
+msgid "Our team is available for any question about products, shipping, or to handle returns and replacements."
+msgstr "Il nostro team è a disposizione per qualsiasi domanda sui prodotti, sulla spedizione o per gestire resi e sostituzioni."
+
+#: inc/shopforge-order-tracker.php:170
+msgid "Open a Request"
+msgstr "Apri Una Richiesta"
+
+#: inc/shopforge-order-tracker.php:182
+msgid "Support request — Order <strong>#%s</strong>"
+msgstr "Richiesta assistenza — Ordine <strong>#%s</strong>"
+
+#: inc/shopforge-order-tracker.php:194
+msgid "Reason for the request"
+msgstr "Motivo della richiesta"
+
+#: inc/shopforge-order-tracker.php:197
+#: inc/shopforge-order-tracker.php:197
+msgid "Product issue"
+msgstr "Problema con il prodotto"
+
+#: inc/shopforge-order-tracker.php:198
+#: inc/shopforge-order-tracker.php:198
+msgid "Shipping or tracking"
+msgstr "Spedizione o tracking"
+
+#: inc/shopforge-order-tracker.php:204
+msgid "Products involved"
+msgstr "Prodotti coinvolti"
+
+#: inc/shopforge-order-tracker.php:246
+msgid "Describe the problem"
+msgstr "Descrivi il problema"
+
+#: inc/shopforge-order-tracker.php:248
+msgid "Describe your request in detail…"
+msgstr "Descrivi nel dettaglio la tua richiesta…"
+
+#: inc/shopforge-order-tracker.php:251
+msgid "Attach photos or documents (optional)"
+msgstr "Allega foto o documenti (opzionale)"
+
+#: inc/shopforge-order-tracker.php:257
+msgid "You will receive a reply at the email address associated with your account."
+msgstr "Riceverai una risposta all'indirizzo email associato al tuo account."
+
+#: inc/shopforge-order-tracker.php:268
+msgid "Request sent!"
+msgstr "Richiesta inviata!"
+
+#: inc/shopforge-order-tracker.php:270
+msgid "We received your report. We will reply by email as soon as possible."
+msgstr "Abbiamo ricevuto la tua segnalazione. Ti risponderemo via email nel più breve tempo possibile."
+
+#: inc/shopforge-order-tracker.php:307
+msgid "You already opened a request recently. Wait a minute and try again."
+msgstr "Hai già aperto una richiesta di recente. Attendi un minuto e riprova."
+
+#: inc/shopforge-order-tracker.php:423
+msgid "Your support requests"
+msgstr "Le tue richieste di assistenza"
+
+#: inc/shopforge-order-tracker.php:505
+msgid "No support requests for this order."
+msgstr "Nessuna richiesta di assistenza per questo ordine."
+
+#: inc/shopforge-order-tracker.php:519
+msgid "Reason / Products / Message"
+msgstr "Motivo / Prodotti / Messaggio"
+
+#: inc/shopforge-order-tracker.php:553
+msgid "Reply to customer (optional)…"
+msgstr "Risposta al cliente (opzionale)…"
+
+#: inc/shopforge-order-tracker.php:694
+msgid "No open tickets."
+msgstr "Nessun ticket aperto."
+
+#: inc/shopforge-order-tracker.php:721
+msgid "Customer message:"
+msgstr "Messaggio cliente:"
+
+#: inc/shopforge-order-tracker.php:756
+msgid "No withdrawal requests received."
+msgstr "Nessuna richiesta di recesso ricevuta."
+
+#: inc/shopforge-order-tracker.php:785
+msgid "Products:"
+msgstr "Prodotti:"
+
+#: inc/shopforge-order-tracker.php:836
+msgid "Saved ✓"
+msgstr "Salvato ✓"
+
+#: inc/shopforge-product-info.php:47
+msgid "Frequently Asked Questions"
+msgstr "Domande Frequenti"
+
+#: inc/shopforge-product-info.php:93
+#: inc/shopforge-product-info.php:268
+msgid "Compatibility"
+msgstr "Compatibilità"
+
+#: inc/shopforge-product-info.php:131
+msgid "Datasheets"
+msgstr "Schede Tecniche"
+
+#: inc/shopforge-product-info.php:180
+msgid "Product FAQ"
+msgstr "FAQ Prodotto"
+
+#: inc/shopforge-product-info.php:199
+msgid "Add FAQ"
+msgstr "Aggiungi FAQ"
+
+#: inc/shopforge-product-info.php:224
+msgid "Question"
+msgstr "Domanda"
+
+#: inc/shopforge-product-info.php:225
+msgid "E.g. How can I contact you?"
+msgstr "Es. Come faccio a contattarvi?"
+
+#: inc/shopforge-product-info.php:227
+msgid "Answer"
+msgstr "Risposta"
+
+#: inc/shopforge-product-info.php:228
+msgid "E.g. You can contact us by email…"
+msgstr "Es. Puoi contattarci via email…"
+
+#: inc/shopforge-product-info.php:287
+msgid "Add compatibility"
+msgstr "Aggiungi compatibilità"
+
+#: inc/shopforge-product-info.php:310
+msgid "E.g. iOS 14+, Android 10+"
+msgstr "Es. iOS 14+, Android 10+"
+
+#: inc/shopforge-product-info.php:345
+msgid "Datasheets (PDF)"
+msgstr "Schede Tecniche (PDF)"
+
+#: inc/shopforge-product-info.php:371
+msgid "Add datasheet"
+msgstr "Aggiungi Scheda Tecnica"
+
+#: inc/shopforge-product-info.php:384
+#: inc/shopforge-product-info.php:437
+msgid "Select PDF"
+msgstr "Seleziona PDF"
+
+#: inc/shopforge-product-info.php:385
+msgid "Use this file"
+msgstr "Usa questo file"
+
+#: inc/shopforge-product-info.php:428
+msgid "Datasheet"
+msgstr "Scheda Tecnica"
+
+#: inc/shopforge-product-info.php:434
+msgid "No file selected"
+msgstr "Nessun file selezionato"
+
+#: inc/shopforge-product.php:146
+msgid "VAT included"
+msgstr "IVA inclusa"
+
+#: inc/shopforge-product.php:150
+msgid "VAT excluded"
+msgstr "IVA esclusa"
+
+#: inc/shopforge-product.php:287
+msgid "The date shown is indicative and may be subject to delays beyond our control."
+msgstr "La data riportata è indicativa e potrebbe subire slittamenti non imputabili al nostro controllo."
+
+#: inc/shopforge-product.php:301
+msgid "Estimated delivery"
+msgstr "Consegna stimata"
+
+#: inc/shopforge-product.php:311
+msgid "Order within %s to receive it by the estimated date"
+msgstr "Ordina entro %s per riceverlo entro la data stimata"
+
+#: inc/shopforge-product.php:345
+msgid "Buy now"
+msgstr "Acquista ora"
+
+#: inc/shopforge-product.php:371
+msgid "In stock"
+msgstr "Disponibile"
+
+#: inc/shopforge-settings.php:130
+msgid "Clean"
+msgstr "Clean"
+
+#: inc/shopforge-settings.php:131
+msgid "Minimal on a white background: cards with a plain border, no shadows. Matches the WooCommerce block checkout."
+msgstr "Minimale su fondo bianco: card con solo bordo, niente ombre. Allineato al checkout a blocchi WooCommerce."
+
+#: inc/shopforge-settings.php:134
+msgid "Boxed"
+msgstr "Boxed"
+
+#: inc/shopforge-settings.php:135
+msgid "Content wrapped in a soft gray panel, elevated cards with subtle shadows and a highlighted footer."
+msgstr "Contenuto racchiuso in un pannello grigio, card in rilievo con ombre morbide e footer evidenziato."
+
+#: inc/shopforge-settings.php:138
+msgid "Cards"
+msgstr "Cards"
+
+#: inc/shopforge-settings.php:139
+msgid "Every product is a separate rounded card with a shadow: airy layout, detached elements."
+msgstr "Ogni prodotto è una card separata e arrotondata con ombra: disposizione ariosa, elementi staccati."
+
+#: inc/shopforge-settings.php:155
+msgid "Cart"
+msgstr "Carrello"
+
+#: inc/shopforge-settings.php:156
+msgid "Checkout"
+msgstr "Checkout"
+
+#: inc/shopforge-settings.php:157
+msgid "Account area"
+msgstr "Area account"
+
+#: inc/shopforge-settings.php:158
+msgid "Shortcodes and other pages"
+msgstr "Shortcode e altre pagine"
+
+#: inc/shopforge-settings.php:230
+msgid "Settings saved."
+msgstr "Impostazioni salvate."
+
+#: inc/shopforge-settings.php:232
+msgid "Warning:"
+msgstr "Attenzione:"
+
+#: inc/shopforge-settings.php:232
+msgid "no module or feature is active."
+msgstr "nessun modulo o funzionalità attiva."
+
+#: inc/shopforge-settings.php:241
+msgid "License missing or invalid — modules cannot be enabled."
+msgstr "Licenza non valida o non configurata — i moduli non possono essere attivati."
+
+#: inc/shopforge-settings.php:242
+msgid "Configure license"
+msgstr "Configura licenza"
+
+#: inc/shopforge-settings.php:255
+msgid "Core features"
+msgstr "Funzionalità di base"
+
+#: inc/shopforge-settings.php:257
+msgid "They control cross-cutting plugin behavior: global CSS styles and the dashboard. Disable them for a \"zero visual impact\" integration."
+msgstr "Controllano il comportamento trasversale del plugin: stili CSS globali e dashboard. Disattivale se vuoi un'integrazione \"zero impatto visivo\"."
+
+#: inc/shopforge-settings.php:277
+msgid "Each module adds specific functionality: account area endpoints, integrations, automatic emails, admin management."
+msgstr "Ogni modulo aggiunge funzionalità specifiche: endpoint nell'area account, integrazioni, email automatiche, gestione admin."
+
+#: inc/shopforge-settings.php:295
+msgid "Configuration"
+msgstr "Configurazione"
+
+#: inc/shopforge-settings.php:297
+msgid "Global parameters that affect module behavior."
+msgstr "Parametri globali che influenzano il comportamento dei moduli."
+
+#: inc/shopforge-settings.php:305
+msgid "Withdrawal window (days)"
+msgstr "Finestra di recesso (giorni)"
+
+#: inc/shopforge-settings.php:314
+msgid "Number of days after delivery during which the customer can exercise the right of withdrawal. Default: 14 days (minimum legal term for EU consumers)."
+msgstr "Numero di giorni dalla consegna entro cui il cliente può esercitare il diritto di recesso. Default: 14 giorni (termine legale minimo per il consumatore in UE)."
+
+#: inc/shopforge-settings.php:321
+msgid "Contact page URL (optional)"
+msgstr "URL pagina contatti (opzionale)"
+
+#: inc/shopforge-settings.php:330
+msgid "URL shown in the \"withdrawal window expired\" message. If left empty, only the text is shown without a link."
+msgstr "URL mostrato nel messaggio \"recesso scaduto\". Se lasciato vuoto, viene mostrato solo il testo senza link."
+
+#: inc/shopforge-settings.php:337
+msgid "17track API key"
+msgstr "Chiave API 17track"
+
+#: inc/shopforge-settings.php:346
+msgid "Required by the Shipment tracking module. Get a free key at api.17track.net. Without a key the tracking widget is not shown."
+msgstr "Richiesta dal modulo Tracking spedizioni. Ottieni una chiave gratuita su api.17track.net. Senza chiave il widget tracking non viene mostrato."
+
+#: inc/shopforge-settings.php:357
+msgid "Theme"
+msgstr "Tema"
+
+#: inc/shopforge-settings.php:359
+msgid "Each theme changes the layout, elements and style of cart, checkout and shortcodes. Pick the global theme, then optionally a different theme per page."
+msgstr "Ogni tema cambia disposizione, elementi e stile di carrello, checkout e shortcode. Scegli il tema globale, poi eventualmente un tema diverso per singola pagina."
+
+#: inc/shopforge-settings.php:388
+msgid "Theme per page"
+msgstr "Tema per pagina"
+
+#: inc/shopforge-settings.php:389
+msgid "Leave \"Global theme\" to apply the same theme everywhere."
+msgstr "Lascia \"Tema globale\" per applicare ovunque lo stesso tema."
+
+#: inc/shopforge-settings.php:397
+msgid "Global theme"
+msgstr "Tema globale"
+
+#: inc/shopforge-settings.php:414
+msgid "Colors"
+msgstr "Colori"
+
+#: inc/shopforge-settings.php:416
+msgid "Customize the ShopForge palette to match your site. Colors are injected as CSS variables and override the plugin defaults."
+msgstr "Personalizza la palette ShopForge per adattarla al tuo sito. I colori vengono iniettati come variabili CSS e sovrascrivono i default del plugin."
+
+#: inc/shopforge-settings.php:424
+msgid "Primary color"
+msgstr "Colore primario"
+
+#: inc/shopforge-settings.php:424
+msgid "Buttons, active links, highlighted elements"
+msgstr "Pulsanti, link attivi, elementi in evidenza"
+
+#: inc/shopforge-settings.php:425
+msgid "Primary — hover"
+msgstr "Primario — hover"
+
+#: inc/shopforge-settings.php:425
+msgid "Lighter shade for hover states"
+msgstr "Tonalità più chiara per gli stati hover"
+
+#: inc/shopforge-settings.php:426
+#: inc/shopforge-settings.php:464
+msgid "Main text"
+msgstr "Testo principale"
+
+#: inc/shopforge-settings.php:426
+msgid "Headings and high-contrast text"
+msgstr "Titoli e testo ad alto contrasto"
+
+#: inc/shopforge-settings.php:427
+msgid "Muted text"
+msgstr "Testo secondario"
+
+#: inc/shopforge-settings.php:427
+msgid "Dates, labels, footnotes"
+msgstr "Date, etichette, note a piè di campo"
+
+#: inc/shopforge-settings.php:428
+msgid "Border"
+msgstr "Bordo"
+
+#: inc/shopforge-settings.php:428
+msgid "Borders of cards, tables and inputs"
+msgstr "Bordi di card, tabelle e input"
+
+#: inc/shopforge-settings.php:429
+msgid "Soft border"
+msgstr "Bordo morbido"
+
+#: inc/shopforge-settings.php:429
+msgid "Light internal separators"
+msgstr "Separatori interni leggeri"
+
+#: inc/shopforge-settings.php:430
+msgid "Neutral background"
+msgstr "Sfondo neutro"
+
+#: inc/shopforge-settings.php:430
+msgid "Background of cards and secondary sections"
+msgstr "Sfondo di card e sezioni secondarie"
+
+#: inc/shopforge-settings.php:431
+msgid "Success"
+msgstr "Successo"
+
+#: inc/shopforge-settings.php:431
+msgid "\"Completed\" badges, positive messages"
+msgstr "Badge \"Completato\", messaggi positivi"
+
+#: inc/shopforge-settings.php:432
+msgid "Warning"
+msgstr "Avviso"
+
+#: inc/shopforge-settings.php:432
+msgid "\"Pending\" badges, warning messages"
+msgstr "Badge \"In attesa\", messaggi di avviso"
+
+#: inc/shopforge-settings.php:433
+msgid "Error / Danger"
+msgstr "Errore / Pericolo"
+
+#: inc/shopforge-settings.php:433
+msgid "Error messages, irreversible actions"
+msgstr "Messaggi di errore, azioni irreversibili"
+
+#: inc/shopforge-settings.php:460
+msgid "Preview"
+msgstr "Anteprima"
+
+#: inc/shopforge-settings.php:463
+msgid "Primary button"
+msgstr "Pulsante primario"
+
+#: inc/shopforge-settings.php:464
+msgid "muted text"
+msgstr "testo secondario"
+
+#: inc/shopforge-settings.php:465
+msgid "Card border"
+msgstr "Bordo card"
+
+#: inc/shopforge-settings.php:470
+msgid "Save settings"
+msgstr "Salva impostazioni"
+
+#: inc/shopforge-settings.php:784
+msgid "core feature"
+msgstr "funzionalità base"
+
+#: inc/shopforge-settings.php:786
+msgid "endpoint:"
+msgstr "endpoint:"
+
+#: inc/shopforge-settings.php:788
+msgid "module (no endpoint)"
+msgstr "modulo (nessun endpoint)"
+
+#: inc/shopforge-settings.php:792
+msgid "Requires an active license"
+msgstr "Richiede licenza attiva"
+
+#: inc/shopforge-settings.php:792
+msgid "Disable"
+msgstr "Disattiva"
+
+#: inc/shopforge-settings.php:792
+msgid "Enable"
+msgstr "Attiva"
+
+#: inc/shopforge-settings.php:804
+msgid "Requires license"
+msgstr "Richiede licenza"
+
+#: inc/shopforge-settings.php:807
+msgid "Active"
+msgstr "Attivo"
+
+#: inc/shopforge-settings.php:807
+msgid "Inactive"
+msgstr "Inattivo"
+
+#: inc/shopforge-thankyou.php:19
+msgid "Order received successfully"
+msgstr "Ordine ricevuto con successo"
+
+#: woocommerce/cart/cart-totals.php:18
+msgid "Order summary"
+msgstr "Riepilogo ordine"
+
+#: woocommerce/cart/cart-totals.php:29
+msgid "Apply"
+msgstr "Applica"
+
+#: woocommerce/cart/cart.php:22
+msgid "Your cart"
+msgstr "Il tuo carrello"
+
+#: woocommerce/emails/shopforge-quote-admin.php:14
+msgid "You received a new quote request."
+msgstr "Hai ricevuto una nuova richiesta di preventivo."
+
+#: woocommerce/emails/shopforge-quote-admin.php:35
+#: woocommerce/emails/shopforge-quote-customer.php:27
+msgid "Requested products"
+msgstr "Prodotti richiesti"
+
+#: woocommerce/emails/shopforge-quote-admin.php:44
+#: woocommerce/emails/shopforge-quote-customer.php:36
+msgid "Notes"
+msgstr "Note"
+
+#: woocommerce/emails/shopforge-quote-admin.php:53
+msgid "Manage quotes →"
+msgstr "Gestisci preventivi →"
+
+#: woocommerce/emails/shopforge-quote-customer.php:14
+#: woocommerce/emails/shopforge-return-customer.php:24
+msgid "Dear %s,"
+msgstr "Gentile %s,"
+
+#: woocommerce/emails/shopforge-quote-customer.php:15
+msgid "We received your quote request. We will reply as soon as possible with a personalized offer."
+msgstr "Abbiamo ricevuto la tua richiesta di preventivo. Ti risponderemo il prima possibile con un'offerta personalizzata."
+
+#: woocommerce/emails/shopforge-quote-customer.php:45
+msgid "My quotes →"
+msgstr "I miei preventivi →"
+
+#: woocommerce/emails/shopforge-return-admin.php:21
+msgid "You received a new withdrawal request for order #%s."
+msgstr "Hai ricevuto una nuova richiesta di recesso per l'ordine #%s."
+
+#: woocommerce/emails/shopforge-return-admin.php:24
+msgid "Request details"
+msgstr "Dettagli della richiesta"
+
+#: woocommerce/emails/shopforge-return-admin.php:33
+msgid "Transmission date"
+msgstr "Data trasmissione"
+
+#: woocommerce/emails/shopforge-return-admin.php:60
+#: woocommerce/emails/shopforge-return-customer.php:58
+msgid "Preferred refund"
+msgstr "Rimborso preferito"
+
+#: woocommerce/emails/shopforge-return-admin.php:72
+#: woocommerce/emails/shopforge-return-customer.php:64
+msgid "Withdrawal declaration"
+msgstr "Dichiarazione di recesso"
+
+#: woocommerce/emails/shopforge-return-admin.php:79
+msgid "Manage the order →"
+msgstr "Gestisci l'ordine →"
+
+#: woocommerce/emails/shopforge-return-customer.php:29
+msgid "We received your withdrawal declaration. Below is the receipt with all the details of your request."
+msgstr "Abbiamo ricevuto la tua dichiarazione di recesso. Di seguito trovi la ricevuta con tutti i dettagli della tua richiesta."
+
+#: woocommerce/emails/shopforge-return-customer.php:38
+msgid "Date and time of transmission"
+msgstr "Data e ora di trasmissione"
+
+#: woocommerce/emails/shopforge-return-customer.php:69
+msgid "We will process your request and contact you within the legally required timeframe. Keep this email as proof of the transmission date."
+msgstr "Elaboreremo la tua richiesta e ti contatteremo entro i termini previsti dalla legge. Conserva questa email come prova della data di trasmissione."
+
+#: woocommerce/emails/shopforge-return-customer.php:75
+msgid "View your returns →"
+msgstr "Visualizza i tuoi resi →"
+
+#: woocommerce/emails/shopforge-return-status-update.php:23
+msgid "We are writing to inform you of an update on your return request."
+msgstr "Ti scriviamo per informarti di un aggiornamento sulla tua richiesta di reso."
+
+#: woocommerce/emails/shopforge-return-status-update.php:31
+msgid "Return reference"
+msgstr "Riferimento reso"
+
+#: woocommerce/emails/shopforge-return-status-update.php:35
+#: woocommerce/emails/shopforge-rma-status-update.php:33
+msgid "Current status"
+msgstr "Stato attuale"
+
+#: woocommerce/emails/shopforge-return-status-update.php:40
+#: woocommerce/emails/shopforge-rma-status-update.php:38
+msgid "Message from the store"
+msgstr "Messaggio dal negozio"
+
+#: woocommerce/emails/shopforge-return-status-update.php:49
+#: woocommerce/emails/shopforge-rma-customer.php:46
+msgid "View order →"
+msgstr "Visualizza ordine →"
+
+#: woocommerce/emails/shopforge-rma-admin.php:19
+msgid "The customer updated the status of RMA request #%d for order #%s."
+msgstr "Il cliente ha aggiornato lo stato della richiesta RMA #%d per l'ordine #%s."
+
+#: woocommerce/emails/shopforge-rma-admin.php:21
+msgid "New %1$s request received for order #%2$s."
+msgstr "Nuova richiesta di %1$s ricevuta per l'ordine #%2$s."
+
+#: woocommerce/emails/shopforge-rma-admin.php:48
+msgid "Problem description"
+msgstr "Descrizione problema"
+
+#: woocommerce/emails/shopforge-rma-admin.php:57
+msgid "Manage request →"
+msgstr "Gestisci richiesta →"
+
+#: woocommerce/emails/shopforge-rma-customer.php:15
+msgid "return"
+msgstr "reso"
+
+#: woocommerce/emails/shopforge-rma-customer.php:15
+msgid "support"
+msgstr "assistenza"
+
+#: woocommerce/emails/shopforge-rma-customer.php:19
+msgid "We received your %1$s request for order #%2$s. Our team will review it as soon as possible."
+msgstr "Abbiamo ricevuto la tua richiesta di %1$s per l'ordine #%2$s. Il nostro team la esaminerà al più presto."
+
+#: woocommerce/emails/shopforge-rma-customer.php:23
+msgid "Request number"
+msgstr "Numero richiesta"
+
+#: woocommerce/emails/shopforge-rma-customer.php:39
+msgid "Description of the problem:"
+msgstr "Descrizione del problema:"
+
+#: woocommerce/emails/shopforge-rma-status-update.php:19
+msgid "We are writing to inform you of an update on your product support request."
+msgstr "Ti scriviamo per informarti di un aggiornamento sulla tua richiesta di assistenza prodotti."
+
+#: woocommerce/emails/shopforge-ticket-admin.php:15
+msgid "New support request received for order #%s."
+msgstr "Nuova richiesta di assistenza ricevuta per l'ordine #%s."
+
+#: woocommerce/emails/shopforge-ticket-admin.php:35
+msgid "Reported products"
+msgstr "Prodotti segnalati"
+
+#: woocommerce/emails/shopforge-ticket-admin.php:52
+msgid "Manage order →"
+msgstr "Gestisci ordine →"
+
+#: woocommerce/emails/shopforge-ticket-customer.php:13
+msgid "Hi %s,"
+msgstr "Ciao %s,"
+
+#: woocommerce/emails/shopforge-ticket-customer.php:14
+msgid "We received your support request for order #%s. Our team will reply as soon as possible."
+msgstr "Abbiamo ricevuto la tua richiesta di assistenza per l'ordine #%s. Il nostro team ti risponderà il prima possibile."
+
+#: woocommerce/emails/shopforge-ticket-customer.php:26
+msgid "Your message"
+msgstr "Il tuo messaggio"
+
+#: woocommerce/emails/shopforge-ticket-status-update.php:17
+msgid "We are writing to inform you of an update on your support request."
+msgstr "Ti scriviamo per informarti di un aggiornamento sulla tua richiesta di assistenza."

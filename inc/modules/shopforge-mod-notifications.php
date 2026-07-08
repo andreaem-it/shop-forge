@@ -75,13 +75,13 @@ add_action( 'woocommerce_order_status_changed', function ( int $order_id, string
 	if ( ! $user_id ) return;
 
 	$labels = [
-		'pending'    => 'In attesa di pagamento',
-		'processing' => 'Pagamento confermato — in preparazione',
-		'on-hold'    => 'In attesa di verifica',
-		'completed'  => 'Consegnato',
-		'cancelled'  => 'Annullato',
-		'refunded'   => 'Rimborsato',
-		'failed'     => 'Pagamento fallito',
+		'pending'    => __( 'Awaiting payment', 'shopforge' ),
+		'processing' => __( 'Payment confirmed — preparing', 'shopforge' ),
+		'on-hold'    => __( 'Awaiting verification', 'shopforge' ),
+		'completed'  => __( 'Delivered', 'shopforge' ),
+		'cancelled'  => __( 'Cancelled', 'shopforge' ),
+		'refunded'   => __( 'Refunded', 'shopforge' ),
+		'failed'     => __( 'Payment failed', 'shopforge' ),
 	];
 
 	// Non notificare tutti i cambi — solo quelli rilevanti per il cliente
@@ -91,7 +91,8 @@ add_action( 'woocommerce_order_status_changed', function ( int $order_id, string
 	$label = $labels[ $new_status ] ?? $new_status;
 
 	shopforge_add_notification( $user_id, 'order_status', [
-		'text' => 'Ordine #' . $order->get_order_number() . ' — ' . $label,
+		/* translators: 1: order number, 2: status label */
+		'text' => sprintf( __( 'Order #%1$s — %2$s', 'shopforge' ), $order->get_order_number(), $label ),
 		'url'  => $order->get_view_order_url(),
 	] );
 }, 10, 3 );
@@ -99,7 +100,8 @@ add_action( 'woocommerce_order_status_changed', function ( int $order_id, string
 // 2. Ticket di assistenza aperto (da shopforge-order-tracker.php)
 add_action( 'shopforge_ticket_submitted', function ( int $user_id, int $order_id, string $ref ) {
 	shopforge_add_notification( $user_id, 'ticket', [
-		'text' => 'Richiesta assistenza ' . $ref . ' inviata per l\'ordine #' . $order_id,
+		/* translators: 1: ticket reference, 2: order ID */
+		'text' => sprintf( __( 'Support request %1$s sent for order #%2$d', 'shopforge' ), $ref, $order_id ),
 		'url'  => wc_get_account_endpoint_url( 'orders' ),
 	] );
 }, 10, 3 );
@@ -128,7 +130,7 @@ add_filter( 'woocommerce_account_menu_items', function ( $items ) {
 
 	$unread = shopforge_unread_count( $user_id );
 	if ( $unread > 0 && isset( $items['shopforge-notices'] ) ) {
-		$items['shopforge-notices'] = 'Notifiche <span class="shopforge-notif-badge">' . $unread . '</span>';
+		$items['shopforge-notices'] = __( 'Notifications', 'shopforge' ) . ' <span class="shopforge-notif-badge">' . $unread . '</span>';
 	}
 
 	return $items;
@@ -147,16 +149,19 @@ add_action( 'woocommerce_account_shopforge-notices_endpoint', function () {
 	$nonce         = wp_create_nonce( 'shopforge_notif_' . $user_id );
 
 	shopforge_account_section_header(
-		'Notifiche',
+		__( 'Notifications', 'shopforge' ),
 		'fa-solid fa-bell',
-		$unread > 0 ? $unread . ' non lette' : 'Tutte lette'
+		$unread > 0
+			/* translators: %d: number of unread notifications */
+			? sprintf( _n( '%d unread', '%d unread', $unread, 'shopforge' ), $unread )
+			: __( 'All read', 'shopforge' )
 	);
 
 	if ( empty( $notifications ) ) {
 		shopforge_account_empty_state(
 			'fa-solid fa-bell',
-			'Nessuna notifica',
-			'Riceverai aggiornamenti su ordini, spedizioni, ticket di assistenza e preventivi.'
+			__( 'No notifications', 'shopforge' ),
+			__( 'You will receive updates about orders, shipments, support tickets and quotes.', 'shopforge' )
 		);
 		return;
 	}
@@ -167,14 +172,14 @@ add_action( 'woocommerce_account_shopforge-notices_endpoint', function () {
 		<button type="button" class="shopforge-btn shopforge-btn--ghost" id="shopforge-notif-read-all"
 		        data-nonce="<?php echo esc_attr( $nonce ); ?>"
 		        data-user="<?php echo esc_attr( $user_id ); ?>">
-			<i class="fa-solid fa-check-double"></i> Segna tutte come lette
+			<i class="fa-solid fa-check-double"></i> <?php esc_html_e( 'Mark all as read', 'shopforge' ); ?>
 		</button>
 	</div>
 	<?php endif; ?>
 
 	<div class="shopforge-notif-list" id="shopforge-notif-list">
 		<?php foreach ( $notifications as $n ) :
-			$date = date_i18n( 'd/m/Y H:i', strtotime( $n['date'] ) );
+			$date = date_i18n( get_option( 'date_format' ) . ' H:i', strtotime( $n['date'] ) );
 		?>
 		<div class="shopforge-notif-row <?php echo ! $n['read'] ? 'shopforge-notif-row--unread' : ''; ?>"
 		     data-id="<?php echo esc_attr( $n['id'] ); ?>">

@@ -29,11 +29,13 @@
 	var storeName = cfg.storeName || '';
 
 	function open()  {
+		backdrop.style.display = 'flex';
 		backdrop.removeAttribute('aria-hidden');
 		backdrop.classList.add('is-open');
 		document.body.style.overflow = 'hidden';
 	}
 	function close() {
+		backdrop.style.display = 'none';
 		backdrop.setAttribute('aria-hidden', 'true');
 		backdrop.classList.remove('is-open');
 		document.body.style.overflow = '';
@@ -49,10 +51,12 @@
 	nextBtn?.addEventListener('click', function() {
 		err1.style.display = 'none';
 
-		var checked = Array.from(document.querySelectorAll('.shopforge-ret-prod:checked')).map(function(el){ return el.value; });
-		var reason  = document.getElementById('shopforge-ret-reason').value;
-		var refund  = document.querySelector('input[name="shopforge-ret-refund"]:checked')?.value || '';
-		var notes   = document.getElementById('shopforge-ret-notes').value.trim();
+		var checked     = Array.from(document.querySelectorAll('.shopforge-ret-prod:checked')).map(function(el){ return el.value; });
+		var reason      = document.getElementById('shopforge-ret-reason').value;
+		var refundInput = document.querySelector('input[name="shopforge-ret-refund"]:checked');
+		var refund      = refundInput?.value || '';
+		var refundLabel = refundInput?.dataset.label || refund;
+		var notes       = document.getElementById('shopforge-ret-notes').value.trim();
 
 		if (!checked.length) { showErr(err1, 'Seleziona almeno un prodotto da restituire.'); return; }
 		if (!reason)         { showErr(err1, 'Seleziona il motivo del recesso.'); return; }
@@ -69,7 +73,7 @@
 			esc(prodStr) + '\n\n' +
 			'Ordinato il ' + esc(orderDate) + '.\n\n' +
 			'Motivo del recesso: ' + esc(reason) + '\n' +
-			'Metodo di rimborso preferito: ' + esc(refund) +
+			'Metodo di rimborso preferito: ' + esc(refundLabel) +
 			(notes ? '\nNote: ' + esc(notes) : '') + '\n\n' +
 			esc(customer) + '\n' +
 			'Data trasmissione: ' + esc(nowStr);

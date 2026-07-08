@@ -17,14 +17,15 @@ defined( 'ABSPATH' ) || exit;
 
 add_action( 'init', function () {
 	register_post_status( 'wc-spedito', [
-		'label'                     => _x( 'Spedito', 'Order status', 'woocommerce' ),
+		'label'                     => _x( 'Shipped', 'Order status', 'shopforge' ),
 		'public'                    => true,
 		'exclude_from_search'       => false,
 		'show_in_admin_all_list'    => true,
 		'show_in_admin_status_list' => true,
 		'label_count'               => _n_noop(
-			'Spedito <span class="count">(%s)</span>',
-			'Spediti <span class="count">(%s)</span>'
+			'Shipped <span class="count">(%s)</span>',
+			'Shipped <span class="count">(%s)</span>',
+			'shopforge'
 		),
 	] );
 } );
@@ -42,7 +43,7 @@ add_filter( 'wc_order_statuses', function ( $statuses ) {
 		$result[ $key ] = $label;
 
 		if ( 'wc-processing' === $key ) {
-			$result['wc-spedito'] = _x( 'Spedito', 'Order status', 'woocommerce' );
+			$result['wc-spedito'] = _x( 'Shipped', 'Order status', 'shopforge' );
 		}
 	}
 
@@ -110,11 +111,11 @@ add_action( 'wp_head', function () {
 // -------------------------------------------------------------------------
 
 add_filter( 'bulk_actions-edit-shop_order', function ( $actions ) {
-	$actions['mark_spedito'] = 'Cambia stato in: Spedito';
+	$actions['mark_spedito'] = __( 'Change status to: Shipped', 'shopforge' );
 	return $actions;
 } );
 
 add_filter( 'bulk_actions-woocommerce_page_wc-orders', function ( $actions ) {
-	$actions['mark_spedito'] = 'Cambia stato in: Spedito';
+	$actions['mark_spedito'] = __( 'Change status to: Shipped', 'shopforge' );
 	return $actions;
 } );

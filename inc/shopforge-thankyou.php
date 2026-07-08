@@ -16,10 +16,8 @@ add_filter( 'woocommerce_thankyou_order_received_text', function ( $text, $order
 		<div class="custom-order-confirmation-alert">
 			<div class="custom-order-confirmation-icon">✓</div>
 			<div class="custom-order-confirmation-content">
-				<h2>Ordine ricevuto con successo</h2>
+				<h2>' . esc_html__( 'Order received successfully', 'shopforge' ) . '</h2>
 				<p>' . esc_html( $text ) . '</p>
-				<br/>
-				<a style="margin-top: 10px" class="jcm-submit-btn" href="/area-socio">Vai al pannello Socio</a>
 			</div>
 		</div>
 	';

@@ -16,8 +16,8 @@ defined( 'ABSPATH' ) || exit;
 
 add_action( 'admin_menu', function () {
 	add_menu_page(
-		'Assistenza Prodotti (RMA)',
-		'Assistenza Prodotti',
+		__( 'Product Support (RMA)', 'shopforge' ),
+		__( 'Product Support', 'shopforge' ),
 		'manage_woocommerce',
 		'shopforge-rma',
 		function () {
@@ -28,7 +28,7 @@ add_action( 'admin_menu', function () {
 		57
 	);
 
-	add_submenu_page( 'shopforge-rma', 'Tutte le Richieste', 'Tutte le Richieste', 'manage_woocommerce', 'edit.php?post_type=shopforge_rma_request' );
+	add_submenu_page( 'shopforge-rma', __( 'All Requests', 'shopforge' ), __( 'All Requests', 'shopforge' ), 'manage_woocommerce', 'edit.php?post_type=shopforge_rma_request' );
 } );
 
 
@@ -56,14 +56,14 @@ add_action( 'admin_enqueue_scripts', function ( $hook ) {
 // =============================================================================
 
 add_filter( 'manage_shopforge_rma_request_posts_columns', function ( $columns ) {
-	$new = [ 'cb' => $columns['cb'], 'title' => 'Richiesta' ];
-	$new['shopforge_rma_tipo']      = 'Tipo';
-	$new['shopforge_rma_cliente']   = 'Cliente';
-	$new['shopforge_rma_ordine']    = 'Ordine';
-	$new['shopforge_rma_prodotto']  = 'Prodotto';
-	$new['shopforge_rma_stato']     = 'Stato';
-	$new['shopforge_rma_assegnato'] = 'Assegnata a';
-	$new['shopforge_rma_data']      = 'Data Creazione';
+	$new = [ 'cb' => $columns['cb'], 'title' => __( 'Request', 'shopforge' ) ];
+	$new['shopforge_rma_tipo']      = __( 'Type', 'shopforge' );
+	$new['shopforge_rma_cliente']   = __( 'Customer', 'shopforge' );
+	$new['shopforge_rma_ordine']    = __( 'Order', 'shopforge' );
+	$new['shopforge_rma_prodotto']  = __( 'Product', 'shopforge' );
+	$new['shopforge_rma_stato']     = __( 'Status', 'shopforge' );
+	$new['shopforge_rma_assegnato'] = __( 'Assigned to', 'shopforge' );
+	$new['shopforge_rma_data']      = __( 'Created', 'shopforge' );
 	return $new;
 } );
 
@@ -71,7 +71,7 @@ add_action( 'manage_shopforge_rma_request_posts_custom_column', function ( $colu
 	switch ( $column ) {
 		case 'shopforge_rma_tipo':
 			$tipo = get_post_meta( $post_id, '_shopforge_rma_tipo_richiesta', true );
-			echo '<span class="shopforge-rma-admin-badge shopforge-rma-admin-badge--' . ( 'reso' === $tipo ? 'reso' : 'assistenza' ) . '">' . ( 'reso' === $tipo ? 'Reso' : 'Assistenza' ) . '</span>';
+			echo '<span class="shopforge-rma-admin-badge shopforge-rma-admin-badge--' . ( 'reso' === $tipo ? 'reso' : 'assistenza' ) . '">' . ( 'reso' === $tipo ? esc_html__( 'Return', 'shopforge' ) : esc_html__( 'Support', 'shopforge' ) ) . '</span>';
 			break;
 
 		case 'shopforge_rma_cliente':
@@ -82,7 +82,7 @@ add_action( 'manage_shopforge_rma_request_posts_custom_column', function ( $colu
 		case 'shopforge_rma_ordine':
 			$order_id = (int) get_post_meta( $post_id, '_shopforge_rma_order_id', true );
 			$order    = $order_id ? wc_get_order( $order_id ) : null;
-			echo $order ? '<a href="' . esc_url( admin_url( 'post.php?post=' . $order_id . '&action=edit' ) ) . '">#' . esc_html( $order->get_order_number() ) . '</a>' : '—';
+			echo $order ? '<a href="' . esc_url( $order->get_edit_order_url() ) . '">#' . esc_html( $order->get_order_number() ) . '</a>' : '—';
 			break;
 
 		case 'shopforge_rma_prodotto':
@@ -114,7 +114,7 @@ add_action( 'restrict_manage_posts', function ( $post_type ) {
 	$current_status = sanitize_text_field( $_GET['shopforge_rma_stato'] ?? '' );
 	?>
 	<select name="shopforge_rma_stato">
-		<option value="">Tutti gli stati</option>
+		<option value=""><?php esc_html_e( 'All statuses', 'shopforge' ); ?></option>
 		<?php foreach ( shopforge_rma_get_statuses() as $key => $label ) : ?>
 		<option value="<?php echo esc_attr( $key ); ?>" <?php selected( $current_status, $key ); ?>><?php echo esc_html( $label ); ?></option>
 		<?php endforeach; ?>
@@ -122,21 +122,21 @@ add_action( 'restrict_manage_posts', function ( $post_type ) {
 	<?php
 	$current_order = absint( $_GET['shopforge_rma_order'] ?? 0 );
 	?>
-	<input type="number" name="shopforge_rma_order" placeholder="Filtra per ID Ordine" value="<?php echo esc_attr( $current_order ?: '' ); ?>">
+	<input type="number" name="shopforge_rma_order" placeholder="<?php esc_attr_e( 'Filter by Order ID', 'shopforge' ); ?>" value="<?php echo esc_attr( $current_order ?: '' ); ?>">
 	<?php
 	$current_user = absint( $_GET['shopforge_rma_user'] ?? 0 );
-	wp_dropdown_users( [ 'name' => 'shopforge_rma_user', 'show_option_none' => 'Tutti gli utenti', 'selected' => $current_user ] );
+	wp_dropdown_users( [ 'name' => 'shopforge_rma_user', 'show_option_none' => __( 'All users', 'shopforge' ), 'selected' => $current_user ] );
 
 	$current_assigned = absint( $_GET['shopforge_rma_assegnato'] ?? 0 );
 	$assignable        = apply_filters( 'shopforge_rma_assignable_users', get_users( [ 'role__in' => [ 'administrator', 'shop_manager' ] ] ) );
 	?>
 	<select name="shopforge_rma_assegnato">
-		<option value="">Tutti gli operatori</option>
+		<option value=""><?php esc_html_e( 'All operators', 'shopforge' ); ?></option>
 		<?php foreach ( $assignable as $u ) : ?>
 		<option value="<?php echo esc_attr( $u->ID ); ?>" <?php selected( $current_assigned, $u->ID ); ?>><?php echo esc_html( $u->display_name ); ?></option>
 		<?php endforeach; ?>
 	</select>
-	<button type="submit" name="shopforge_rma_export_csv" value="1" class="button">Esporta CSV</button>
+	<button type="submit" name="shopforge_rma_export_csv" value="1" class="button"><?php esc_html_e( 'Export CSV', 'shopforge' ); ?></button>
 	<?php
 }, 10, 1 );
 
@@ -169,11 +169,13 @@ add_filter( 'posts_search', function ( $search, $wp_query ) {
 
 add_filter( 'bulk_actions-edit-shopforge_rma_request', function ( $actions ) {
 	foreach ( shopforge_rma_get_statuses() as $key => $label ) {
-		$actions[ 'shopforge_rma_set_status_' . $key ] = 'Cambia stato: ' . $label;
+		/* translators: %s: status label */
+		$actions[ 'shopforge_rma_set_status_' . $key ] = sprintf( __( 'Change status: %s', 'shopforge' ), $label );
 	}
 	$assignable = apply_filters( 'shopforge_rma_assignable_users', get_users( [ 'role__in' => [ 'administrator', 'shop_manager' ] ] ) );
 	foreach ( $assignable as $u ) {
-		$actions[ 'shopforge_rma_assign_' . $u->ID ] = 'Assegna a: ' . $u->display_name;
+		/* translators: %s: user display name */
+		$actions[ 'shopforge_rma_assign_' . $u->ID ] = sprintf( __( 'Assign to: %s', 'shopforge' ), $u->display_name );
 	}
 	return $actions;
 } );
@@ -211,10 +213,12 @@ add_filter( 'handle_bulk_actions-edit-shopforge_rma_request', function ( $redire
 
 add_action( 'admin_notices', function () {
 	if ( ! empty( $_REQUEST['shopforge_rma_bulk_status'] ) ) {
-		printf( '<div class="updated"><p>%d richieste aggiornate.</p></div>', absint( $_REQUEST['shopforge_rma_bulk_status'] ) );
+		/* translators: %d: number of requests */
+		printf( '<div class="updated"><p>' . esc_html__( '%d requests updated.', 'shopforge' ) . '</p></div>', absint( $_REQUEST['shopforge_rma_bulk_status'] ) );
 	}
 	if ( ! empty( $_REQUEST['shopforge_rma_bulk_assigned'] ) ) {
-		printf( '<div class="updated"><p>%d richieste assegnate.</p></div>', absint( $_REQUEST['shopforge_rma_bulk_assigned'] ) );
+		/* translators: %d: number of requests */
+		printf( '<div class="updated"><p>' . esc_html__( '%d requests assigned.', 'shopforge' ) . '</p></div>', absint( $_REQUEST['shopforge_rma_bulk_assigned'] ) );
 	}
 } );
 
@@ -224,8 +228,8 @@ add_action( 'admin_notices', function () {
 // =============================================================================
 
 add_action( 'add_meta_boxes', function () {
-	add_meta_box( 'shopforge_rma_details', 'Dettagli Richiesta', 'shopforge_rma_details_metabox_render', 'shopforge_rma_request', 'normal', 'high' );
-	add_meta_box( 'shopforge_rma_messages', 'Conversazione', 'shopforge_rma_messages_metabox_render', 'shopforge_rma_request', 'normal', 'high' );
+	add_meta_box( 'shopforge_rma_details', __( 'Request Details', 'shopforge' ), 'shopforge_rma_details_metabox_render', 'shopforge_rma_request', 'normal', 'high' );
+	add_meta_box( 'shopforge_rma_messages', __( 'Conversation', 'shopforge' ), 'shopforge_rma_messages_metabox_render', 'shopforge_rma_request', 'normal', 'high' );
 } );
 
 function shopforge_rma_details_metabox_render( WP_Post $post ): void {
@@ -249,11 +253,11 @@ function shopforge_rma_details_metabox_render( WP_Post $post ): void {
 
 	$print_url = wp_nonce_url( add_query_arg( [ 'page' => 'shopforge-rma-print', 'request_id' => $post->ID ], admin_url( 'admin.php' ) ), 'shopforge_rma_print_request' );
 	?>
-	<p><a href="<?php echo esc_url( $print_url ); ?>" class="button" target="_blank">Stampa richiesta</a></p>
+	<p><a href="<?php echo esc_url( $print_url ); ?>" class="button" target="_blank"><?php esc_html_e( 'Print request', 'shopforge' ); ?></a></p>
 
 	<table class="form-table">
 		<tr>
-			<th><label for="shopforge_rma_stato">Stato Richiesta</label></th>
+			<th><label for="shopforge_rma_stato"><?php esc_html_e( 'Request Status', 'shopforge' ); ?></label></th>
 			<td>
 				<select name="shopforge_rma_stato" id="shopforge_rma_stato" class="shopforge-rma-status-select">
 					<?php foreach ( shopforge_rma_get_statuses() as $key => $label ) : ?>
@@ -263,40 +267,40 @@ function shopforge_rma_details_metabox_render( WP_Post $post ): void {
 			</td>
 		</tr>
 		<tr>
-			<th><label for="shopforge_rma_assigned_to">Assegnata a</label></th>
+			<th><label for="shopforge_rma_assigned_to"><?php esc_html_e( 'Assigned to', 'shopforge' ); ?></label></th>
 			<td>
 				<select name="shopforge_rma_assigned_to" id="shopforge_rma_assigned_to">
-					<option value="0">Non assegnata</option>
+					<option value="0"><?php esc_html_e( 'Unassigned', 'shopforge' ); ?></option>
 					<?php foreach ( apply_filters( 'shopforge_rma_assignable_users', get_users( [ 'role__in' => [ 'administrator', 'shop_manager' ] ] ) ) as $u ) : ?>
 					<option value="<?php echo esc_attr( $u->ID ); ?>" <?php selected( (int) $assigned_to, $u->ID ); ?>><?php echo esc_html( $u->display_name ); ?></option>
 					<?php endforeach; ?>
 				</select>
 			</td>
 		</tr>
-		<tr><th>Tipo Richiesta</th><td><span class="shopforge-rma-admin-badge shopforge-rma-admin-badge--<?php echo 'reso' === $tipo ? 'reso' : 'assistenza'; ?>"><?php echo 'reso' === $tipo ? 'Reso' : 'Assistenza'; ?></span></td></tr>
-		<tr><th>Quantità</th><td><?php echo esc_html( $quantita ); ?></td></tr>
+		<tr><th><?php esc_html_e( 'Request Type', 'shopforge' ); ?></th><td><span class="shopforge-rma-admin-badge shopforge-rma-admin-badge--<?php echo 'reso' === $tipo ? 'reso' : 'assistenza'; ?>"><?php echo 'reso' === $tipo ? esc_html__( 'Return', 'shopforge' ) : esc_html__( 'Support', 'shopforge' ); ?></span></td></tr>
+		<tr><th><?php esc_html_e( 'Quantity', 'shopforge' ); ?></th><td><?php echo esc_html( $quantita ); ?></td></tr>
 		<tr>
-			<th>Cliente</th>
+			<th><?php esc_html_e( 'Customer', 'shopforge' ); ?></th>
 			<td>
 				<?php $user = $user_id ? get_userdata( $user_id ) : null; ?>
 				<?php if ( $user ) : ?>
 					<strong><?php echo esc_html( $user->display_name ); ?></strong><br><?php echo esc_html( $user->user_email ); ?><br>
-					<a href="<?php echo esc_url( admin_url( 'user-edit.php?user_id=' . $user_id ) ); ?>">Modifica utente</a>
+					<a href="<?php echo esc_url( admin_url( 'user-edit.php?user_id=' . $user_id ) ); ?>"><?php esc_html_e( 'Edit user', 'shopforge' ); ?></a>
 				<?php else : ?>—<?php endif; ?>
 			</td>
 		</tr>
 		<tr>
-			<th>Ordine</th>
+			<th><?php esc_html_e( 'Order', 'shopforge' ); ?></th>
 			<td>
 				<?php $order = $order_id ? wc_get_order( $order_id ) : null; ?>
 				<?php if ( $order ) : ?>
-					<a href="<?php echo esc_url( admin_url( 'post.php?post=' . $order_id . '&action=edit' ) ); ?>"><strong>#<?php echo esc_html( $order->get_order_number() ); ?></strong></a><br>
+					<a href="<?php echo esc_url( $order->get_edit_order_url() ); ?>"><strong>#<?php echo esc_html( $order->get_order_number() ); ?></strong></a><br>
 					<?php echo esc_html( $order->get_date_created()->date_i18n( get_option( 'date_format' ) ) ); ?>
 				<?php else : ?>—<?php endif; ?>
 			</td>
 		</tr>
 		<tr>
-			<th>Prodotto</th>
+			<th><?php esc_html_e( 'Product', 'shopforge' ); ?></th>
 			<td>
 				<?php $product = $product_id ? wc_get_product( $product_id ) : null; ?>
 				<?php if ( $product ) : ?>
@@ -304,59 +308,59 @@ function shopforge_rma_details_metabox_render( WP_Post $post ): void {
 				<?php else : ?>—<?php endif; ?>
 			</td>
 		</tr>
-		<tr><th>Descrizione Problema</th><td><?php echo wp_kses_post( wpautop( $descrizione ?: '—' ) ); ?></td></tr>
+		<tr><th><?php esc_html_e( 'Problem Description', 'shopforge' ); ?></th><td><?php echo wp_kses_post( wpautop( $descrizione ?: '—' ) ); ?></td></tr>
 		<tr>
-			<th>Rimedio Scelto</th>
+			<th><?php esc_html_e( 'Chosen Remedy', 'shopforge' ); ?></th>
 			<td><?php echo $rimedio ? esc_html( shopforge_rma_get_remedy_options( $tipo )[ $rimedio ] ?? $rimedio ) : '—'; ?></td>
 		</tr>
 		<?php if ( 'rimborso_restituzione' === $rimedio && $order_id && $product_id ) : ?>
 		<tr>
-			<th>Rimborso WooCommerce</th>
+			<th><?php esc_html_e( 'WooCommerce Refund', 'shopforge' ); ?></th>
 			<td>
 				<?php if ( $refund_id ) :
 					$refund_order  = wc_get_order( $refund_id );
 					$refund_amount = $refund_order ? $refund_order->get_amount() : '';
 				?>
-					<span class="shopforge-rma-admin-badge shopforge-rma-admin-badge--reso">Rimborso #<?php echo (int) $refund_id; ?> creato (<?php echo wp_kses_post( wc_price( $refund_amount ) ); ?>)</span>
+					<span class="shopforge-rma-admin-badge shopforge-rma-admin-badge--reso"><?php /* translators: 1: refund ID, 2: refund amount */ printf( wp_kses_post( __( 'Refund #%1$d created (%2$s)', 'shopforge' ) ), (int) $refund_id, wp_kses_post( wc_price( $refund_amount ) ) ); ?></span>
 				<?php elseif ( current_user_can( shopforge_rma_get_refund_capability() ) ) : ?>
-					<button type="button" id="shopforge-rma-create-refund" class="button" data-post-id="<?php echo esc_attr( $post->ID ); ?>">Crea rimborso WooCommerce</button>
-					<p class="description">Crea un rimborso reale sull'ordine per la quantità di questa richiesta e ripristina lo stock.</p>
+					<button type="button" id="shopforge-rma-create-refund" class="button" data-post-id="<?php echo esc_attr( $post->ID ); ?>"><?php esc_html_e( 'Create WooCommerce refund', 'shopforge' ); ?></button>
+					<p class="description"><?php esc_html_e( 'Creates a real refund on the order for this request quantity and restores stock.', 'shopforge' ); ?></p>
 				<?php else : ?>
-					<p class="description">Non hai i permessi per creare un rimborso.</p>
+					<p class="description"><?php esc_html_e( 'You do not have permission to create a refund.', 'shopforge' ); ?></p>
 				<?php endif; ?>
 			</td>
 		</tr>
 		<?php endif; ?>
 		<?php if ( $allegati ) : ?>
 		<tr>
-			<th>Allegati</th>
+			<th><?php esc_html_e( 'Attachments', 'shopforge' ); ?></th>
 			<td><div class="shopforge-rma-attachments"><?php foreach ( $allegati as $attach_id ) shopforge_rma_render_attachment( $attach_id ); ?></div></td>
 		</tr>
 		<?php endif; ?>
 		<?php if ( $motivo ) : ?>
-		<tr><th>Motivazione</th><td><?php echo esc_html( shopforge_rma_get_motivo_options()[ $motivo ] ?? $motivo ); ?></td></tr>
+		<tr><th><?php esc_html_e( 'Reason', 'shopforge' ); ?></th><td><?php echo esc_html( shopforge_rma_get_motivo_options()[ $motivo ] ?? $motivo ); ?></td></tr>
 		<?php endif; ?>
 		<tr>
-			<th>Accettazioni</th>
+			<th><?php esc_html_e( 'Acceptances', 'shopforge' ); ?></th>
 			<td>
 				<ul style="list-style:none;padding:0">
-					<li><?php echo '1' === get_post_meta( $post->ID, '_shopforge_rma_accetto_termini', true ) ? '✓' : '✗'; ?> Termini e condizioni</li>
-					<li><?php echo '1' === get_post_meta( $post->ID, '_shopforge_rma_accetto_privacy', true ) ? '✓' : '✗'; ?> Informativa privacy</li>
-					<li><?php echo '1' === get_post_meta( $post->ID, '_shopforge_rma_accetto_procedura', true ) ? '✓' : '✗'; ?> Procedura di reso e condizioni</li>
+					<li><?php echo '1' === get_post_meta( $post->ID, '_shopforge_rma_accetto_termini', true ) ? '✓' : '✗'; ?> <?php esc_html_e( 'Terms and conditions', 'shopforge' ); ?></li>
+					<li><?php echo '1' === get_post_meta( $post->ID, '_shopforge_rma_accetto_privacy', true ) ? '✓' : '✗'; ?> <?php esc_html_e( 'Privacy policy', 'shopforge' ); ?></li>
+					<li><?php echo '1' === get_post_meta( $post->ID, '_shopforge_rma_accetto_procedura', true ) ? '✓' : '✗'; ?> <?php esc_html_e( 'Return procedure and conditions', 'shopforge' ); ?></li>
 				</ul>
 			</td>
 		</tr>
 		<tr>
-			<th><label for="shopforge_rma_tracking_corriere">Tracking spedizione</label></th>
+			<th><label for="shopforge_rma_tracking_corriere"><?php esc_html_e( 'Shipment tracking', 'shopforge' ); ?></label></th>
 			<td>
-				<input type="text" name="shopforge_rma_tracking_corriere" id="shopforge_rma_tracking_corriere" value="<?php echo esc_attr( $tr_corriere ); ?>" placeholder="Corriere" style="margin-bottom:5px"><br>
-				<input type="text" name="shopforge_rma_tracking_numero" id="shopforge_rma_tracking_numero" value="<?php echo esc_attr( $tr_numero ); ?>" placeholder="Numero tracking">
-				<p class="description">Se compilato, verrà mostrato al cliente nel dettaglio della richiesta.</p>
+				<input type="text" name="shopforge_rma_tracking_corriere" id="shopforge_rma_tracking_corriere" value="<?php echo esc_attr( $tr_corriere ); ?>" placeholder="<?php esc_attr_e( 'Carrier', 'shopforge' ); ?>" style="margin-bottom:5px"><br>
+				<input type="text" name="shopforge_rma_tracking_numero" id="shopforge_rma_tracking_numero" value="<?php echo esc_attr( $tr_numero ); ?>" placeholder="<?php esc_attr_e( 'Tracking number', 'shopforge' ); ?>">
+				<p class="description"><?php esc_html_e( 'If filled in, it will be shown to the customer in the request detail.', 'shopforge' ); ?></p>
 			</td>
 		</tr>
 		<?php if ( $history ) : ?>
 		<tr>
-			<th>Storico Stati</th>
+			<th><?php esc_html_e( 'Status History', 'shopforge' ); ?></th>
 			<td>
 				<ul style="list-style:none;padding:0;margin:0">
 					<?php foreach ( array_reverse( $history ) as $entry ) :
@@ -396,7 +400,7 @@ function shopforge_rma_messages_metabox_render( WP_Post $post ): void {
 	?>
 	<div class="shopforge-rma-admin-messages">
 		<?php if ( ! $messages ) : ?>
-			<p>Nessun messaggio ancora.</p>
+			<p><?php esc_html_e( 'No messages yet.', 'shopforge' ); ?></p>
 		<?php else : ?>
 			<?php foreach ( $messages as $message ) : ?>
 			<div class="shopforge-rma-admin-message-item <?php echo ! empty( $message['is_admin'] ) ? 'is-admin' : 'is-customer'; ?>">
@@ -413,17 +417,17 @@ function shopforge_rma_messages_metabox_render( WP_Post $post ): void {
 		<?php endif; ?>
 
 		<div class="shopforge-rma-add-admin-message">
-			<h4>Aggiungi Messaggio</h4>
+			<h4><?php esc_html_e( 'Add Message', 'shopforge' ); ?></h4>
 			<form method="post" enctype="multipart/form-data">
 				<?php wp_nonce_field( 'shopforge_rma_add_admin_message', 'shopforge_rma_admin_message_nonce' ); ?>
 				<input type="hidden" name="shopforge_rma_request_id" value="<?php echo esc_attr( $post->ID ); ?>">
-				<p><label for="shopforge_rma_admin_message_text">Messaggio</label><br>
+				<p><label for="shopforge_rma_admin_message_text"><?php esc_html_e( 'Message', 'shopforge' ); ?></label><br>
 					<textarea name="shopforge_rma_admin_message_text" id="shopforge_rma_admin_message_text" rows="4" class="large-text"></textarea>
 				</p>
-				<p><label for="shopforge_rma_admin_message_allegati">Allegati (opzionale)</label><br>
+				<p><label for="shopforge_rma_admin_message_allegati"><?php esc_html_e( 'Attachments (optional)', 'shopforge' ); ?></label><br>
 					<input type="file" name="shopforge_rma_admin_message_allegati[]" id="shopforge_rma_admin_message_allegati" multiple accept="image/*,video/*,.pdf">
 				</p>
-				<p><button type="submit" class="button button-primary" name="shopforge_rma_send_admin_message">Invia Messaggio</button></p>
+				<p><button type="submit" class="button button-primary" name="shopforge_rma_send_admin_message"><?php esc_html_e( 'Send Message', 'shopforge' ); ?></button></p>
 			</form>
 		</div>
 	</div>
@@ -487,20 +491,20 @@ add_action( 'save_post_shopforge_rma_request', function (): void {
 
 add_action( 'wp_ajax_shopforge_rma_update_status', function () {
 	if ( ! wp_verify_nonce( $_POST['nonce'] ?? '', 'shopforge_rma_admin' ) ) {
-		wp_send_json_error( [ 'message' => 'Sicurezza: nonce non valido.' ] );
+		wp_send_json_error( [ 'message' => __( 'Security: invalid nonce.', 'shopforge' ) ] );
 	}
 	if ( ! current_user_can( 'manage_woocommerce' ) ) {
-		wp_send_json_error( [ 'message' => 'Permessi insufficienti.' ] );
+		wp_send_json_error( [ 'message' => __( 'Insufficient permissions.', 'shopforge' ) ] );
 	}
 
 	$post_id = absint( $_POST['post_id'] ?? 0 );
 	$stato   = sanitize_text_field( $_POST['stato'] ?? '' );
 
 	if ( ! $post_id || 'shopforge_rma_request' !== get_post_type( $post_id ) ) {
-		wp_send_json_error( [ 'message' => 'Richiesta non valida.' ] );
+		wp_send_json_error( [ 'message' => __( 'Invalid request.', 'shopforge' ) ] );
 	}
 	if ( ! array_key_exists( $stato, shopforge_rma_get_statuses() ) ) {
-		wp_send_json_error( [ 'message' => 'Stato non valido.' ] );
+		wp_send_json_error( [ 'message' => __( 'Invalid status.', 'shopforge' ) ] );
 	}
 
 	shopforge_rma_update_status( $post_id, $stato, get_current_user_id() );
@@ -510,18 +514,18 @@ add_action( 'wp_ajax_shopforge_rma_update_status', function () {
 
 add_action( 'wp_ajax_shopforge_rma_create_refund', function () {
 	if ( ! wp_verify_nonce( $_POST['nonce'] ?? '', 'shopforge_rma_admin' ) ) {
-		wp_send_json_error( [ 'message' => 'Sicurezza: nonce non valido.' ] );
+		wp_send_json_error( [ 'message' => __( 'Security: invalid nonce.', 'shopforge' ) ] );
 	}
 	if ( ! current_user_can( shopforge_rma_get_refund_capability() ) ) {
-		wp_send_json_error( [ 'message' => 'Permessi insufficienti per creare un rimborso.' ] );
+		wp_send_json_error( [ 'message' => __( 'Insufficient permissions to create a refund.', 'shopforge' ) ] );
 	}
 
 	$post_id = absint( $_POST['post_id'] ?? 0 );
 	if ( ! $post_id || 'shopforge_rma_request' !== get_post_type( $post_id ) ) {
-		wp_send_json_error( [ 'message' => 'Richiesta non valida.' ] );
+		wp_send_json_error( [ 'message' => __( 'Invalid request.', 'shopforge' ) ] );
 	}
 	if ( get_post_meta( $post_id, '_shopforge_rma_refund_id', true ) ) {
-		wp_send_json_error( [ 'message' => 'È già stato creato un rimborso per questa richiesta.' ] );
+		wp_send_json_error( [ 'message' => __( 'A refund was already created for this request.', 'shopforge' ) ] );
 	}
 
 	$order_id   = (int) get_post_meta( $post_id, '_shopforge_rma_order_id', true );
@@ -530,7 +534,7 @@ add_action( 'wp_ajax_shopforge_rma_create_refund', function () {
 
 	$order = $order_id ? wc_get_order( $order_id ) : false;
 	if ( ! $order ) {
-		wp_send_json_error( [ 'message' => 'Ordine non valido.' ] );
+		wp_send_json_error( [ 'message' => __( 'Invalid order.', 'shopforge' ) ] );
 	}
 
 	$order_item    = null;
@@ -543,7 +547,7 @@ add_action( 'wp_ajax_shopforge_rma_create_refund', function () {
 		}
 	}
 	if ( ! $order_item ) {
-		wp_send_json_error( [ 'message' => 'Prodotto non trovato nell\'ordine.' ] );
+		wp_send_json_error( [ 'message' => __( 'Product not found in the order.', 'shopforge' ) ] );
 	}
 
 	$item_qty   = $order_item->get_quantity();
@@ -563,7 +567,8 @@ add_action( 'wp_ajax_shopforge_rma_create_refund', function () {
 	$refund = wc_create_refund( [
 		'order_id'      => $order_id,
 		'amount'        => $refund_total + $refund_tax_total,
-		'reason'        => sprintf( 'Rimborso richiesta Assistenza Prodotti #%d', $post_id ),
+		/* translators: %d: request ID */
+		'reason'        => sprintf( __( 'Refund for Product Support request #%d', 'shopforge' ), $post_id ),
 		'line_items'    => [ $order_item_id => [ 'qty' => $refund_qty, 'refund_total' => $refund_total, 'refund_tax' => $refund_taxes ] ],
 		'restock_items' => true,
 	] );
@@ -576,7 +581,8 @@ add_action( 'wp_ajax_shopforge_rma_create_refund', function () {
 	shopforge_rma_update_status( $post_id, 'rimborsata', get_current_user_id() );
 
 	wp_send_json_success( [
-		'message'   => 'Rimborso di ' . wp_strip_all_tags( wc_price( $refund_total + $refund_tax_total ) ) . ' creato con successo.',
+		/* translators: %s: refund amount */
+		'message'   => sprintf( __( 'Refund of %s created successfully.', 'shopforge' ), wp_strip_all_tags( wc_price( $refund_total + $refund_tax_total ) ) ),
 		'refund_id' => $refund->get_id(),
 	] );
 } );

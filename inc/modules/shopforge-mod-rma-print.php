@@ -11,16 +11,16 @@ add_action( 'admin_init', function () {
 	if ( empty( $_GET['page'] ) || 'shopforge-rma-print' !== $_GET['page'] ) return;
 
 	if ( ! current_user_can( 'manage_woocommerce' ) ) {
-		wp_die( 'Permessi insufficienti.' );
+		wp_die( esc_html__( 'Insufficient permissions.', 'shopforge' ) );
 	}
 	if ( ! isset( $_GET['_wpnonce'] ) || ! wp_verify_nonce( $_GET['_wpnonce'], 'shopforge_rma_print_request' ) ) {
-		wp_die( 'Link non valido o scaduto.' );
+		wp_die( esc_html__( 'Invalid or expired link.', 'shopforge' ) );
 	}
 
 	$request_id = absint( $_GET['request_id'] ?? 0 );
 	$request    = get_post( $request_id );
 	if ( ! $request || 'shopforge_rma_request' !== $request->post_type ) {
-		wp_die( 'Richiesta non trovata.' );
+		wp_die( esc_html__( 'Request not found.', 'shopforge' ) );
 	}
 
 	$user_id     = (int) get_post_meta( $request_id, '_shopforge_rma_user_id', true );
@@ -78,7 +78,7 @@ add_action( 'admin_init', function () {
 
 		<h2>Conversazione</h2>
 		<?php if ( ! $messages ) : ?>
-			<p>Nessun messaggio.</p>
+			<p><?php esc_html_e( 'No messages.', 'shopforge' ); ?></p>
 		<?php else : ?>
 			<?php foreach ( $messages as $message ) :
 				$is_admin = ! empty( $message['is_admin'] );

@@ -68,7 +68,7 @@ function shopforge_rma_stats_page_render(): void {
 	<div class="wrap">
 		<h1>Statistiche Assistenza Prodotti</h1>
 
-		<h2>Richieste per stato</h2>
+		<h2><?php esc_html_e( 'Requests by status', 'shopforge' ); ?></h2>
 		<table class="widefat striped" style="max-width:500px">
 			<thead><tr><th>Stato</th><th>N. richieste</th></tr></thead>
 			<tbody>
@@ -78,15 +78,15 @@ function shopforge_rma_stats_page_render(): void {
 			</tbody>
 		</table>
 
-		<h2>Tempo medio di risoluzione</h2>
+		<h2><?php esc_html_e( 'Average resolution time', 'shopforge' ); ?></h2>
 		<p><?php echo null !== $avg_resolution ? esc_html( number_format_i18n( $avg_resolution, 1 ) . ' giorni (calcolato su ' . count( $resolution_days ) . ' richieste risolte)' ) : 'Nessun dato disponibile ancora.'; ?></p>
 
-		<h2>Prodotti più richiesti</h2>
+		<h2><?php esc_html_e( 'Most requested products', 'shopforge' ); ?></h2>
 		<table class="widefat striped" style="max-width:700px">
 			<thead><tr><th>Prodotto</th><th>Resi</th><th>Assistenza</th></tr></thead>
 			<tbody>
 			<?php if ( ! $top_products ) : ?>
-				<tr><td colspan="3">Nessun dato disponibile.</td></tr>
+				<tr><td colspan="3"><?php esc_html_e( 'No data available.', 'shopforge' ); ?></td></tr>
 			<?php else : foreach ( $top_products as $product_id => $counts ) : $product = wc_get_product( $product_id ); ?>
 				<tr>
 					<td><?php echo $product ? esc_html( $product->get_name() ) : 'Prodotto eliminato (#' . absint( $product_id ) . ')'; ?></td>
@@ -97,12 +97,12 @@ function shopforge_rma_stats_page_render(): void {
 			</tbody>
 		</table>
 
-		<h2>Motivi più frequenti (assistenza)</h2>
+		<h2><?php esc_html_e( 'Most frequent reasons (support)', 'shopforge' ); ?></h2>
 		<table class="widefat striped" style="max-width:500px">
 			<thead><tr><th>Motivo</th><th>N. richieste</th></tr></thead>
 			<tbody>
 			<?php if ( ! $motivo_counts ) : ?>
-				<tr><td colspan="2">Nessun dato disponibile.</td></tr>
+				<tr><td colspan="2"><?php esc_html_e( 'No data available.', 'shopforge' ); ?></td></tr>
 			<?php else : foreach ( $motivo_counts as $motivo_key => $count ) : ?>
 				<tr><td><?php echo esc_html( $motivo_options[ $motivo_key ] ?? $motivo_key ); ?></td><td><?php echo esc_html( $count ); ?></td></tr>
 			<?php endforeach; endif; ?>

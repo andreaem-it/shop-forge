@@ -1,6 +1,6 @@
 <?php
 /**
- * Modulo: Integrazione tracking spedizioni via 17track
+ * Andrea Emili — Integrazione tracking spedizioni via 17track
  *
  * Flusso:
  *  1. Admin inserisce tracking number + nome corriere nel metabox ordine
@@ -14,8 +14,15 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'SHOPFORGE_17TRACK_KEY', 'D778B41030ADFD3C0657F8169093631A' );
-define( 'SHOPFORGE_17TRACK_API', 'https://api.17track.net/track/v2.2/' );
+define( 'BNCOM_17TRACK_API', 'https://api.17track.net/track/v2.2/' );
+
+/**
+ * API key 17track configurata dall'admin (ShopForge → Impostazioni).
+ * Nessuna chiave in bundle: ogni negozio registra la propria su 17track.com.
+ */
+function shopforge_17track_api_key(): string {
+	return (string) get_option( 'shopforge_17track_key', '' );
+}
 
 
 // =============================================================================
@@ -26,7 +33,7 @@ add_action( 'add_meta_boxes', function () {
 	// Classic orders
 	add_meta_box(
 		'shopforge-tracking',
-		'📦 Tracking Spedizione',
+		'📦 ' . __( 'Shipment Tracking', 'shopforge' ),
 		'shopforge_tracking_metabox_render',
 		'shop_order',
 		'side',
@@ -35,7 +42,7 @@ add_action( 'add_meta_boxes', function () {
 	// HPOS (WC 7+)
 	add_meta_box(
 		'shopforge-tracking',
-		'📦 Tracking Spedizione',
+		'📦 ' . __( 'Shipment Tracking', 'shopforge' ),
 		'shopforge_tracking_metabox_render',
 		'woocommerce_page_wc-orders',
 		'side',
@@ -68,22 +75,22 @@ function shopforge_tracking_metabox_render( $post_or_order ): void {
 	</style>
 
 	<div class="shopforge-mb">
-		<label for="shopforge_tracking_carrier">Corriere</label>
+		<label for="shopforge_tracking_carrier"><?php esc_html_e( 'Carrier', 'shopforge' ); ?></label>
 		<input type="text" id="shopforge_tracking_carrier" name="shopforge_tracking_carrier"
 		       value="<?php echo esc_attr( $carrier_name ); ?>"
-		       placeholder="BRT, GLS, SDA, DHL…">
+		       placeholder="<?php esc_attr_e( 'DHL, UPS, FedEx…', 'shopforge' ); ?>">
 
-		<label for="shopforge_tracking_number">Numero tracking</label>
+		<label for="shopforge_tracking_number"><?php esc_html_e( 'Tracking number', 'shopforge' ); ?></label>
 		<input type="text" id="shopforge_tracking_number" name="shopforge_tracking_number"
 		       value="<?php echo esc_attr( $tracking_number ); ?>"
-		       placeholder="Inserisci numero tracking">
+		       placeholder="<?php esc_attr_e( 'Enter tracking number', 'shopforge' ); ?>">
 
 		<?php if ( $tracking_number ) : ?>
 		<div class="shopforge-mb-actions">
 			<button type="button" class="shopforge-mb-clear" id="shopforge-clear-cache"
 			        data-order="<?php echo esc_attr( $order->get_id() ); ?>"
 			        data-nonce="<?php echo esc_attr( wp_create_nonce( 'shopforge_clear_cache' ) ); ?>">
-				🔄 Aggiorna cache
+				🔄 <?php esc_html_e( 'Refresh cache', 'shopforge' ); ?>
 			</button>
 			<span class="shopforge-mb-status" id="shopforge-cache-status"></span>
 		</div>
@@ -92,13 +99,13 @@ function shopforge_tracking_metabox_render( $post_or_order ): void {
 			var btn = this;
 			var status = document.getElementById('shopforge-cache-status');
 			btn.disabled = true;
-			status.textContent = 'Pulizia…';
+			status.textContent = <?php echo wp_json_encode( __( 'Clearing…', 'shopforge' ) ); ?>;
 			fetch(ajaxurl, {
 				method: 'POST',
 				headers: {'Content-Type':'application/x-www-form-urlencoded'},
 				body: 'action=shopforge_clear_tracking_cache&order_id=' + btn.dataset.order + '&nonce=' + btn.dataset.nonce
 			}).then(function(r){ return r.json(); }).then(function(d) {
-				status.textContent = d.success ? '✓ Cache svuotata' : '✗ Errore';
+				status.textContent = d.success ? '✓ ' + <?php echo wp_json_encode( __( 'Cache cleared', 'shopforge' ) ); ?> : '✗ ' + <?php echo wp_json_encode( __( 'Error', 'shopforge' ) ); ?>;
 				btn.disabled = false;
 				setTimeout(function(){ status.textContent=''; }, 3000);
 			});
@@ -167,9 +174,9 @@ add_action( 'wp_ajax_shopforge_clear_tracking_cache', function () {
  * Registra un numero tracking su 17track (chiamata one-time al salvataggio).
  */
 function shopforge_17track_register( string $number ): bool {
-	$response = wp_remote_post( SHOPFORGE_17TRACK_API . 'register', [
+	$response = wp_remote_post( BNCOM_17TRACK_API . 'register', [
 		'headers' => [
-			'17token'      => SHOPFORGE_17TRACK_KEY,
+			'17token'      => shopforge_17track_api_key(),
 			'Content-Type' => 'application/json',
 		],
 		'body'    => wp_json_encode( [ [ 'number' => $number ] ] ),
@@ -189,9 +196,9 @@ function shopforge_17track_get( string $number ): array|false {
 	$cached    = get_transient( $cache_key );
 	if ( $cached !== false ) return $cached;
 
-	$response = wp_remote_post( SHOPFORGE_17TRACK_API . 'gettrackinfo', [
+	$response = wp_remote_post( BNCOM_17TRACK_API . 'gettrackinfo', [
 		'headers' => [
-			'17token'      => SHOPFORGE_17TRACK_KEY,
+			'17token'      => shopforge_17track_api_key(),
 			'Content-Type' => 'application/json',
 		],
 		'body'    => wp_json_encode( [ [ 'number' => $number ] ] ),
@@ -228,14 +235,14 @@ function shopforge_17track_normalize( string $number, array $track ): array {
 	$status_code = intval( $latest['c'] ?? 0 );
 
 	$status_labels = [
-		0  => 'In attesa',
-		10 => 'Non trovato',
-		20 => 'Ritirato',
-		30 => 'In transito',
-		35 => 'Tentativo fallito',
-		40 => 'Consegnato',
-		50 => 'Scaduto',
-		60 => 'Allerta',
+		0  => __( 'Pending', 'shopforge' ),
+		10 => __( 'Not found', 'shopforge' ),
+		20 => __( 'Picked up', 'shopforge' ),
+		30 => __( 'In transit', 'shopforge' ),
+		35 => __( 'Delivery attempt failed', 'shopforge' ),
+		40 => __( 'Delivered', 'shopforge' ),
+		50 => __( 'Expired', 'shopforge' ),
+		60 => __( 'Alert', 'shopforge' ),
 	];
 
 	$events = array_map( function ( $e ) {
@@ -258,10 +265,10 @@ function shopforge_17track_normalize( string $number, array $track ): array {
 
 	return [
 		'tracking_number' => $number,
-		'status'          => $status_labels[ $status_code ] ?? ( $latest['a'] ?? 'Sconosciuto' ),
+		'status'          => $status_labels[ $status_code ] ?? ( $latest['a'] ?? __( 'Unknown', 'shopforge' ) ),
 		'status_code'     => $status_code,
 		'events'          => $events,
-		'updated_at'      => ( new DateTime() )->format( 'd/m/Y \a\l\l\e H:i' ),
+		'updated_at'      => date_i18n( get_option( 'date_format' ) . ' H:i' ),
 	];
 }
 
@@ -312,7 +319,7 @@ function shopforge_tracking_rest_handler( WP_REST_Request $request ): WP_REST_Re
 	if ( ! $tracking_number ) {
 		return new WP_REST_Response( [
 			'success' => false,
-			'message' => 'Numero di tracking non ancora disponibile.',
+			'message' => __( 'Tracking number not available yet.', 'shopforge' ),
 		], 200 );
 	}
 
@@ -321,7 +328,7 @@ function shopforge_tracking_rest_handler( WP_REST_Request $request ): WP_REST_Re
 	if ( $data === false ) {
 		return new WP_REST_Response( [
 			'success' => false,
-			'message' => 'Impossibile recuperare il tracking al momento. Riprova tra qualche minuto.',
+			'message' => __( 'Unable to fetch tracking right now. Try again in a few minutes.', 'shopforge' ),
 		], 200 );
 	}
 
@@ -372,7 +379,7 @@ add_action( 'woocommerce_order_details_before_order_table', function ( WC_Order 
 				<i class="fa-solid fa-truck-fast" aria-hidden="true"></i>
 			</span>
 			<div class="shopforge-shiptrack__title-group">
-				<p class="shopforge-shiptrack__title">Tracciamento spedizione</p>
+				<p class="shopforge-shiptrack__title"><?php esc_html_e( 'Shipment tracking', 'shopforge' ); ?></p>
 				<p class="shopforge-shiptrack__meta">
 					<?php if ( $carrier_name ) : ?>
 						<strong><?php echo esc_html( $carrier_name ); ?></strong> ·
@@ -385,7 +392,7 @@ add_action( 'woocommerce_order_details_before_order_table', function ( WC_Order 
 		<div class="shopforge-shiptrack__body" id="shopforge-st-body">
 			<div class="shopforge-shiptrack__loading">
 				<span class="shopforge-st-spinner" aria-hidden="true"></span>
-				Caricamento tracking…
+				<?php esc_html_e( 'Loading tracking…', 'shopforge' ); ?>
 			</div>
 		</div>
 	</div>
@@ -416,7 +423,7 @@ add_action( 'woocommerce_order_details_before_order_table', function ( WC_Order 
 		.then(function (data) {
 			if (!data.success) {
 				body.innerHTML = '<p class="shopforge-st-empty">' +
-					esc(data.message || 'Tracking non disponibile.') + '</p>';
+					esc(data.message || <?php echo wp_json_encode( __( 'Tracking not available.', 'shopforge' ) ); ?>) + '</p>';
 				return;
 			}
 
@@ -426,8 +433,7 @@ add_action( 'woocommerce_order_details_before_order_table', function ( WC_Order 
 			badge.className = 'shopforge-shiptrack__badge shopforge-st-badge--' + (STATUS_CLASS[sc] || 'pending');
 
 			if (!data.events || !data.events.length) {
-				body.innerHTML = '<p class="shopforge-st-empty">Nessun aggiornamento disponibile ancora. ' +
-					'Il corriere potrebbe impiegare qualche ora ad aggiornare lo stato.</p>';
+				body.innerHTML = '<p class="shopforge-st-empty">' + <?php echo wp_json_encode( __( 'No updates available yet. The carrier may take a few hours to update the status.', 'shopforge' ) ); ?> + '</p>';
 				return;
 			}
 
@@ -446,13 +452,13 @@ add_action( 'woocommerce_order_details_before_order_table', function ( WC_Order 
 				'</li>';
 			});
 			html += '</ul>';
-			html += '<p class="shopforge-st-footer">Aggiornato <?php echo esc_js( '' ); ?>' +
+			html += '<p class="shopforge-st-footer">' + <?php echo wp_json_encode( __( 'Updated', 'shopforge' ) ); ?> + ' ' +
 				'<span id="shopforge-st-updated">' + esc(data.updated_at) + '</span></p>';
 
 			body.innerHTML = html;
 		})
 		.catch(function () {
-			body.innerHTML = '<p class="shopforge-st-empty">Errore nel caricamento del tracking.</p>';
+			body.innerHTML = '<p class="shopforge-st-empty">' + <?php echo wp_json_encode( __( 'Error loading tracking.', 'shopforge' ) ); ?> + '</p>';
 		});
 
 		function esc(str) {

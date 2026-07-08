@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
     <?php do_action( 'woocommerce_before_cart_totals' ); ?>
 
     <div class="shopforge-totals-header">
-        <h3><?php esc_html_e( 'Riepilogo ordine', 'woocommerce' ); ?></h3>
+        <h3><?php esc_html_e( 'Order summary', 'shopforge' ); ?></h3>
     </div>
 
     <?php if ( wc_coupons_enabled() ) : ?>
@@ -24,9 +24,9 @@ defined( 'ABSPATH' ) || exit;
             <label for="coupon_code" class="screen-reader-text"><?php esc_html_e( 'Coupon:', 'woocommerce' ); ?></label>
             <div class="shopforge-coupon-row">
                 <i class="fa-solid fa-tag" aria-hidden="true"></i>
-                <input type="text" name="coupon_code" id="coupon_code" class="input-text" value="" placeholder="<?php esc_attr_e( 'Codice coupon', 'woocommerce' ); ?>" />
+                <input type="text" name="coupon_code" id="coupon_code" class="input-text" value="" placeholder="<?php esc_attr_e( 'Coupon code', 'woocommerce' ); ?>" />
                 <button type="submit" name="apply_coupon" value="<?php esc_attr_e( 'Apply coupon', 'woocommerce' ); ?>">
-                    <?php esc_html_e( 'Applica', 'woocommerce' ); ?>
+                    <?php esc_html_e( 'Apply', 'shopforge' ); ?>
                 </button>
             </div>
             <?php wp_nonce_field( 'woocommerce-cart', 'woocommerce-cart-nonce' ); ?>
@@ -38,7 +38,7 @@ defined( 'ABSPATH' ) || exit;
     <table class="shopforge-totals-table" cellspacing="0">
 
         <tr class="cart-subtotal">
-            <th><?php esc_html_e( 'Subtotale', 'woocommerce' ); ?></th>
+            <th><?php esc_html_e( 'Subtotal', 'woocommerce' ); ?></th>
             <td data-title="<?php esc_attr_e( 'Subtotal', 'woocommerce' ); ?>"><?php wc_cart_totals_subtotal_html(); ?></td>
         </tr>
 
@@ -55,7 +55,7 @@ defined( 'ABSPATH' ) || exit;
             <?php do_action( 'woocommerce_cart_totals_after_shipping' ); ?>
         <?php elseif ( WC()->cart->needs_shipping() && 'yes' === get_option( 'woocommerce_enable_shipping_calc' ) ) : ?>
         <tr class="shipping">
-            <th><?php esc_html_e( 'Spedizione', 'woocommerce' ); ?></th>
+            <th><?php esc_html_e( 'Shipping', 'woocommerce' ); ?></th>
             <td data-title="<?php esc_attr_e( 'Shipping', 'woocommerce' ); ?>"><?php woocommerce_shipping_calculator(); ?></td>
         </tr>
         <?php endif; ?>
@@ -93,7 +93,7 @@ defined( 'ABSPATH' ) || exit;
         <?php do_action( 'woocommerce_cart_totals_before_order_total' ); ?>
 
         <tr class="order-total">
-            <th><?php esc_html_e( 'Totale', 'woocommerce' ); ?></th>
+            <th><?php esc_html_e( 'Total', 'woocommerce' ); ?></th>
             <td data-title="<?php esc_attr_e( 'Total', 'woocommerce' ); ?>"><?php wc_cart_totals_order_total_html(); ?></td>
         </tr>
 

@@ -43,24 +43,27 @@ function shopforge_render_order_tracker( WC_Order $order ): void {
 		?>
 		<div class="shopforge-order-tracker shopforge-order-tracker--error">
 			<i class="fa-solid fa-circle-xmark" aria-hidden="true"></i>
-			<span>Ordine <strong><?php echo esc_html( $label ); ?></strong> — nessun avanzamento disponibile.</span>
+			<span><?php
+			/* translators: %s: order status name */
+			printf( wp_kses_post( __( 'Order <strong>%s</strong> — no progress available.', 'shopforge' ) ), esc_html( $label ) );
+			?></span>
 		</div>
 		<?php
 		return;
 	}
 
 	$steps = [
-		[ 'label' => 'Ricevuto',        'icon' => 'fa-solid fa-inbox' ],
-		[ 'label' => 'Pagato',           'icon' => 'fa-solid fa-credit-card' ],
-		[ 'label' => 'In Preparazione',  'icon' => 'fa-solid fa-box-open' ],
-		[ 'label' => 'Spedito',          'icon' => 'fa-solid fa-truck' ],
-		[ 'label' => 'Consegnato',       'icon' => 'fa-solid fa-circle-check' ],
+		[ 'label' => __( 'Received', 'shopforge' ),   'icon' => 'fa-solid fa-inbox' ],
+		[ 'label' => __( 'Paid', 'shopforge' ),       'icon' => 'fa-solid fa-credit-card' ],
+		[ 'label' => __( 'Preparing', 'shopforge' ),  'icon' => 'fa-solid fa-box-open' ],
+		[ 'label' => __( 'Shipped', 'shopforge' ),    'icon' => 'fa-solid fa-truck' ],
+		[ 'label' => __( 'Delivered', 'shopforge' ),  'icon' => 'fa-solid fa-circle-check' ],
 	];
 	?>
-	<div class="shopforge-order-tracker" role="list" aria-label="Stato ordine">
+	<div class="shopforge-order-tracker" role="list" aria-label="<?php esc_attr_e( 'Order status', 'shopforge' ); ?>">
 		<p class="shopforge-tracker-header">
 			<i class="fa-solid fa-route" aria-hidden="true"></i>
-			Stato ordine
+			<?php esc_html_e( 'Order status', 'shopforge' ); ?>
 		</p>
 
 		<div class="shopforge-tracker-steps">
@@ -69,13 +72,13 @@ function shopforge_render_order_tracker( WC_Order $order ): void {
 
 				if ( $step_num < $progress ) {
 					$css_class = 'is-completed';
-					$aria      = 'Completato';
+					$aria      = __( 'Completed', 'shopforge' );
 				} elseif ( $step_num === $progress ) {
 					$css_class = 'is-active';
-					$aria      = 'In corso';
+					$aria      = __( 'In progress', 'shopforge' );
 				} else {
 					$css_class = 'is-pending';
-					$aria      = 'In attesa';
+					$aria      = __( 'Pending', 'shopforge' );
 				}
 			?>
 				<div class="shopforge-tracker-step <?php echo esc_attr( $css_class ); ?>"
@@ -153,10 +156,9 @@ add_action( 'woocommerce_order_details_after_order_table', function ( WC_Order $
 			<i class="fa-solid fa-headset" aria-hidden="true"></i>
 		</div>
 		<div class="shopforge-support-card__body" style="flex:1;min-width:0;">
-			<p class="shopforge-support-card__title" style="margin:0 0 4px;font-weight:700;font-size:14px;">Serve aiuto con questo ordine?</p>
+			<p class="shopforge-support-card__title" style="margin:0 0 4px;font-weight:700;font-size:14px;"><?php esc_html_e( 'Need help with this order?', 'shopforge' ); ?></p>
 			<p class="shopforge-support-card__text" style="margin:0;font-size:13px;color:#555;">
-				Il nostro team è a disposizione per qualsiasi domanda sui prodotti,
-				sulla spedizione o per gestire resi e sostituzioni.
+				<?php esc_html_e( 'Our team is available for any question about products, shipping, or to handle returns and replacements.', 'shopforge' ); ?>
 			</p>
 		</div>
 		<button type="button" class="shopforge-support-card__btn"
@@ -165,7 +167,7 @@ add_action( 'woocommerce_order_details_after_order_table', function ( WC_Order $
 		        data-number="<?php echo esc_attr( $order_number ); ?>"
 		        data-nonce="<?php echo esc_attr( $nonce ); ?>"
 		        style="flex-shrink:0;display:inline-flex;align-items:center;gap:6px;padding:9px 16px;background:#0369A1;color:#fff;border:none;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;">
-			Apri Una Richiesta
+			<?php esc_html_e( 'Open a Request', 'shopforge' ); ?>
 			<i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
 		</button>
 	</div>
@@ -175,9 +177,12 @@ add_action( 'woocommerce_order_details_after_order_table', function ( WC_Order $
 		<div class="shopforge-ticket-inline__header">
 			<h2 class="shopforge-ticket-inline__title">
 				<i class="fa-solid fa-headset" aria-hidden="true"></i>
-				Richiesta assistenza — Ordine <strong>#<?php echo esc_html( $order_number ); ?></strong>
+				<?php
+				/* translators: %s: order number */
+				printf( wp_kses_post( __( 'Support request — Order <strong>#%s</strong>', 'shopforge' ) ), esc_html( $order_number ) );
+				?>
 			</h2>
-			<button type="button" class="shopforge-ticket-inline__close" id="shopforge-close-ticket" aria-label="Chiudi">
+			<button type="button" class="shopforge-ticket-inline__close" id="shopforge-close-ticket" aria-label="<?php esc_attr_e( 'Close', 'shopforge' ); ?>">
 				<i class="fa-solid fa-xmark" aria-hidden="true"></i>
 			</button>
 		</div>
@@ -186,17 +191,17 @@ add_action( 'woocommerce_order_details_after_order_table', function ( WC_Order $
 			<!-- Form -->
 			<div id="shopforge-ticket-form">
 					<div class="shopforge-field">
-						<label for="shopforge-ticket-subject">Motivo della richiesta</label>
+						<label for="shopforge-ticket-subject"><?php esc_html_e( 'Reason for the request', 'shopforge' ); ?></label>
 						<select id="shopforge-ticket-subject" name="subject">
-							<option value="">— Seleziona —</option>
-							<option value="Problema con il prodotto">Problema con il prodotto</option>
-							<option value="Spedizione o tracking">Spedizione o tracking</option>
-							<option value="Altro">Altro</option>
+							<option value="">— <?php esc_html_e( 'Select', 'shopforge' ); ?> —</option>
+							<option value="<?php esc_attr_e( 'Product issue', 'shopforge' ); ?>"><?php esc_html_e( 'Product issue', 'shopforge' ); ?></option>
+							<option value="<?php esc_attr_e( 'Shipping or tracking', 'shopforge' ); ?>"><?php esc_html_e( 'Shipping or tracking', 'shopforge' ); ?></option>
+							<option value="<?php esc_attr_e( 'Other', 'shopforge' ); ?>"><?php esc_html_e( 'Other', 'shopforge' ); ?></option>
 						</select>
 					</div>
 
 					<div class="shopforge-field">
-						<label>Prodotti coinvolti</label>
+						<label><?php esc_html_e( 'Products involved', 'shopforge' ); ?></label>
 						<ul class="shopforge-product-list" id="shopforge-product-list">
 							<?php foreach ( $order->get_items() as $item_id => $item ) :
 								/** @var WC_Order_Item_Product $item */
@@ -238,21 +243,21 @@ add_action( 'woocommerce_order_details_after_order_table', function ( WC_Order $
 					</div>
 
 					<div class="shopforge-field">
-						<label for="shopforge-ticket-message">Descrivi il problema</label>
+						<label for="shopforge-ticket-message"><?php esc_html_e( 'Describe the problem', 'shopforge' ); ?></label>
 						<textarea id="shopforge-ticket-message" name="message" rows="5"
-						          placeholder="Descrivi nel dettaglio la tua richiesta…"></textarea>
+						          placeholder="<?php esc_attr_e( 'Describe your request in detail…', 'shopforge' ); ?>"></textarea>
 					</div>
 					<div class="shopforge-form-group shopforge-form-group--file">
-						<label for="shopforge-ticket-files">Allega foto o documenti (opzionale)</label>
+						<label for="shopforge-ticket-files"><?php esc_html_e( 'Attach photos or documents (optional)', 'shopforge' ); ?></label>
 						<input type="file" id="shopforge-ticket-files" name="files[]"
 						       multiple accept="image/*,.pdf" class="shopforge-file-input">
 						<div id="shopforge-ticket-file-preview" class="shopforge-file-preview"></div>
 					</div>
 					<p class="shopforge-field-note">
-						Riceverai una risposta all'indirizzo email associato al tuo account.
+						<?php esc_html_e( 'You will receive a reply at the email address associated with your account.', 'shopforge' ); ?>
 					</p>
 					<button type="button" class="shopforge-modal__submit" id="shopforge-submit-ticket">
-						<span id="shopforge-btn-label">Invia richiesta</span>
+						<span id="shopforge-btn-label"><?php esc_html_e( 'Send request', 'shopforge' ); ?></span>
 						<span class="shopforge-st-spinner" id="shopforge-btn-spinner" style="display:none"></span>
 					</button>
 				</div>
@@ -260,13 +265,12 @@ add_action( 'woocommerce_order_details_after_order_table', function ( WC_Order $
 			<!-- Stato successo -->
 			<div id="shopforge-ticket-success" style="display:none" class="shopforge-ticket-success">
 				<i class="fa-solid fa-circle-check" aria-hidden="true"></i>
-				<p class="shopforge-ts__title">Richiesta inviata!</p>
+				<p class="shopforge-ts__title"><?php esc_html_e( 'Request sent!', 'shopforge' ); ?></p>
 				<p class="shopforge-ts__text">
-					Abbiamo ricevuto la tua segnalazione. Ti risponderemo
-					via email nel più breve tempo possibile.
+					<?php esc_html_e( 'We received your report. We will reply by email as soon as possible.', 'shopforge' ); ?>
 				</p>
 				<button type="button" class="shopforge-modal__close-btn" id="shopforge-close-success">
-					Chiudi
+					<?php esc_html_e( 'Close', 'shopforge' ); ?>
 				</button>
 			</div>
 
@@ -295,23 +299,23 @@ function shopforge_submit_ticket_handler(): void {
 	$order_id = absint( $_POST['order_id'] ?? 0 );
 
 	if ( ! wp_verify_nonce( $_POST['nonce'] ?? '', 'shopforge_ticket_' . $order_id ) ) {
-		wp_send_json_error( 'Sessione scaduta. Ricarica la pagina e riprova.' );
+		wp_send_json_error( __( 'Session expired. Reload the page and try again.', 'shopforge' ) );
 	}
 
 	if ( function_exists( 'shopforge_check_rate_limit' )
 		 && ! shopforge_check_rate_limit( 'submit_ticket', 60 ) ) {
-		wp_send_json_error( 'Hai già aperto una richiesta di recente. Attendi un minuto e riprova.' );
+		wp_send_json_error( __( 'You already opened a request recently. Wait a minute and try again.', 'shopforge' ) );
 	}
 
 	$order = wc_get_order( $order_id );
 	if ( ! $order ) {
-		wp_send_json_error( 'Ordine non trovato.' );
+		wp_send_json_error( __( 'Order not found.', 'shopforge' ) );
 	}
 
 	// Verifica che sia il proprietario dell'ordine
 	$user_id = get_current_user_id();
 	if ( ! $user_id || (int) $order->get_customer_id() !== $user_id ) {
-		wp_send_json_error( 'Accesso non autorizzato.' );
+		wp_send_json_error( __( 'Unauthorized access.', 'shopforge' ) );
 	}
 
 	$subject  = sanitize_text_field( $_POST['subject'] ?? '' );
@@ -320,7 +324,7 @@ function shopforge_submit_ticket_handler(): void {
 	$products = array_filter( $products );
 
 	if ( ! $subject || strlen( $message ) < 10 ) {
-		wp_send_json_error( 'Dati mancanti o non validi.' );
+		wp_send_json_error( __( 'Missing or invalid data.', 'shopforge' ) );
 	}
 
 	// Gestione allegati (opzionale)
@@ -409,19 +413,19 @@ add_action( 'woocommerce_order_details_after_order_table', function ( WC_Order $
 	usort( $tickets, fn( $a, $b ) => strtotime( $b['date'] ) - strtotime( $a['date'] ) );
 
 	$status_labels = [
-		'open'   => [ 'label' => 'Aperto',   'class' => 'open' ],
-		'closed' => [ 'label' => 'Chiuso',   'class' => 'closed' ],
+		'open'   => [ 'label' => __( 'Open', 'shopforge' ),   'class' => 'open' ],
+		'closed' => [ 'label' => __( 'Closed', 'shopforge' ), 'class' => 'closed' ],
 	];
 	?>
 	<div class="shopforge-tickets-history">
 		<p class="shopforge-tickets-history__title">
 			<i class="fa-solid fa-clock-rotate-left" aria-hidden="true"></i>
-			Le tue richieste di assistenza
+			<?php esc_html_e( 'Your support requests', 'shopforge' ); ?>
 		</p>
 		<ul class="shopforge-tickets-list">
 			<?php foreach ( $tickets as $ticket ) :
 				$st    = $status_labels[ $ticket['status'] ] ?? $status_labels['open'];
-				$date  = date_i18n( 'd/m/Y \a\l\l\e H:i', strtotime( $ticket['date'] ) );
+				$date  = date_i18n( get_option( 'date_format' ) . ' H:i', strtotime( $ticket['date'] ) );
 			?>
 			<li class="shopforge-ticket-row">
 				<div class="shopforge-ticket-row__main">
@@ -434,7 +438,7 @@ add_action( 'woocommerce_order_details_after_order_table', function ( WC_Order $
 					<span class="shopforge-ticket-row__message"><?php echo esc_html( $ticket['message'] ); ?></span>
 					<?php if ( ! empty( $ticket['reply'] ) ) : ?>
 					<div class="shopforge-ticket-row__reply">
-						<strong><?php esc_html_e( 'Risposta negozio:', 'shopforge' ); ?></strong>
+						<strong><?php esc_html_e( 'Store reply:', 'shopforge' ); ?></strong>
 						<?php echo esc_html( $ticket['reply'] ); ?>
 					</div>
 					<?php endif; ?>
@@ -462,7 +466,7 @@ add_action( 'add_meta_boxes', function () {
 	foreach ( [ 'shop_order', 'woocommerce_page_wc-orders' ] as $screen ) {
 		add_meta_box(
 			'shopforge-tickets',
-			'📩 Richieste assistenza',
+			'📩 ' . __( 'Support requests', 'shopforge' ),
 			'shopforge_tickets_metabox_render',
 			$screen,
 			'normal',
@@ -498,29 +502,29 @@ function shopforge_tickets_metabox_render( $post_or_order ): void {
 	$tickets = $order->get_meta( '_shopforge_tickets' ) ?: [];
 
 	if ( empty( $tickets ) ) {
-		echo '<p style="color:#646970;font-size:13px;margin:8px 0">Nessuna richiesta di assistenza per questo ordine.</p>';
+		echo '<p style="color:#646970;font-size:13px;margin:8px 0">' . esc_html__( 'No support requests for this order.', 'shopforge' ) . '</p>';
 		return;
 	}
 
 	usort( $tickets, fn( $a, $b ) => strtotime( $b['date'] ) - strtotime( $a['date'] ) );
 
-	$status_labels = [ 'open' => 'Aperto', 'closed' => 'Chiuso' ];
+	$status_labels = [ 'open' => __( 'Open', 'shopforge' ), 'closed' => __( 'Closed', 'shopforge' ) ];
 	$status_colors = [ 'open' => '#B45309', 'closed' => '#15803D' ];
 	$status_bg     = [ 'open' => '#FEF3C7', 'closed' => '#DCFCE7' ];
 	?>
 	<table class="shopforge-adm-tickets">
 		<thead>
 			<tr>
-				<th>Data</th>
-				<th>Motivo / Prodotti / Messaggio</th>
-				<th>Stato</th>
+				<th><?php esc_html_e( 'Date', 'shopforge' ); ?></th>
+				<th><?php esc_html_e( 'Reason / Products / Message', 'shopforge' ); ?></th>
+				<th><?php esc_html_e( 'Status', 'shopforge' ); ?></th>
 			</tr>
 		</thead>
 		<tbody>
 		<?php foreach ( $tickets as $idx => $ticket ) :
 			$date  = date_i18n( 'd/m/Y H:i', strtotime( $ticket['date'] ) );
 			$st    = $ticket['status'] ?? 'open';
-			$label = $status_labels[ $st ] ?? 'Aperto';
+			$label = $status_labels[ $st ] ?? __( 'Open', 'shopforge' );
 			$color = $status_colors[ $st ] ?? '#B45309';
 			$bg    = $status_bg[ $st ] ?? '#FEF3C7';
 		?>
@@ -543,21 +547,21 @@ function shopforge_tickets_metabox_render( $post_or_order ): void {
 					<br><br>
 					<?php if ( ! empty( $ticket['reply'] ) ) : ?>
 					<div style="margin:6px 0;padding:6px 8px;background:#f0f7ff;border-left:3px solid #2563eb;border-radius:3px;font-size:12px;">
-						<strong>Risposta negozio:</strong> <?php echo esc_html( $ticket['reply'] ); ?>
+						<strong><?php esc_html_e( 'Store reply:', 'shopforge' ); ?></strong> <?php echo esc_html( $ticket['reply'] ); ?>
 					</div>
 					<?php endif; ?>
-					<textarea class="shopforge-reply-text" rows="2" placeholder="Risposta al cliente (opzionale)…"
+					<textarea class="shopforge-reply-text" rows="2" placeholder="<?php esc_attr_e( 'Reply to customer (optional)…', 'shopforge' ); ?>"
 					          style="width:100%;margin:4px 0;font-size:12px;resize:vertical;"
 					><?php echo esc_textarea( $ticket['reply'] ?? '' ); ?></textarea>
 					<select data-idx="<?php echo esc_attr( $idx ); ?>" class="shopforge-status-select">
-						<option value="open"   <?php selected( $st, 'open' ); ?>>Aperto</option>
-						<option value="closed" <?php selected( $st, 'closed' ); ?>>Chiuso</option>
+						<option value="open"   <?php selected( $st, 'open' ); ?>><?php esc_html_e( 'Open', 'shopforge' ); ?></option>
+						<option value="closed" <?php selected( $st, 'closed' ); ?>><?php esc_html_e( 'Closed', 'shopforge' ); ?></option>
 					</select>
 					<button type="button" class="button button-small shopforge-save-status"
 					        data-idx="<?php echo esc_attr( $idx ); ?>"
 					        data-order="<?php echo esc_attr( $order->get_id() ); ?>"
 					        data-nonce="<?php echo esc_attr( wp_create_nonce( 'shopforge_ticket_status' ) ); ?>">
-						Salva &amp; Notifica
+						<?php esc_html_e( 'Save &amp; Notify', 'shopforge' ); ?>
 					</button>
 				</div>
 			</td>
@@ -616,8 +620,8 @@ add_action( 'wp_ajax_shopforge_update_ticket_status', function () {
 add_action( 'admin_menu', function () {
 	add_submenu_page(
 		'woocommerce',
-		'Assistenza e Resi',
-		'Assistenza e Resi',
+		__( 'Support & Returns', 'shopforge' ),
+		__( 'Support & Returns', 'shopforge' ),
 		'edit_shop_orders',
 		'shopforge-support',
 		'shopforge_admin_support_page'
@@ -626,15 +630,15 @@ add_action( 'admin_menu', function () {
 
 function shopforge_admin_support_page(): void {
 	$ticket_statuses = [
-		'open'   => [ 'label' => 'Aperto',   'bg' => '#DBEAFE', 'color' => '#1E40AF' ],
-		'closed' => [ 'label' => 'Chiuso',   'bg' => '#F3F4F6', 'color' => '#6B7280' ],
+		'open'   => [ 'label' => __( 'Open', 'shopforge' ),   'bg' => '#DBEAFE', 'color' => '#1E40AF' ],
+		'closed' => [ 'label' => __( 'Closed', 'shopforge' ), 'bg' => '#F3F4F6', 'color' => '#6B7280' ],
 	];
 	$return_statuses = [
-		'pending'    => [ 'label' => 'Ricevuta',       'bg' => '#FEF9C3', 'color' => '#854D0E' ],
-		'processing' => [ 'label' => 'In lavorazione', 'bg' => '#DBEAFE', 'color' => '#1E40AF' ],
-		'approved'   => [ 'label' => 'Approvata',      'bg' => '#DCFCE7', 'color' => '#166534' ],
-		'refunded'   => [ 'label' => 'Rimborsata',     'bg' => '#D1FAE5', 'color' => '#065F46' ],
-		'rejected'   => [ 'label' => 'Rifiutata',      'bg' => '#FEE2E2', 'color' => '#991B1B' ],
+		'pending'    => [ 'label' => __( 'Received', 'shopforge' ),   'bg' => '#FEF9C3', 'color' => '#854D0E' ],
+		'processing' => [ 'label' => __( 'Processing', 'shopforge' ), 'bg' => '#DBEAFE', 'color' => '#1E40AF' ],
+		'approved'   => [ 'label' => __( 'Approved', 'shopforge' ),   'bg' => '#DCFCE7', 'color' => '#166534' ],
+		'refunded'   => [ 'label' => __( 'Refunded', 'shopforge' ),   'bg' => '#D1FAE5', 'color' => '#065F46' ],
+		'rejected'   => [ 'label' => __( 'Rejected', 'shopforge' ),   'bg' => '#FEE2E2', 'color' => '#991B1B' ],
 	];
 
 	// Recupera tutti gli ordini e raggruppa ticket + resi
@@ -671,32 +675,32 @@ function shopforge_admin_support_page(): void {
 	$base_url   = admin_url( 'admin.php?page=shopforge-support' );
 	?>
 	<div class="wrap">
-		<h1>Assistenza e Resi</h1>
+		<h1><?php esc_html_e( 'Support & Returns', 'shopforge' ); ?></h1>
 
 		<nav class="nav-tab-wrapper" style="margin-bottom:16px">
 			<a href="<?php echo esc_url( $base_url . '&tab=tickets' ); ?>"
 			   class="nav-tab <?php echo $active_tab === 'tickets' ? 'nav-tab-active' : ''; ?>">
-				Richieste assistenza (<?php echo count( $all_tickets ); ?>)
+				<?php esc_html_e( 'Support requests', 'shopforge' ); ?> (<?php echo count( $all_tickets ); ?>)
 			</a>
 			<a href="<?php echo esc_url( $base_url . '&tab=returns' ); ?>"
 			   class="nav-tab <?php echo $active_tab === 'returns' ? 'nav-tab-active' : ''; ?>">
-				Richieste di recesso (<?php echo count( $all_returns ); ?>)
+				<?php esc_html_e( 'Withdrawal requests', 'shopforge' ); ?> (<?php echo count( $all_returns ); ?>)
 			</a>
 		</nav>
 
 		<?php if ( $active_tab === 'tickets' ) : ?>
 
 		<?php if ( empty( $all_tickets ) ) : ?>
-		<p>Nessun ticket aperto.</p>
+		<p><?php esc_html_e( 'No open tickets.', 'shopforge' ); ?></p>
 		<?php else : ?>
 		<table class="wp-list-table widefat fixed striped">
 			<thead><tr>
-				<th style="width:180px">Oggetto</th>
-				<th>Cliente</th>
-				<th>Ordine</th>
-				<th style="width:120px">Data</th>
-				<th style="width:90px">Stato</th>
-				<th style="width:80px">Azioni</th>
+				<th style="width:180px"><?php esc_html_e( 'Subject', 'shopforge' ); ?></th>
+				<th><?php esc_html_e( 'Customer', 'shopforge' ); ?></th>
+				<th><?php esc_html_e( 'Order', 'shopforge' ); ?></th>
+				<th style="width:120px"><?php esc_html_e( 'Date', 'shopforge' ); ?></th>
+				<th style="width:90px"><?php esc_html_e( 'Status', 'shopforge' ); ?></th>
+				<th style="width:80px"><?php esc_html_e( 'Actions', 'shopforge' ); ?></th>
 			</tr></thead>
 			<tbody>
 			<?php foreach ( $all_tickets as $t ) :
@@ -709,36 +713,36 @@ function shopforge_admin_support_page(): void {
 				<td><a href="<?php echo esc_url( get_edit_post_link( $t['_oid'] ) ?: admin_url( 'admin.php?page=wc-orders&action=edit&id=' . $t['_oid'] ) ); ?>">#<?php echo esc_html( $t['_on'] ); ?></a></td>
 				<td><?php echo date_i18n( 'd/m/Y H:i', strtotime( $t['date'] ) ); ?></td>
 				<td><span style="display:inline-block;padding:3px 8px;border-radius:999px;font-size:11px;font-weight:700;background:<?php echo esc_attr( $st['bg'] ); ?>;color:<?php echo esc_attr( $st['color'] ); ?>"><?php echo esc_html( $st['label'] ); ?></span></td>
-				<td><button type="button" class="button button-small shopforge-sadm-edit" data-key="<?php echo esc_attr( $key ); ?>">Gestisci</button></td>
+				<td><button type="button" class="button button-small shopforge-sadm-edit" data-key="<?php echo esc_attr( $key ); ?>"><?php esc_html_e( 'Manage', 'shopforge' ); ?></button></td>
 			</tr>
 			<tr class="shopforge-sadm-panel" id="shopforge-spanel-<?php echo esc_attr( $key ); ?>" style="display:none">
 				<td colspan="6" style="background:#f9f9f9;padding:16px">
 					<?php if ( ! empty( $t['message'] ) ) : ?>
-					<p style="margin-top:0"><strong>Messaggio cliente:</strong><br><?php echo nl2br( esc_html( $t['message'] ) ); ?></p>
+					<p style="margin-top:0"><strong><?php esc_html_e( 'Customer message:', 'shopforge' ); ?></strong><br><?php echo nl2br( esc_html( $t['message'] ) ); ?></p>
 					<?php endif; ?>
 					<?php if ( ! empty( $t['attachments'] ) ) :
 						$atts = (array) $t['attachments'];
 					?>
-					<p><strong>Allegati:</strong><br>
+					<p><strong><?php esc_html_e( 'Attachments:', 'shopforge' ); ?></strong><br>
 					<?php foreach ( $atts as $url ) : ?>
 						<a href="<?php echo esc_url( $url ); ?>" target="_blank" rel="noopener" style="display:inline-block;margin:2px 6px 2px 0"><?php echo esc_html( basename( $url ) ); ?></a>
 					<?php endforeach; ?>
 					</p>
 					<?php endif; ?>
-					<label style="display:block;margin-bottom:8px;font-weight:600">Stato:
+					<label style="display:block;margin-bottom:8px;font-weight:600"><?php esc_html_e( 'Status:', 'shopforge' ); ?>
 						<select class="shopforge-sadm-status">
 							<?php foreach ( $ticket_statuses as $val => $info ) : ?>
 							<option value="<?php echo esc_attr( $val ); ?>" <?php selected( $t['status'] ?? 'open', $val ); ?>><?php echo esc_html( $info['label'] ); ?></option>
 							<?php endforeach; ?>
 						</select>
 					</label>
-					<label style="display:block;margin-bottom:6px;font-weight:600">Risposta al cliente:</label>
+					<label style="display:block;margin-bottom:6px;font-weight:600"><?php esc_html_e( 'Reply to customer:', 'shopforge' ); ?></label>
 					<textarea class="widefat shopforge-sadm-reply" rows="4" style="margin-bottom:8px"><?php echo esc_textarea( $t['reply'] ?? '' ); ?></textarea>
 					<button type="button" class="button button-primary shopforge-sadm-save"
 					        data-type="ticket"
 					        data-order="<?php echo esc_attr( $t['_oid'] ); ?>"
 					        data-idx="<?php echo esc_attr( $t['_idx'] ); ?>"
-					        data-nonce="<?php echo esc_attr( wp_create_nonce( 'shopforge_ticket_status' ) ); ?>">Salva</button>
+					        data-nonce="<?php echo esc_attr( wp_create_nonce( 'shopforge_ticket_status' ) ); ?>"><?php esc_html_e( 'Save', 'shopforge' ); ?></button>
 				</td>
 			</tr>
 			<?php endforeach; ?>
@@ -749,17 +753,17 @@ function shopforge_admin_support_page(): void {
 		<?php else : // tab returns ?>
 
 		<?php if ( empty( $all_returns ) ) : ?>
-		<p>Nessuna richiesta di recesso ricevuta.</p>
+		<p><?php esc_html_e( 'No withdrawal requests received.', 'shopforge' ); ?></p>
 		<?php else : ?>
 		<table class="wp-list-table widefat fixed striped">
 			<thead><tr>
-				<th style="width:130px">Riferimento</th>
-				<th>Cliente</th>
-				<th>Ordine</th>
-				<th>Motivazione</th>
-				<th style="width:120px">Data</th>
-				<th style="width:90px">Stato</th>
-				<th style="width:80px">Azioni</th>
+				<th style="width:130px"><?php esc_html_e( 'Reference', 'shopforge' ); ?></th>
+				<th><?php esc_html_e( 'Customer', 'shopforge' ); ?></th>
+				<th><?php esc_html_e( 'Order', 'shopforge' ); ?></th>
+				<th><?php esc_html_e( 'Reason', 'shopforge' ); ?></th>
+				<th style="width:120px"><?php esc_html_e( 'Date', 'shopforge' ); ?></th>
+				<th style="width:90px"><?php esc_html_e( 'Status', 'shopforge' ); ?></th>
+				<th style="width:80px"><?php esc_html_e( 'Actions', 'shopforge' ); ?></th>
 			</tr></thead>
 			<tbody>
 			<?php foreach ( $all_returns as $r ) :
@@ -773,27 +777,27 @@ function shopforge_admin_support_page(): void {
 				<td><small><?php echo esc_html( $r['reason'] ?? '' ); ?></small></td>
 				<td><?php echo date_i18n( 'd/m/Y H:i', strtotime( $r['date'] ) ); ?></td>
 				<td><span style="display:inline-block;padding:3px 8px;border-radius:999px;font-size:11px;font-weight:700;background:<?php echo esc_attr( $st['bg'] ); ?>;color:<?php echo esc_attr( $st['color'] ); ?>"><?php echo esc_html( $st['label'] ); ?></span></td>
-				<td><button type="button" class="button button-small shopforge-sadm-edit" data-key="<?php echo esc_attr( $key ); ?>">Gestisci</button></td>
+				<td><button type="button" class="button button-small shopforge-sadm-edit" data-key="<?php echo esc_attr( $key ); ?>"><?php esc_html_e( 'Manage', 'shopforge' ); ?></button></td>
 			</tr>
 			<tr class="shopforge-sadm-panel" id="shopforge-spanel-<?php echo esc_attr( $key ); ?>" style="display:none">
 				<td colspan="7" style="background:#f9f9f9;padding:16px">
 					<?php if ( ! empty( $r['products'] ) ) : ?>
-					<p style="margin-top:0"><strong>Prodotti:</strong> <?php echo esc_html( implode( ', ', $r['products'] ) ); ?></p>
+					<p style="margin-top:0"><strong><?php esc_html_e( 'Products:', 'shopforge' ); ?></strong> <?php echo esc_html( implode( ', ', $r['products'] ) ); ?></p>
 					<?php endif; ?>
-					<label style="display:block;margin-bottom:8px;font-weight:600">Stato:
+					<label style="display:block;margin-bottom:8px;font-weight:600"><?php esc_html_e( 'Status:', 'shopforge' ); ?>
 						<select class="shopforge-sadm-status">
 							<?php foreach ( $return_statuses as $val => $info ) : ?>
 							<option value="<?php echo esc_attr( $val ); ?>" <?php selected( $r['status'] ?? 'pending', $val ); ?>><?php echo esc_html( $info['label'] ); ?></option>
 							<?php endforeach; ?>
 						</select>
 					</label>
-					<label style="display:block;margin-bottom:6px;font-weight:600">Risposta al cliente:</label>
+					<label style="display:block;margin-bottom:6px;font-weight:600"><?php esc_html_e( 'Reply to customer:', 'shopforge' ); ?></label>
 					<textarea class="widefat shopforge-sadm-reply" rows="4" style="margin-bottom:8px"><?php echo esc_textarea( $r['reply'] ?? '' ); ?></textarea>
 					<button type="button" class="button button-primary shopforge-sadm-save"
 					        data-type="return"
 					        data-order="<?php echo esc_attr( $r['_oid'] ); ?>"
 					        data-idx="<?php echo esc_attr( $r['_idx'] ); ?>"
-					        data-nonce="<?php echo esc_attr( wp_create_nonce( 'shopforge_return_status' ) ); ?>">Salva</button>
+					        data-nonce="<?php echo esc_attr( wp_create_nonce( 'shopforge_return_status' ) ); ?>"><?php esc_html_e( 'Save', 'shopforge' ); ?></button>
 				</td>
 			</tr>
 			<?php endforeach; ?>
@@ -809,8 +813,8 @@ function shopforge_admin_support_page(): void {
 			var panel = document.getElementById('shopforge-spanel-' + this.dataset.key);
 			var show  = panel.style.display === 'none';
 			document.querySelectorAll('.shopforge-sadm-panel').forEach(function(p){ p.style.display='none'; });
-			document.querySelectorAll('.shopforge-sadm-edit').forEach(function(b){ b.textContent='Gestisci'; });
-			if (show) { panel.style.display='table-row'; this.textContent='Chiudi'; }
+			document.querySelectorAll('.shopforge-sadm-edit').forEach(function(b){ b.textContent=<?php echo wp_json_encode( __( 'Manage', 'shopforge' ) ); ?>; });
+			if (show) { panel.style.display='table-row'; this.textContent=<?php echo wp_json_encode( __( 'Close', 'shopforge' ) ); ?>; }
 		});
 	});
 	document.querySelectorAll('.shopforge-sadm-save').forEach(function(btn){
@@ -829,10 +833,10 @@ function shopforge_admin_support_page(): void {
 				})
 			}).then(function(r){ return r.json(); }).then(function(data){
 				me.disabled = false;
-				me.textContent = data.success ? 'Salvato ✓' : 'Errore';
-				setTimeout(function(){ me.textContent = 'Salva'; }, 2500);
+				me.textContent = data.success ? <?php echo wp_json_encode( __( 'Saved ✓', 'shopforge' ) ); ?> : <?php echo wp_json_encode( __( 'Error', 'shopforge' ) ); ?>;
+				setTimeout(function(){ me.textContent = <?php echo wp_json_encode( __( 'Save', 'shopforge' ) ); ?>; }, 2500);
 			}).catch(function(){
-				me.disabled = false; me.textContent = 'Errore';
+				me.disabled = false; me.textContent = <?php echo wp_json_encode( __( 'Error', 'shopforge' ) ); ?>;
 			});
 		});
 	});

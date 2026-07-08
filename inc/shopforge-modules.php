@@ -30,8 +30,8 @@ function shopforge_modules_registry(): array {
 		'styles-account' => [
 			'id'          => 'styles-account',
 			'type'        => 'feature',
-			'label'       => 'Stili area account',
-			'description' => 'CSS di bacheca, ordini, indirizzi e moduli (resi, assistenza, notifiche): layout a card, badge stato, tipografia. Disattiva per affidarti interamente al tema anche nell\'area account.',
+			'label'       => __( 'Account area styles', 'shopforge' ),
+			'description' => __( 'CSS for the dashboard, orders, addresses and modules (returns, support, notifications): card layout, status badges, typography. Disable to rely entirely on your theme in the account area too.', 'shopforge' ),
 			'icon'        => 'fa-solid fa-user-gear',
 			'file'        => null,
 			'menu_item'   => false,
@@ -40,8 +40,8 @@ function shopforge_modules_registry(): array {
 		'styles-shop' => [
 			'id'          => 'styles-shop',
 			'type'        => 'feature',
-			'label'       => 'Stili catalogo/negozio',
-			'description' => 'CSS della vetrina prodotti e delle pagine shop. Disattiva per affidarti interamente al tema sul catalogo.',
+			'label'       => __( 'Shop/catalog styles', 'shopforge' ),
+			'description' => __( 'CSS for the product catalog and shop pages. Disable to rely entirely on your theme for the catalog.', 'shopforge' ),
 			'icon'        => 'fa-solid fa-shop',
 			'file'        => null,
 			'menu_item'   => false,
@@ -50,8 +50,8 @@ function shopforge_modules_registry(): array {
 		'styles-colors' => [
 			'id'          => 'styles-colors',
 			'type'        => 'feature',
-			'label'       => 'Colori personalizzati',
-			'description' => 'Palette colori (pulsanti, badge, testo) iniettata come variabili CSS, inclusa la configurazione qui sotto. Disattivandola, anche le modali di resi/assistenza tornano allo stile di default del tema.',
+			'label'       => __( 'Custom colors', 'shopforge' ),
+			'description' => __( 'Color palette (buttons, badges, text) injected as CSS variables, including the configuration below. When disabled, the returns/support modals also fall back to the default theme style.', 'shopforge' ),
 			'icon'        => 'fa-solid fa-palette',
 			'file'        => null,
 			'menu_item'   => false,
@@ -60,8 +60,8 @@ function shopforge_modules_registry(): array {
 		'dashboard' => [
 			'id'          => 'dashboard',
 			'type'        => 'feature',
-			'label'       => 'Dashboard personalizzata',
-			'description' => 'Sostituisce la bacheca WooCommerce con una dashboard custom: statistiche ordini, widget tracking, indirizzi. Disattiva per usare la bacheca WooCommerce predefinita.',
+			'label'       => __( 'Custom dashboard', 'shopforge' ),
+			'description' => __( 'Replaces the WooCommerce dashboard with a custom one: order statistics, tracking widget, addresses. Disable to use the default WooCommerce dashboard.', 'shopforge' ),
 			'icon'        => 'fa-solid fa-gauge-high',
 			'file'        => null,
 			'menu_item'   => false,
@@ -73,8 +73,8 @@ function shopforge_modules_registry(): array {
 		'tracking' => [
 			'id'          => 'tracking',
 			'type'        => 'module',
-			'label'       => 'Tracking spedizioni',
-			'description' => 'Widget di tracciamento nella pagina dettaglio ordine con integrazione 17track. L\'admin inserisce il numero tracking dall\'ordine in backend.',
+			'label'       => __( 'Shipment tracking', 'shopforge' ),
+			'description' => __( 'Tracking widget on the order detail page with 17track integration. The admin enters the tracking number from the order in the backend.', 'shopforge' ),
 			'icon'        => 'fa-solid fa-truck-fast',
 			'file'        => 'shopforge-mod-tracking.php',
 			'menu_item'   => false,
@@ -83,61 +83,61 @@ function shopforge_modules_registry(): array {
 		'wishlist' => [
 			'id'          => 'wishlist',
 			'type'        => 'module',
-			'label'       => 'Lista desideri',
-			'description' => 'Permette ai clienti di salvare prodotti preferiti e accedervi dal proprio account. Aggiunge il pulsante cuore su catalogo e pagina prodotto.',
+			'label'       => __( 'Wishlist', 'shopforge' ),
+			'description' => __( 'Lets customers save favorite products and access them from their account. Adds the heart button to the catalog and product page.', 'shopforge' ),
 			'icon'        => 'fa-solid fa-heart',
 			'file'        => 'shopforge-mod-wishlist.php',
 			'menu_item'   => true,
 			'endpoint'    => 'shopforge-wishlist',
-			'menu_label'  => 'Lista desideri',
+			'menu_label'  => __( 'Wishlist', 'shopforge' ),
 		],
 
 		'quotes' => [
 			'id'          => 'quotes',
 			'type'        => 'module',
-			'label'       => 'Preventivi',
-			'description' => 'Sezione dedicata alle richieste di preventivo. I clienti inseriscono prodotti e quantità, l\'admin risponde via email e gestisce dalla pagina dedicata.',
+			'label'       => __( 'Quotes', 'shopforge' ),
+			'description' => __( 'Dedicated section for quote requests. Customers add products and quantities, the admin replies via email and manages everything from a dedicated page.', 'shopforge' ),
 			'icon'        => 'fa-solid fa-file-invoice',
 			'file'        => 'shopforge-mod-quotes.php',
 			'menu_item'   => true,
 			'endpoint'    => 'shopforge-quotes',
-			'menu_label'  => 'Preventivi',
+			'menu_label'  => __( 'Quotes', 'shopforge' ),
 		],
 
 		'returns' => [
 			'id'          => 'returns',
 			'type'        => 'module',
-			'label'       => 'Assistenza e Resi',
-			'description' => 'Procedura di recesso digitale conforme al D.Lgs. 209/2025 (art. 54-bis). Pulsante in pagina ordine, modal 2 step, ricevuta automatica via email.',
+			'label'       => __( 'Support & Returns', 'shopforge' ),
+			'description' => __( 'Digital withdrawal procedure compliant with EU consumer law. Button on the order page, 2-step modal, automatic email receipt.', 'shopforge' ),
 			'icon'        => 'fa-solid fa-rotate-left',
 			'file'        => 'shopforge-mod-returns.php',
 			'menu_item'   => true,
 			'endpoint'    => 'shopforge-returns',
-			'menu_label'  => 'Assistenza e Resi',
+			'menu_label'  => __( 'Support & Returns', 'shopforge' ),
 		],
 
 		'rma' => [
 			'id'          => 'rma',
 			'type'        => 'module',
-			'label'       => 'Assistenza Prodotti (RMA)',
-			'description' => 'Richieste strutturate di riparazione, sostituzione o rimborso per difetti/garanzia: selezione rimedio, tracciamento quantità, rimborso WooCommerce automatico, thread messaggi.',
+			'label'       => __( 'Product Support (RMA)', 'shopforge' ),
+			'description' => __( 'Structured repair, replacement or refund requests for defects/warranty: remedy selection, quantity tracking, automatic WooCommerce refund, message thread.', 'shopforge' ),
 			'icon'        => 'fa-solid fa-screwdriver-wrench',
 			'file'        => 'shopforge-mod-rma.php',
 			'menu_item'   => true,
 			'endpoint'    => 'shopforge-rma',
-			'menu_label'  => 'Assistenza Prodotti',
+			'menu_label'  => __( 'Product Support', 'shopforge' ),
 		],
 
 		'notifications' => [
 			'id'          => 'notifications',
 			'type'        => 'module',
-			'label'       => 'Notifiche',
-			'description' => 'Centro notifiche alimentato da eventi reali: cambio stato ordine, ticket assistenza, aggiornamento reso, risposta preventivo. Badge con conteggio non lette.',
+			'label'       => __( 'Notifications', 'shopforge' ),
+			'description' => __( 'Notification center fed by real events: order status changes, support tickets, return updates, quote replies. Badge with unread count.', 'shopforge' ),
 			'icon'        => 'fa-solid fa-bell',
 			'file'        => 'shopforge-mod-notifications.php',
 			'menu_item'   => true,
 			'endpoint'    => 'shopforge-notices',
-			'menu_label'  => 'Notifiche',
+			'menu_label'  => __( 'Notifications', 'shopforge' ),
 		],
 
 	];
@@ -253,6 +253,13 @@ add_action( 'init', function () {
 		if ( ! empty( $module['endpoint'] ) ) {
 			add_rewrite_endpoint( $module['endpoint'], EP_ROOT | EP_PAGES );
 		}
+	}
+
+	// Flush una-tantum dopo l'attivazione (flag settato in shopforge.php):
+	// senza, gli endpoint account rispondono 404 fino a un salvataggio permalink.
+	if ( get_option( 'shopforge_flush_rewrite' ) ) {
+		delete_option( 'shopforge_flush_rewrite' );
+		flush_rewrite_rules();
 	}
 } );
 

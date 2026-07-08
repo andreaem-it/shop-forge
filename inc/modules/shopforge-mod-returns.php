@@ -126,6 +126,79 @@ function shopforge_is_b2c_order( WC_Order $order ): bool {
 }
 
 /**
+ * Metodi di rimborso disponibili nel form di recesso.
+ * Chiave stabile salvata in meta ('refund') + label tradotta per l'UI.
+ */
+function shopforge_return_refund_methods(): array {
+	return [
+		'original'     => __( 'Refund to the original payment method', 'shopforge' ),
+		'store_credit' => __( 'Store credit to use on the site', 'shopforge' ),
+	];
+}
+
+function shopforge_return_get_refund_label( string $key ): string {
+	return shopforge_return_refund_methods()[ $key ] ?? $key;
+}
+
+/**
+ * Somma gli importi (netto + tassa) delle righe ordine il cui nome prodotto
+ * corrisponde a uno di quelli selezionati nella richiesta di recesso.
+ * Il form salva solo i nomi (non gli item id), quindi il match è per nome;
+ * se nessuna riga corrisponde si usa il totale ordine come fallback prudente.
+ */
+function shopforge_return_calculate_amount( WC_Order $order, array $product_names ): float {
+	$decimals = wc_get_price_decimals();
+	$total    = 0.0;
+	$matched  = false;
+
+	foreach ( $order->get_items() as $item ) {
+		if ( in_array( $item->get_name(), $product_names, true ) ) {
+			$total  += (float) $item->get_total() + (float) $item->get_total_tax();
+			$matched = true;
+		}
+	}
+
+	if ( ! $matched ) {
+		$total = (float) $order->get_total();
+	}
+
+	return round( $total, $decimals );
+}
+
+/**
+ * Emette un coupon "buono sconto" per il cliente (metodo di rimborso
+ * 'store_credit'): monouso, importo fisso pari al valore dei prodotti resi,
+ * vincolato all'email del cliente. Ritorna il codice coupon o WP_Error.
+ */
+function shopforge_return_issue_coupon( WC_Order $order, array $return_data, string $ref ) {
+	$amount = shopforge_return_calculate_amount( $order, (array) ( $return_data['products'] ?? [] ) );
+	if ( $amount <= 0 ) {
+		return new WP_Error( 'invalid_amount', __( 'Could not determine a refund amount for the coupon.', 'shopforge' ) );
+	}
+
+	$email = $order->get_billing_email();
+	$code  = 'RESO-' . strtoupper( preg_replace( '/[^A-Z0-9]/', '', strtoupper( $ref ) ) );
+
+	$coupon = new WC_Coupon();
+	$coupon->set_code( $code );
+	$coupon->set_discount_type( 'fixed_cart' );
+	$coupon->set_amount( $amount );
+	$coupon->set_usage_limit( 1 );
+	if ( $email ) {
+		$coupon->set_email_restrictions( [ $email ] );
+	}
+	/* translators: 1: return reference, 2: order number */
+	$coupon->set_description( sprintf( __( 'Store credit for withdrawal %1$s — Order #%2$s', 'shopforge' ), $ref, $order->get_order_number() ) );
+	$coupon_id = $coupon->save();
+
+	if ( ! $coupon_id ) {
+		return new WP_Error( 'coupon_creation_failed', __( 'Coupon creation failed.', 'shopforge' ) );
+	}
+
+	return $code;
+}
+
+/**
  * Controlla se esiste già una richiesta di recesso per questo ordine.
  */
 function shopforge_has_active_return( WC_Order $order ): bool {
@@ -182,7 +255,7 @@ add_action( 'woocommerce_order_details_before_order_table', function ( WC_Order 
 	$order_id      = $order->get_id();
 	$order_number  = $order->get_order_number();
 	$order_date    = $order->get_date_created()
-		? $order->get_date_created()->date_i18n( 'd/m/Y' )
+		? $order->get_date_created()->date_i18n( get_option( 'date_format' ) )
 		: '';
 	$customer      = $order->get_billing_first_name() . ' ' . $order->get_billing_last_name();
 	$nonce         = wp_create_nonce( 'shopforge_return_' . $order_id );
@@ -217,10 +290,10 @@ add_action( 'woocommerce_order_details_before_order_table', function ( WC_Order 
 			if ( ! in_array( $_r['status'] ?? '', [ 'rejected' ], true ) ) { $_last_return = $_r; break; }
 		}
 		$_ret_status_labels = [
-			'pending'    => [ 'label' => 'Ricevuta',       'color' => '#854D0E', 'bg' => '#FEF9C3' ],
-			'processing' => [ 'label' => 'In lavorazione', 'color' => '#1E40AF', 'bg' => '#DBEAFE' ],
-			'approved'   => [ 'label' => 'Approvata',      'color' => '#166534', 'bg' => '#DCFCE7' ],
-			'refunded'   => [ 'label' => 'Rimborsata',     'color' => '#065F46', 'bg' => '#D1FAE5' ],
+			'pending'    => [ 'label' => __( 'Received', 'shopforge' ),   'color' => '#854D0E', 'bg' => '#FEF9C3' ],
+			'processing' => [ 'label' => __( 'Processing', 'shopforge' ), 'color' => '#1E40AF', 'bg' => '#DBEAFE' ],
+			'approved'   => [ 'label' => __( 'Approved', 'shopforge' ),   'color' => '#166534', 'bg' => '#DCFCE7' ],
+			'refunded'   => [ 'label' => __( 'Refunded', 'shopforge' ),   'color' => '#065F46', 'bg' => '#D1FAE5' ],
 		];
 		$_ret_st = $_ret_status_labels[ $_last_return['status'] ?? 'pending' ] ?? $_ret_status_labels['pending'];
 	?>
@@ -229,24 +302,32 @@ add_action( 'woocommerce_order_details_before_order_table', function ( WC_Order 
 			<i class="fa-solid fa-rotate-left" aria-hidden="true"></i>
 		</div>
 		<div class="shopforge-recesso-card__body">
-			<p class="shopforge-recesso-card__title">Richiesta di recesso inviata</p>
+			<p class="shopforge-recesso-card__title"><?php esc_html_e( 'Withdrawal request sent', 'shopforge' ); ?></p>
 			<p class="shopforge-recesso-card__text">
 				<?php if ( $_last_return ) : ?>
-				Rif. <strong><?php echo esc_html( $_last_return['ref'] ); ?></strong> —
-				Stato: <span style="display:inline-block;padding:1px 8px;border-radius:999px;font-size:12px;font-weight:700;background:<?php echo esc_attr( $_ret_st['bg'] ); ?>;color:<?php echo esc_attr( $_ret_st['color'] ); ?>">
+				<?php esc_html_e( 'Ref.', 'shopforge' ); ?> <strong><?php echo esc_html( $_last_return['ref'] ); ?></strong> —
+				<?php esc_html_e( 'Status:', 'shopforge' ); ?> <span style="display:inline-block;padding:1px 8px;border-radius:999px;font-size:12px;font-weight:700;background:<?php echo esc_attr( $_ret_st['bg'] ); ?>;color:<?php echo esc_attr( $_ret_st['color'] ); ?>">
 					<?php echo esc_html( $_ret_st['label'] ); ?>
 				</span>
 				<?php if ( ! empty( $_last_return['reply'] ) ) : ?>
 				<br><span style="display:block;margin-top:8px;padding:7px 10px;background:#EFF6FF;border-left:3px solid #3B82F6;border-radius:0 4px 4px 0;font-size:13px;">
-					<strong style="font-size:11px;color:#1D4ED8;display:block;margin-bottom:2px;">Messaggio dal negozio:</strong>
+					<strong style="font-size:11px;color:#1D4ED8;display:block;margin-bottom:2px;"><?php esc_html_e( 'Message from the store:', 'shopforge' ); ?></strong>
 					<?php echo esc_html( $_last_return['reply'] ); ?>
+				</span>
+				<?php endif; ?>
+				<?php if ( ! empty( $_last_return['coupon_code'] ) ) : ?>
+				<br><span style="display:block;margin-top:8px;padding:7px 10px;background:#F0FDF4;border-left:3px solid #16A34A;border-radius:0 4px 4px 0;font-size:13px;color:#166534;">
+					<?php
+					/* translators: %s: coupon code */
+					printf( esc_html__( 'Your store credit coupon: %s', 'shopforge' ), '<code>' . esc_html( $_last_return['coupon_code'] ) . '</code>' );
+					?>
 				</span>
 				<?php endif; ?>
 				<?php endif; ?>
 			</p>
 			<a href="<?php echo esc_url( wc_get_account_endpoint_url('shopforge-returns') ); ?>" class="shopforge-recesso-btn shopforge-recesso-btn--secondary">
 				<i class="fa-solid fa-list" aria-hidden="true"></i>
-				Tutti i miei resi
+				<?php esc_html_e( 'All my returns', 'shopforge' ); ?>
 			</a>
 		</div>
 	</div>
@@ -258,21 +339,23 @@ add_action( 'woocommerce_order_details_before_order_table', function ( WC_Order 
 			<i class="fa-solid fa-clock" aria-hidden="true"></i>
 		</div>
 		<div class="shopforge-recesso-card__body">
-			<p class="shopforge-recesso-card__title">Termine di recesso scaduto</p>
+			<p class="shopforge-recesso-card__title"><?php esc_html_e( 'Withdrawal window expired', 'shopforge' ); ?></p>
 			<p class="shopforge-recesso-card__text">
-				Il periodo di <?php echo esc_html( $window ); ?> giorni per esercitare il diritto di recesso è scaduto.
-				Per qualsiasi necessità, contatta il nostro negozio.
+				<?php
+				/* translators: %d: number of days */
+				printf( esc_html__( 'The %d-day period to exercise the right of withdrawal has expired. For any need, contact our store.', 'shopforge' ), (int) $window );
+				?>
 			</p>
 		</div>
 		<?php if ( $contact_url ) : ?>
 		<a href="<?php echo esc_url( $contact_url ); ?>" class="shopforge-recesso-btn shopforge-recesso-btn--secondary">
 			<i class="fa-solid fa-headset" aria-hidden="true"></i>
-			Contatta il negozio
+			<?php esc_html_e( 'Contact the store', 'shopforge' ); ?>
 		</a>
 		<?php else : ?>
 		<span class="shopforge-recesso-expired-note">
 			<i class="fa-solid fa-headset" aria-hidden="true"></i>
-			Contatta il negozio per assistenza
+			<?php esc_html_e( 'Contact the store for assistance', 'shopforge' ); ?>
 		</span>
 		<?php endif; ?>
 	</div>
@@ -284,11 +367,17 @@ add_action( 'woocommerce_order_details_before_order_table', function ( WC_Order 
 			<i class="fa-solid fa-rotate-left" aria-hidden="true"></i>
 		</div>
 		<div class="shopforge-recesso-card__body">
-			<p class="shopforge-recesso-card__title">Diritto di recesso</p>
+			<p class="shopforge-recesso-card__title"><?php esc_html_e( 'Right of withdrawal', 'shopforge' ); ?></p>
 			<p class="shopforge-recesso-card__text">
-				Hai il diritto di recedere dal contratto entro <?php echo esc_html( $window ); ?> giorni dalla ricezione della merce, senza fornire alcuna motivazione.
+				<?php
+				/* translators: %d: number of days */
+				printf( esc_html__( 'You have the right to withdraw from the contract within %d days of receiving the goods, without giving any reason.', 'shopforge' ), (int) $window );
+				?>
 				<?php if ( $days_left !== null ) : ?>
-				<strong>Hai ancora <?php echo $days_left; ?> <?php echo $days_left === 1 ? 'giorno' : 'giorni'; ?>.</strong>
+				<strong><?php
+				/* translators: %d: number of days left */
+				printf( esc_html( _n( 'You still have %d day.', 'You still have %d days.', $days_left, 'shopforge' ) ), (int) $days_left );
+				?></strong>
 				<?php endif; ?>
 			</p>
 		</div>
@@ -296,7 +385,7 @@ add_action( 'woocommerce_order_details_before_order_table', function ( WC_Order 
 		        data-order="<?php echo esc_attr( $order_id ); ?>"
 		        data-nonce="<?php echo esc_attr( $nonce ); ?>">
 			<i class="fa-solid fa-rotate-left" aria-hidden="true"></i>
-			Recedi dal contratto
+			<?php esc_html_e( 'Withdraw from the contract', 'shopforge' ); ?>
 		</button>
 	</div>
 
@@ -308,9 +397,9 @@ add_action( 'woocommerce_order_details_before_order_table', function ( WC_Order 
 			<div class="shopforge-modal__header">
 				<h2 class="shopforge-modal__title" id="shopforge-recesso-title">
 					<i class="fa-solid fa-rotate-left" aria-hidden="true"></i>
-					Recesso dal contratto
+					<?php esc_html_e( 'Contract withdrawal', 'shopforge' ); ?>
 				</h2>
-				<button type="button" class="shopforge-modal__close" id="shopforge-close-recesso" aria-label="Chiudi">
+				<button type="button" class="shopforge-modal__close" id="shopforge-close-recesso" aria-label="<?php esc_attr_e( 'Close', 'shopforge' ); ?>">
 					<i class="fa-solid fa-xmark" aria-hidden="true"></i>
 				</button>
 			</div>
@@ -319,12 +408,12 @@ add_action( 'woocommerce_order_details_before_order_table', function ( WC_Order 
 			<div class="shopforge-steps">
 				<div class="shopforge-step is-active" id="shopforge-step-dot-1">
 					<span class="shopforge-step__num">1</span>
-					<span class="shopforge-step__label">Dettagli</span>
+					<span class="shopforge-step__label"><?php esc_html_e( 'Details', 'shopforge' ); ?></span>
 				</div>
 				<div class="shopforge-steps__line"></div>
 				<div class="shopforge-step" id="shopforge-step-dot-2">
 					<span class="shopforge-step__num">2</span>
-					<span class="shopforge-step__label">Conferma</span>
+					<span class="shopforge-step__label"><?php esc_html_e( 'Confirm', 'shopforge' ); ?></span>
 				</div>
 			</div>
 
@@ -333,12 +422,14 @@ add_action( 'woocommerce_order_details_before_order_table', function ( WC_Order 
 				<!-- STEP 1 -->
 				<div id="shopforge-recesso-step1">
 					<p class="shopforge-modal__ref">
-						Ordine <strong>#<?php echo esc_html( $order_number ); ?></strong>
-						del <?php echo esc_html( $order_date ); ?>
+						<?php
+						/* translators: 1: order number, 2: order date */
+						printf( wp_kses_post( __( 'Order <strong>#%1$s</strong> of %2$s', 'shopforge' ) ), esc_html( $order_number ), esc_html( $order_date ) );
+						?>
 					</p>
 
 					<div class="shopforge-field">
-						<label>Prodotti da restituire</label>
+						<label><?php esc_html_e( 'Products to return', 'shopforge' ); ?></label>
 						<ul class="shopforge-product-list">
 							<?php foreach ( $items_data as $item ) : ?>
 							<li class="shopforge-product-list__item">
@@ -366,54 +457,53 @@ add_action( 'woocommerce_order_details_before_order_table', function ( WC_Order 
 					</div>
 
 					<div class="shopforge-field">
-						<label for="shopforge-ret-reason">Motivo del recesso</label>
+						<label for="shopforge-ret-reason"><?php esc_html_e( 'Reason for withdrawal', 'shopforge' ); ?></label>
 						<select id="shopforge-ret-reason">
-							<option value="">— Seleziona —</option>
-							<option value="Ripensamento">Ripensamento (non sono più interessato)</option>
-							<option value="Prodotto non conforme alla descrizione">Prodotto non conforme alla descrizione</option>
-							<option value="Prodotto difettoso o danneggiato">Prodotto difettoso o danneggiato</option>
-							<option value="Prodotto errato ricevuto">Prodotto errato ricevuto</option>
-							<option value="Ritardo nella consegna">Ritardo nella consegna</option>
-							<option value="Altro">Altro</option>
+							<option value="">— <?php esc_html_e( 'Select', 'shopforge' ); ?> —</option>
+							<option value="<?php esc_attr_e( 'Changed my mind', 'shopforge' ); ?>"><?php esc_html_e( 'Changed my mind (no longer interested)', 'shopforge' ); ?></option>
+							<option value="<?php esc_attr_e( 'Product not as described', 'shopforge' ); ?>"><?php esc_html_e( 'Product not as described', 'shopforge' ); ?></option>
+							<option value="<?php esc_attr_e( 'Defective or damaged product', 'shopforge' ); ?>"><?php esc_html_e( 'Defective or damaged product', 'shopforge' ); ?></option>
+							<option value="<?php esc_attr_e( 'Wrong product received', 'shopforge' ); ?>"><?php esc_html_e( 'Wrong product received', 'shopforge' ); ?></option>
+							<option value="<?php esc_attr_e( 'Delivery delay', 'shopforge' ); ?>"><?php esc_html_e( 'Delivery delay', 'shopforge' ); ?></option>
+							<option value="<?php esc_attr_e( 'Other', 'shopforge' ); ?>"><?php esc_html_e( 'Other', 'shopforge' ); ?></option>
 						</select>
 					</div>
 
 					<div class="shopforge-field">
-						<label>Metodo di rimborso preferito</label>
+						<label><?php esc_html_e( 'Preferred refund method', 'shopforge' ); ?></label>
 						<div class="shopforge-radio-group">
+							<?php foreach ( shopforge_return_refund_methods() as $method_key => $method_label ) : ?>
 							<label class="shopforge-radio">
-								<input type="radio" name="shopforge-ret-refund" value="Rimborso sul metodo di pagamento originale" checked>
+								<input type="radio" name="shopforge-ret-refund" value="<?php echo esc_attr( $method_key ); ?>"
+								       data-label="<?php echo esc_attr( $method_label ); ?>"
+								       <?php checked( 'original', $method_key ); ?>>
 								<span class="shopforge-radio__box"></span>
-								Rimborso sul metodo di pagamento originale
+								<?php echo esc_html( $method_label ); ?>
 							</label>
-							<label class="shopforge-radio">
-								<input type="radio" name="shopforge-ret-refund" value="Buono sconto">
-								<span class="shopforge-radio__box"></span>
-								Buono sconto da utilizzare sul sito
-							</label>
+							<?php endforeach; ?>
 						</div>
 					</div>
 
 					<div class="shopforge-field">
-						<label for="shopforge-ret-notes">Note aggiuntive <span style="font-weight:400;text-transform:none">(opzionale)</span></label>
-						<textarea id="shopforge-ret-notes" rows="3" placeholder="Inserisci ulteriori dettagli…"></textarea>
+						<label for="shopforge-ret-notes"><?php esc_html_e( 'Additional notes', 'shopforge' ); ?> <span style="font-weight:400;text-transform:none">(<?php esc_html_e( 'optional', 'shopforge' ); ?>)</span></label>
+						<textarea id="shopforge-ret-notes" rows="3" placeholder="<?php esc_attr_e( 'Enter further details…', 'shopforge' ); ?>"></textarea>
 					</div>
 
 					<div class="shopforge-field shopforge-form-group--file">
-						<label for="shopforge-ret-files">Foto o documenti <span style="font-weight:400;text-transform:none">(opzionale — max 5 MB per file)</span></label>
+						<label for="shopforge-ret-files"><?php esc_html_e( 'Photos or documents', 'shopforge' ); ?> <span style="font-weight:400;text-transform:none">(<?php esc_html_e( 'optional — max 5 MB per file', 'shopforge' ); ?>)</span></label>
 						<input type="file" id="shopforge-ret-files" name="ret_files[]"
 						       multiple accept="image/*,.pdf" class="shopforge-file-input">
 						<div id="shopforge-ret-file-preview" class="shopforge-file-preview"></div>
 					</div>
 
 					<p class="shopforge-field-note">
-						Nella schermata successiva potrai leggere il testo completo della tua dichiarazione di recesso prima di confermare.
+						<?php esc_html_e( 'On the next screen you can read the full text of your withdrawal declaration before confirming.', 'shopforge' ); ?>
 					</p>
 
 					<p class="shopforge-ret-error" id="shopforge-ret-error-1" style="display:none"></p>
 
 					<button type="button" class="shopforge-modal__submit" id="shopforge-ret-next">
-						Avanti — Rivedi e conferma
+						<?php esc_html_e( 'Next — Review and confirm', 'shopforge' ); ?>
 						<i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
 					</button>
 				</div>
@@ -426,17 +516,17 @@ add_action( 'woocommerce_order_details_before_order_table', function ( WC_Order 
 
 					<div class="shopforge-declaration-notice">
 						<i class="fa-solid fa-circle-info" aria-hidden="true"></i>
-						Confermando, invieremo questa dichiarazione al venditore e riceverai una ricevuta automatica via email con data e ora della trasmissione.
+						<?php esc_html_e( 'By confirming, we will send this declaration to the seller and you will receive an automatic email receipt with the date and time of transmission.', 'shopforge' ); ?>
 					</div>
 
 					<p class="shopforge-ret-error" id="shopforge-ret-error-2" style="display:none"></p>
 
 					<div class="shopforge-step2-actions">
 						<button type="button" class="shopforge-btn shopforge-btn--ghost" id="shopforge-ret-back">
-							<i class="fa-solid fa-arrow-left"></i> Indietro
+							<i class="fa-solid fa-arrow-left"></i> <?php esc_html_e( 'Back', 'shopforge' ); ?>
 						</button>
 						<button type="button" class="shopforge-modal__submit shopforge-modal__submit--danger" id="shopforge-ret-confirm">
-							<span id="shopforge-ret-label">Confermo il recesso</span>
+							<span id="shopforge-ret-label"><?php esc_html_e( 'I confirm the withdrawal', 'shopforge' ); ?></span>
 							<span class="shopforge-st-spinner" id="shopforge-ret-spinner" style="display:none"></span>
 						</button>
 					</div>
@@ -445,10 +535,10 @@ add_action( 'woocommerce_order_details_before_order_table', function ( WC_Order 
 				<!-- SUCCESS -->
 				<div id="shopforge-recesso-success" style="display:none" class="shopforge-ticket-success">
 					<i class="fa-solid fa-circle-check" aria-hidden="true"></i>
-					<p class="shopforge-ts__title">Recesso registrato</p>
+					<p class="shopforge-ts__title"><?php esc_html_e( 'Withdrawal recorded', 'shopforge' ); ?></p>
 					<p class="shopforge-ts__text" id="shopforge-ret-success-text"></p>
 					<button type="button" class="shopforge-modal__close-btn" id="shopforge-close-recesso-ok">
-						Chiudi
+						<?php esc_html_e( 'Close', 'shopforge' ); ?>
 					</button>
 				</div>
 
@@ -484,39 +574,41 @@ function shopforge_submit_return_handler(): void {
 	$order_id = absint( $_POST['order_id'] ?? 0 );
 
 	if ( ! wp_verify_nonce( $_POST['nonce'] ?? '', 'shopforge_return_' . $order_id ) ) {
-		wp_send_json_error( 'Sessione scaduta. Ricarica la pagina e riprova.' );
+		wp_send_json_error( __( 'Session expired. Reload the page and try again.', 'shopforge' ) );
 	}
 
 	if ( function_exists( 'shopforge_check_rate_limit' )
 		 && ! shopforge_check_rate_limit( 'submit_return', 90 ) ) {
-		wp_send_json_error( 'Hai già inviato una richiesta di recesso di recente. Attendi qualche minuto e riprova.' );
+		wp_send_json_error( __( 'You already sent a withdrawal request recently. Wait a few minutes and try again.', 'shopforge' ) );
 	}
 
 	$order = wc_get_order( $order_id );
-	if ( ! $order ) wp_send_json_error( 'Ordine non trovato.' );
+	if ( ! $order ) wp_send_json_error( __( 'Order not found.', 'shopforge' ) );
 
 	$user_id = get_current_user_id();
 	if ( ! $user_id || (int) $order->get_customer_id() !== $user_id ) {
-		wp_send_json_error( 'Accesso non autorizzato.' );
+		wp_send_json_error( __( 'Unauthorized access.', 'shopforge' ) );
 	}
 
 	if ( ! shopforge_is_within_recesso_window( $order ) ) {
-		wp_send_json_error( sprintf( 'Il termine di %d giorni per esercitare il recesso è scaduto.', shopforge_get_return_window_days() ) );
+		/* translators: %d: number of days */
+		wp_send_json_error( sprintf( __( 'The %d-day withdrawal period has expired.', 'shopforge' ), shopforge_get_return_window_days() ) );
 	}
 
 	if ( shopforge_has_active_return( $order ) ) {
-		wp_send_json_error( 'Esiste già una richiesta di recesso per questo ordine.' );
+		wp_send_json_error( __( 'A withdrawal request already exists for this order.', 'shopforge' ) );
 	}
 
 	$products    = array_map( 'sanitize_text_field', (array) ( $_POST['products'] ?? [] ) );
 	$reason      = sanitize_text_field( $_POST['reason'] ?? '' );
 	$refund      = sanitize_text_field( $_POST['refund'] ?? '' );
+	$refund      = array_key_exists( $refund, shopforge_return_refund_methods() ) ? $refund : 'original';
 	$notes       = sanitize_textarea_field( $_POST['notes'] ?? '' );
 	$declaration = sanitize_textarea_field( $_POST['declaration'] ?? '' );
 	$products    = array_filter( $products );
 
 	if ( ! $reason || empty( $products ) ) {
-		wp_send_json_error( 'Dati mancanti o non validi.' );
+		wp_send_json_error( __( 'Missing or invalid data.', 'shopforge' ) );
 	}
 
 	// Gestione allegati (opzionale)
@@ -564,7 +656,7 @@ function shopforge_submit_return_handler(): void {
 	$order->save();
 
 	$customer_email = $order->get_billing_email();
-	$date_str       = date_i18n( 'd/m/Y \a\l\l\e H:i', strtotime( $now ) );
+	$date_str       = date_i18n( get_option( 'date_format' ) . ' H:i', strtotime( $now ) );
 
 	// Dati condivisi tra le due email
 	$return_email_data = [
@@ -604,7 +696,7 @@ add_action( 'add_meta_boxes', function () {
 	foreach ( [ 'shop_order', 'woocommerce_page_wc-orders' ] as $screen ) {
 		add_meta_box(
 			'shopforge-returns',
-			'↩ Richieste di recesso',
+			'↩ ' . __( 'Withdrawal requests', 'shopforge' ),
 			'shopforge_returns_metabox_render',
 			$screen,
 			'normal',
@@ -620,32 +712,32 @@ function shopforge_returns_metabox_render( $post_or_order ): void {
 	$returns = $order->get_meta( '_shopforge_returns' ) ?: [];
 
 	if ( empty( $returns ) ) {
-		echo '<p style="color:#646970;font-size:13px;margin:8px 0">Nessuna richiesta di recesso per questo ordine.</p>';
+		echo '<p style="color:#646970;font-size:13px;margin:8px 0">' . esc_html__( 'No withdrawal requests for this order.', 'shopforge' ) . '</p>';
 		return;
 	}
 
 	$status_map = [
-		'pending'    => [ 'label' => 'Ricevuta',      'bg' => '#FEF9C3', 'color' => '#854D0E' ],
-		'processing' => [ 'label' => 'In lavorazione','bg' => '#DBEAFE', 'color' => '#1E40AF' ],
-		'approved'   => [ 'label' => 'Approvata',     'bg' => '#DCFCE7', 'color' => '#166534' ],
-		'refunded'   => [ 'label' => 'Rimborsata',    'bg' => '#D1FAE5', 'color' => '#065F46' ],
-		'rejected'   => [ 'label' => 'Rifiutata',     'bg' => '#FEE2E2', 'color' => '#991B1B' ],
+		'pending'    => [ 'label' => __( 'Received', 'shopforge' ),   'bg' => '#FEF9C3', 'color' => '#854D0E' ],
+		'processing' => [ 'label' => __( 'Processing', 'shopforge' ), 'bg' => '#DBEAFE', 'color' => '#1E40AF' ],
+		'approved'   => [ 'label' => __( 'Approved', 'shopforge' ),   'bg' => '#DCFCE7', 'color' => '#166534' ],
+		'refunded'   => [ 'label' => __( 'Refunded', 'shopforge' ),   'bg' => '#D1FAE5', 'color' => '#065F46' ],
+		'rejected'   => [ 'label' => __( 'Rejected', 'shopforge' ),   'bg' => '#FEE2E2', 'color' => '#991B1B' ],
 	];
 	?>
 
 	<table class="shopforge-ret-adm">
 		<thead>
 			<tr>
-				<th>Rif. / Data</th>
-				<th>Prodotti / Motivo</th>
-				<th>Dichiarazione</th>
-				<th>Stato</th>
+				<th><?php esc_html_e( 'Ref. / Date', 'shopforge' ); ?></th>
+				<th><?php esc_html_e( 'Products / Reason', 'shopforge' ); ?></th>
+				<th><?php esc_html_e( 'Declaration', 'shopforge' ); ?></th>
+				<th><?php esc_html_e( 'Status', 'shopforge' ); ?></th>
 			</tr>
 		</thead>
 		<tbody>
 		<?php foreach ( $returns as $idx => $ret ) :
 			$st    = $status_map[ $ret['status'] ] ?? $status_map['pending'];
-			$date  = date_i18n( 'd/m/Y H:i', strtotime( $ret['date'] ) );
+			$date  = date_i18n( get_option( 'date_format' ) . ' H:i', strtotime( $ret['date'] ) );
 		?>
 		<tr>
 			<td>
@@ -661,9 +753,17 @@ function shopforge_returns_metabox_render( $post_or_order ): void {
 				</ul>
 				<?php endif; ?>
 				<em style="color:#646970"><?php echo esc_html( $ret['reason'] ); ?></em><br>
-				<span style="font-size:11px;color:#646970">Rimborso: <?php echo esc_html( $ret['refund'] ); ?></span>
+				<span style="font-size:11px;color:#646970"><?php esc_html_e( 'Refund:', 'shopforge' ); ?> <?php echo esc_html( shopforge_return_get_refund_label( $ret['refund'] ) ); ?></span>
+				<?php if ( ! empty( $ret['coupon_code'] ) ) : ?>
+				<br><span style="font-size:11px;color:#166534">
+					<?php
+					/* translators: %s: coupon code */
+					printf( esc_html__( 'Coupon issued: %s', 'shopforge' ), '<code>' . esc_html( $ret['coupon_code'] ) . '</code>' );
+					?>
+				</span>
+				<?php endif; ?>
 				<?php if ( $ret['notes'] ) : ?>
-				<br><span style="font-size:11px;color:#646970">Note: <?php echo esc_html( $ret['notes'] ); ?></span>
+				<br><span style="font-size:11px;color:#646970"><?php esc_html_e( 'Notes:', 'shopforge' ); ?> <?php echo esc_html( $ret['notes'] ); ?></span>
 				<?php endif; ?>
 			</td>
 			<td>
@@ -676,10 +776,10 @@ function shopforge_returns_metabox_render( $post_or_order ): void {
 				</span>
 				<?php if ( ! empty( $ret['reply'] ) ) : ?>
 				<div style="margin:6px 0;padding:5px 8px;background:#f0f7ff;border-left:3px solid #2563eb;border-radius:3px;font-size:11px;">
-					<strong>Risposta negozio:</strong> <?php echo esc_html( $ret['reply'] ); ?>
+					<strong><?php esc_html_e( 'Store reply:', 'shopforge' ); ?></strong> <?php echo esc_html( $ret['reply'] ); ?>
 				</div>
 				<?php endif; ?>
-				<textarea class="shopforge-ret-reply-text" rows="2" placeholder="Messaggio al cliente (opzionale)…"
+				<textarea class="shopforge-ret-reply-text" rows="2" placeholder="<?php esc_attr_e( 'Message to customer (optional)…', 'shopforge' ); ?>"
 				          style="width:100%;margin:4px 0;font-size:11px;resize:vertical;"
 				><?php echo esc_textarea( $ret['reply'] ?? '' ); ?></textarea>
 				<div class="shopforge-ret-adm-status">
@@ -694,7 +794,7 @@ function shopforge_returns_metabox_render( $post_or_order ): void {
 					        data-idx="<?php echo esc_attr( $idx ); ?>"
 					        data-order="<?php echo esc_attr( $order->get_id() ); ?>"
 					        data-nonce="<?php echo esc_attr( wp_create_nonce('shopforge_return_status') ); ?>">
-						Salva &amp; Notifica
+						<?php esc_html_e( 'Save &amp; Notify', 'shopforge' ); ?>
 					</button>
 				</div>
 			</td>
@@ -722,10 +822,32 @@ add_action( 'wp_ajax_shopforge_update_return_status', function () {
 	$returns = $order->get_meta( '_shopforge_returns' ) ?: [];
 	if ( ! isset( $returns[ $idx ] ) ) wp_send_json_error();
 
-	$prev_status = $returns[ $idx ]['status'] ?? 'pending';
-	$returns[ $idx ]['status']     = $status;
-	$returns[ $idx ]['reply']      = $reply;
-	$returns[ $idx ]['reply_date'] = current_time( 'mysql' );
+	$prev_status  = $returns[ $idx ]['status'] ?? 'pending';
+	$coupon_code  = $returns[ $idx ]['coupon_code'] ?? '';
+	$coupon_error = '';
+
+	// Passaggio a "refunded": emette il coupon (se il metodo scelto è store
+	// credit e non è già stato emesso) e allinea sempre lo stato ordine WC —
+	// sia che il rimborso sia stato eseguito con coupon o sul pagamento originale.
+	if ( 'refunded' === $status && 'refunded' !== $prev_status ) {
+		if ( 'store_credit' === ( $returns[ $idx ]['refund'] ?? '' ) && ! $coupon_code ) {
+			$issued = shopforge_return_issue_coupon( $order, $returns[ $idx ], $returns[ $idx ]['ref'] ?? '' );
+			if ( is_wp_error( $issued ) ) {
+				$coupon_error = $issued->get_error_message();
+			} else {
+				$coupon_code = $issued;
+			}
+		}
+
+		if ( ! $order->has_status( 'refunded' ) ) {
+			$order->update_status( 'refunded', __( 'Order marked as refunded following an approved withdrawal request.', 'shopforge' ) );
+		}
+	}
+
+	$returns[ $idx ]['status']      = $status;
+	$returns[ $idx ]['reply']       = $reply;
+	$returns[ $idx ]['reply_date']  = current_time( 'mysql' );
+	$returns[ $idx ]['coupon_code'] = $coupon_code;
 	$order->update_meta_data( '_shopforge_returns', $returns );
 	$order->save();
 
@@ -738,11 +860,12 @@ add_action( 'wp_ajax_shopforge_update_return_status', function () {
 				'status'      => $status,
 				'prev_status' => $prev_status,
 				'reply'       => $reply,
+				'coupon_code' => $coupon_code,
 			] );
 		}
 	}
 
-	wp_send_json_success();
+	wp_send_json_success( [ 'coupon_code' => $coupon_code, 'coupon_error' => $coupon_error ] );
 } );
 
 
@@ -751,7 +874,7 @@ add_action( 'wp_ajax_shopforge_update_return_status', function () {
 // =============================================================================
 
 add_action( 'woocommerce_account_shopforge-returns_endpoint', function () {
-	shopforge_account_section_header( 'Assistenza e Resi', 'fa-solid fa-headset' );
+	shopforge_account_section_header( __( 'Support & Returns', 'shopforge' ), 'fa-solid fa-headset' );
 
 	$user_id = get_current_user_id();
 	$orders  = wc_get_orders( [
@@ -779,8 +902,9 @@ add_action( 'woocommerce_account_shopforge-returns_endpoint', function () {
 	if ( ! $has_any ) {
 		shopforge_account_empty_state(
 			'fa-solid fa-headset',
-			'Nessuna richiesta',
-			sprintf( 'Dall\'area ordini puoi aprire un ticket di assistenza o richiedere il recesso (entro %d giorni dalla consegna).', shopforge_get_return_window_days() )
+			__( 'No requests', 'shopforge' ),
+			/* translators: %d: number of days */
+			sprintf( __( 'From the orders area you can open a support ticket or request a withdrawal (within %d days of delivery).', 'shopforge' ), shopforge_get_return_window_days() )
 		);
 		return;
 	}
@@ -790,15 +914,15 @@ add_action( 'woocommerce_account_shopforge-returns_endpoint', function () {
 	usort( $all_returns, fn( $a, $b ) => strtotime( $b['date'] ) - strtotime( $a['date'] ) );
 
 	$ticket_st_labels = [
-		'open'   => [ 'label' => 'Aperto',  'class' => 'open' ],
-		'closed' => [ 'label' => 'Chiuso',  'class' => 'closed' ],
+		'open'   => [ 'label' => __( 'Open', 'shopforge' ),   'class' => 'open' ],
+		'closed' => [ 'label' => __( 'Closed', 'shopforge' ), 'class' => 'closed' ],
 	];
 	$return_st_labels = [
-		'pending'    => [ 'label' => 'Ricevuta',       'class' => 'pending' ],
-		'processing' => [ 'label' => 'In lavorazione', 'class' => 'processing' ],
-		'approved'   => [ 'label' => 'Approvata',      'class' => 'approved' ],
-		'refunded'   => [ 'label' => 'Rimborsata',     'class' => 'refunded' ],
-		'rejected'   => [ 'label' => 'Rifiutata',      'class' => 'rejected' ],
+		'pending'    => [ 'label' => __( 'Received', 'shopforge' ),   'class' => 'pending' ],
+		'processing' => [ 'label' => __( 'Processing', 'shopforge' ), 'class' => 'processing' ],
+		'approved'   => [ 'label' => __( 'Approved', 'shopforge' ),   'class' => 'approved' ],
+		'refunded'   => [ 'label' => __( 'Refunded', 'shopforge' ),   'class' => 'refunded' ],
+		'rejected'   => [ 'label' => __( 'Rejected', 'shopforge' ),   'class' => 'rejected' ],
 	];
 	?>
 
@@ -806,12 +930,12 @@ add_action( 'woocommerce_account_shopforge-returns_endpoint', function () {
 	<div class="shopforge-returns-section">
 		<h3 class="shopforge-returns-section__title">
 			<i class="fa-solid fa-headset" aria-hidden="true"></i>
-			Richieste di assistenza
+			<?php esc_html_e( 'Support requests', 'shopforge' ); ?>
 		</h3>
 		<div class="shopforge-returns-list">
 		<?php foreach ( $all_tickets as $t ) :
 			$st   = $ticket_st_labels[ $t['status'] ?? 'open' ] ?? $ticket_st_labels['open'];
-			$date = date_i18n( 'd/m/Y \a\l\l\e H:i', strtotime( $t['date'] ) );
+			$date = date_i18n( get_option( 'date_format' ) . ' H:i', strtotime( $t['date'] ) );
 		?>
 		<div class="shopforge-return-row">
 			<div class="shopforge-return-row__head">
@@ -822,13 +946,13 @@ add_action( 'woocommerce_account_shopforge-returns_endpoint', function () {
 			</div>
 			<div class="shopforge-return-row__body">
 				<p class="shopforge-return-row__meta">
-					Ordine <strong>#<?php echo esc_html( $t['_order_number'] ); ?></strong>
+					<?php esc_html_e( 'Order', 'shopforge' ); ?> <strong>#<?php echo esc_html( $t['_order_number'] ); ?></strong>
 					· <?php echo esc_html( $date ); ?>
 				</p>
 				<p class="shopforge-return-row__reason"><?php echo esc_html( $t['message'] ); ?></p>
 				<?php if ( ! empty( $t['attachments'] ) ) : ?>
 				<div class="shopforge-return-row__attachments">
-					<strong>Allegati:</strong>
+					<strong><?php esc_html_e( 'Attachments:', 'shopforge' ); ?></strong>
 					<?php foreach ( $t['attachments'] as $url ) : ?>
 					<a href="<?php echo esc_url( $url ); ?>" target="_blank" rel="noopener" class="shopforge-attachment-link">
 						<i class="fa-solid fa-paperclip" aria-hidden="true"></i> <?php echo esc_html( basename( $url ) ); ?>
@@ -838,7 +962,7 @@ add_action( 'woocommerce_account_shopforge-returns_endpoint', function () {
 				<?php endif; ?>
 				<?php if ( ! empty( $t['reply'] ) ) : ?>
 				<div class="shopforge-return-row__reply">
-					<strong>Risposta negozio:</strong> <?php echo esc_html( $t['reply'] ); ?>
+					<strong><?php esc_html_e( 'Store reply:', 'shopforge' ); ?></strong> <?php echo esc_html( $t['reply'] ); ?>
 				</div>
 				<?php endif; ?>
 			</div>
@@ -852,12 +976,12 @@ add_action( 'woocommerce_account_shopforge-returns_endpoint', function () {
 	<div class="shopforge-returns-section" <?php if ( ! empty( $all_tickets ) ) echo 'style="margin-top:28px"'; ?>>
 		<h3 class="shopforge-returns-section__title">
 			<i class="fa-solid fa-rotate-left" aria-hidden="true"></i>
-			Richieste di recesso
+			<?php esc_html_e( 'Withdrawal requests', 'shopforge' ); ?>
 		</h3>
 		<div class="shopforge-returns-list">
 		<?php foreach ( $all_returns as $ret ) :
 			$st   = $return_st_labels[ $ret['status'] ?? 'pending' ] ?? $return_st_labels['pending'];
-			$date = date_i18n( 'd/m/Y \a\l\l\e H:i', strtotime( $ret['date'] ) );
+			$date = date_i18n( get_option( 'date_format' ) . ' H:i', strtotime( $ret['date'] ) );
 		?>
 		<div class="shopforge-return-row">
 			<div class="shopforge-return-row__head">
@@ -868,7 +992,7 @@ add_action( 'woocommerce_account_shopforge-returns_endpoint', function () {
 			</div>
 			<div class="shopforge-return-row__body">
 				<p class="shopforge-return-row__meta">
-					Ordine <strong>#<?php echo esc_html( $ret['_order_number'] ); ?></strong>
+					<?php esc_html_e( 'Order', 'shopforge' ); ?> <strong>#<?php echo esc_html( $ret['_order_number'] ); ?></strong>
 					· <?php echo esc_html( $date ); ?>
 				</p>
 				<p class="shopforge-return-row__reason"><?php echo esc_html( $ret['reason'] ); ?></p>
@@ -877,7 +1001,7 @@ add_action( 'woocommerce_account_shopforge-returns_endpoint', function () {
 				<?php endif; ?>
 				<?php if ( ! empty( $ret['attachments'] ) ) : ?>
 				<div class="shopforge-return-row__attachments">
-					<strong>Allegati:</strong>
+					<strong><?php esc_html_e( 'Attachments:', 'shopforge' ); ?></strong>
 					<?php foreach ( $ret['attachments'] as $url ) : ?>
 					<a href="<?php echo esc_url( $url ); ?>" target="_blank" rel="noopener" class="shopforge-attachment-link">
 						<i class="fa-solid fa-paperclip" aria-hidden="true"></i> <?php echo esc_html( basename( $url ) ); ?>
@@ -887,7 +1011,15 @@ add_action( 'woocommerce_account_shopforge-returns_endpoint', function () {
 				<?php endif; ?>
 				<?php if ( ! empty( $ret['reply'] ) ) : ?>
 				<div class="shopforge-return-row__reply">
-					<strong>Risposta negozio:</strong> <?php echo esc_html( $ret['reply'] ); ?>
+					<strong><?php esc_html_e( 'Store reply:', 'shopforge' ); ?></strong> <?php echo esc_html( $ret['reply'] ); ?>
+				</div>
+				<?php endif; ?>
+				<?php if ( ! empty( $ret['coupon_code'] ) ) : ?>
+				<div class="shopforge-return-row__reply" style="background:#F0FDF4;border-left-color:#16A34A;color:#166534;">
+					<?php
+					/* translators: %s: coupon code */
+					printf( esc_html__( 'Your store credit coupon: %s', 'shopforge' ), '<code>' . esc_html( $ret['coupon_code'] ) . '</code>' );
+					?>
 				</div>
 				<?php endif; ?>
 			</div>

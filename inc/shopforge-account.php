@@ -155,8 +155,7 @@ function shopforge_enqueue_account_css() {
     if ( ! function_exists( 'shopforge_is_module_active' ) || ! shopforge_is_module_active( 'styles-account' ) ) return;
 
     // FontAwesome: caricato solo se lo stile account è attivo (unico consumer lato frontend)
-    wp_enqueue_script( 'fontawesome-kit', SHOPFORGE_FA_KIT_URL, [], null, false );
-    wp_script_add_data( 'fontawesome-kit', 'crossorigin', 'anonymous' );
+    shopforge_enqueue_fontawesome();
 
     wp_enqueue_style( 'shopforge-woo-account', SHOPFORGE_URL . 'assets/css/shopforge-woo-account.css', [], SHOPFORGE_VERSION );
 }
@@ -275,7 +274,7 @@ add_filter( 'woocommerce_my_account_my_orders_actions', function ( array $action
                 'order_again' => $order->get_id(),
                 '_wpnonce'    => wp_create_nonce( 'woocommerce-order_again' ),
             ], $cart_url ),
-            'name' => 'Riordina', // esc_html-safe; l'icona viene iniettata dal filtro sotto
+            'name' => __( 'Reorder', 'shopforge' ), // esc_html-safe; l'icona viene iniettata dal filtro sotto
         ];
     }
     return $actions;
@@ -286,7 +285,7 @@ add_filter( 'woocommerce_my_account_my_orders_actions', function ( array $action
 add_filter( 'woocommerce_my_account_my_orders_actions_button_html', function ( string $html, array $action, string $key ): string {
     if ( 'reorder' === $key ) {
         $html = '<a href="' . esc_url( $action['url'] ) . '" class="button reorder">'
-              . '<i class="fa-solid fa-rotate-right" aria-hidden="true"></i> Riordina'
+              . '<i class="fa-solid fa-rotate-right" aria-hidden="true"></i> ' . esc_html__( 'Reorder', 'shopforge' )
               . '</a>';
     }
     return $html;
@@ -304,11 +303,11 @@ add_filter( 'woocommerce_account_orders_columns', function ( $columns ) {
         return $columns; // usa le colonne WooCommerce predefinite
     }
     return [
-        'order-number'  => 'Ordine',
-        'order-date'    => 'Data',
-        'order-status'  => 'Stato',
-        'order-total'   => 'Totale',
-        'order-actions' => 'Azioni',
+        'order-number'  => __( 'Order', 'shopforge' ),
+        'order-date'    => __( 'Date', 'shopforge' ),
+        'order-status'  => __( 'Status', 'shopforge' ),
+        'order-total'   => __( 'Total', 'shopforge' ),
+        'order-actions' => __( 'Actions', 'shopforge' ),
     ];
 }, 20 );
 
@@ -436,46 +435,54 @@ function shopforge_render_account_dashboard(): void {
     $stats = [
         [
             'icon'      => 'fa-solid fa-bag-shopping',
-            'label'     => 'Ordini totali',
+            'label'     => __( 'Total orders', 'shopforge' ),
             'value'     => count( $total_orders ),
-            'link_text' => 'Visualizza ordini',
+            'link_text' => __( 'View orders', 'shopforge' ),
             'url'       => wc_get_account_endpoint_url( 'orders' ),
         ],
         [
             'icon'      => 'fa-solid fa-clock',
-            'label'     => 'In lavorazione',
+            'label'     => __( 'Processing', 'shopforge' ),
             'value'     => count( $processing_orders ),
-            'link_text' => 'Controlla stato',
+            'link_text' => __( 'Check status', 'shopforge' ),
             'url'       => wc_get_account_endpoint_url( 'orders' ),
         ],
         [
             'icon'      => 'fa-solid fa-truck',
-            'label'     => 'Consegnati',
+            'label'     => __( 'Delivered', 'shopforge' ),
             'value'     => count( $completed_orders ),
-            'link_text' => 'Storico acquisti',
+            'link_text' => __( 'Purchase history', 'shopforge' ),
             'url'       => wc_get_account_endpoint_url( 'orders' ),
         ],
-        [
-            'icon'      => 'fa-solid fa-file-invoice',
-            'label'     => 'Preventivi',
-            'value'     => 0,
-            'link_text' => 'Vai ai preventivi',
-            'url'       => wc_get_account_endpoint_url( 'shopforge-quotes' ),
-        ],
     ];
+
+    // Card preventivi solo se il modulo è attivo (altrimenti il link è un 404)
+    if ( function_exists( 'shopforge_is_module_active' ) && shopforge_is_module_active( 'quotes' ) ) {
+        $quotes  = get_user_meta( $user_id, '_shopforge_quotes', true ) ?: [];
+        $stats[] = [
+            'icon'      => 'fa-solid fa-file-invoice',
+            'label'     => __( 'Quotes', 'shopforge' ),
+            'value'     => count( $quotes ),
+            'link_text' => __( 'Go to quotes', 'shopforge' ),
+            'url'       => wc_get_account_endpoint_url( 'shopforge-quotes' ),
+        ];
+    }
     ?>
     <div class="shopforge-account-dashboard">
 
         <!-- Benvenuto -->
         <div class="shopforge-account-welcome">
             <div>
-                <span class="shopforge-account-eyebrow">Area cliente</span>
-                <h2>Ciao <?php echo esc_html( $display_name ); ?></h2>
-                <p>Da qui puoi gestire ordini, indirizzi, dati personali, metodi di pagamento, preventivi e richieste commerciali.</p>
+                <span class="shopforge-account-eyebrow"><?php esc_html_e( 'Customer area', 'shopforge' ); ?></span>
+                <h2><?php
+                    /* translators: %s: customer display name */
+                    printf( esc_html__( 'Hi %s', 'shopforge' ), esc_html( $display_name ) );
+                ?></h2>
+                <p><?php esc_html_e( 'From here you can manage orders, addresses, personal data, payment methods, quotes and sales requests.', 'shopforge' ); ?></p>
             </div>
             <a class="shopforge-account-logout" href="<?php echo esc_url( wc_logout_url() ); ?>">
                 <i class="fa-solid fa-right-from-bracket" aria-hidden="true"></i>
-                Esci
+                <?php esc_html_e( 'Log out', 'shopforge' ); ?>
             </a>
         </div>
 
@@ -502,10 +509,13 @@ function shopforge_render_account_dashboard(): void {
             <section class="shopforge-account-card shopforge-orders-card">
                 <div class="shopforge-card-header">
                     <div>
-                        <h3>I miei ordini recenti</h3>
-                        <p>Gli ultimi acquisti effettuati su <?php echo esc_html( get_bloginfo( 'name' ) ); ?>.</p>
+                        <h3><?php esc_html_e( 'My recent orders', 'shopforge' ); ?></h3>
+                        <p><?php
+                            /* translators: %s: site name */
+                            printf( esc_html__( 'Your latest purchases on %s.', 'shopforge' ), esc_html( get_bloginfo( 'name' ) ) );
+                        ?></p>
                     </div>
-                    <a href="<?php echo esc_url( wc_get_account_endpoint_url( 'orders' ) ); ?>">Vedi tutti</a>
+                    <a href="<?php echo esc_url( wc_get_account_endpoint_url( 'orders' ) ); ?>"><?php esc_html_e( 'View all', 'shopforge' ); ?></a>
                 </div>
 
                 <?php if ( ! empty( $recent_orders ) ) : ?>
@@ -513,11 +523,11 @@ function shopforge_render_account_dashboard(): void {
                         <table class="shopforge-orders-table">
                             <thead>
                                 <tr>
-                                    <th>Ordine</th>
-                                    <th>Data</th>
-                                    <th>Stato</th>
-                                    <th>Totale</th>
-                                    <th>Azioni</th>
+                                    <th><?php esc_html_e( 'Order', 'shopforge' ); ?></th>
+                                    <th><?php esc_html_e( 'Date', 'shopforge' ); ?></th>
+                                    <th><?php esc_html_e( 'Status', 'shopforge' ); ?></th>
+                                    <th><?php esc_html_e( 'Total', 'shopforge' ); ?></th>
+                                    <th><?php esc_html_e( 'Actions', 'shopforge' ); ?></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -536,7 +546,7 @@ function shopforge_render_account_dashboard(): void {
                                         <td><?php echo wp_kses_post( $order->get_formatted_order_total() ); ?></td>
                                         <td>
                                             <a class="shopforge-small-link" href="<?php echo esc_url( $order->get_view_order_url() ); ?>">
-                                                Visualizza
+                                                <?php esc_html_e( 'View', 'shopforge' ); ?>
                                             </a>
                                         </td>
                                     </tr>
@@ -546,8 +556,8 @@ function shopforge_render_account_dashboard(): void {
                     </div>
                 <?php else : ?>
                     <div class="shopforge-empty-state">
-                        <strong>Nessun ordine ancora effettuato.</strong>
-                        <span>Quando effettuerai un acquisto, lo troverai qui.</span>
+                        <strong><?php esc_html_e( 'No orders placed yet.', 'shopforge' ); ?></strong>
+                        <span><?php esc_html_e( 'When you make a purchase, you will find it here.', 'shopforge' ); ?></span>
                     </div>
                 <?php endif; ?>
             </section>
@@ -555,32 +565,32 @@ function shopforge_render_account_dashboard(): void {
             <section class="shopforge-account-card shopforge-address-card">
                 <div class="shopforge-card-header">
                     <div>
-                        <h3>Indirizzi salvati</h3>
-                        <p>Fatturazione e spedizione.</p>
+                        <h3><?php esc_html_e( 'Saved addresses', 'shopforge' ); ?></h3>
+                        <p><?php esc_html_e( 'Billing and shipping.', 'shopforge' ); ?></p>
                     </div>
-                    <a href="<?php echo esc_url( wc_get_account_endpoint_url( 'edit-address' ) ); ?>">Modifica</a>
+                    <a href="<?php echo esc_url( wc_get_account_endpoint_url( 'edit-address' ) ); ?>"><?php esc_html_e( 'Edit', 'shopforge' ); ?></a>
                 </div>
 
                 <div class="shopforge-address-block">
-                    <h4><i class="fa-solid fa-file-invoice" aria-hidden="true"></i> Fatturazione</h4>
+                    <h4><i class="fa-solid fa-file-invoice" aria-hidden="true"></i> <?php esc_html_e( 'Billing', 'shopforge' ); ?></h4>
                     <?php if ( $billing_address ) : ?>
                         <address><?php echo wp_kses_post( $billing_address ); ?></address>
                     <?php else : ?>
-                        <p>Nessun indirizzo salvato.</p>
+                        <p><?php esc_html_e( 'No address saved.', 'shopforge' ); ?></p>
                     <?php endif; ?>
                 </div>
 
                 <div class="shopforge-address-block">
-                    <h4><i class="fa-solid fa-truck" aria-hidden="true"></i> Spedizione</h4>
+                    <h4><i class="fa-solid fa-truck" aria-hidden="true"></i> <?php esc_html_e( 'Shipping', 'shopforge' ); ?></h4>
                     <?php if ( $shipping_address ) : ?>
                         <address><?php echo wp_kses_post( $shipping_address ); ?></address>
                     <?php else : ?>
-                        <p>Nessun indirizzo salvato.</p>
+                        <p><?php esc_html_e( 'No address saved.', 'shopforge' ); ?></p>
                     <?php endif; ?>
                 </div>
 
                 <a class="shopforge-outline-button" href="<?php echo esc_url( wc_get_account_endpoint_url( 'edit-address' ) ); ?>">
-                    Gestisci indirizzi
+                    <?php esc_html_e( 'Manage addresses', 'shopforge' ); ?>
                 </a>
             </section>
 
@@ -628,12 +638,12 @@ function shopforge_dashboard_tracking_widget( int $user_id ): void {
     if ( ! $tracked_order ) return;
 
     $status_labels = [
-        0  => [ 'label' => 'In attesa di ritiro', 'icon' => 'fa-solid fa-hourglass-start',  'color' => '#6B7280' ],
-        10 => [ 'label' => 'Tracking non trovato', 'icon' => 'fa-solid fa-question-circle', 'color' => '#6B7280' ],
-        20 => [ 'label' => 'Ritirato dal corriere', 'icon' => 'fa-solid fa-box',            'color' => '#2563EB' ],
-        30 => [ 'label' => 'In transito',           'icon' => 'fa-solid fa-truck-fast',     'color' => '#7C3AED' ],
-        35 => [ 'label' => 'Tentativo fallito',     'icon' => 'fa-solid fa-triangle-exclamation', 'color' => '#D97706' ],
-        40 => [ 'label' => 'Consegnato',            'icon' => 'fa-solid fa-circle-check',   'color' => '#16A34A' ],
+        0  => [ 'label' => __( 'Awaiting pickup', 'shopforge' ),        'icon' => 'fa-solid fa-hourglass-start',  'color' => '#6B7280' ],
+        10 => [ 'label' => __( 'Tracking not found', 'shopforge' ),     'icon' => 'fa-solid fa-question-circle', 'color' => '#6B7280' ],
+        20 => [ 'label' => __( 'Picked up by carrier', 'shopforge' ),   'icon' => 'fa-solid fa-box',            'color' => '#2563EB' ],
+        30 => [ 'label' => __( 'In transit', 'shopforge' ),             'icon' => 'fa-solid fa-truck-fast',     'color' => '#7C3AED' ],
+        35 => [ 'label' => __( 'Delivery attempt failed', 'shopforge' ), 'icon' => 'fa-solid fa-triangle-exclamation', 'color' => '#D97706' ],
+        40 => [ 'label' => __( 'Delivered', 'shopforge' ),              'icon' => 'fa-solid fa-circle-check',   'color' => '#16A34A' ],
     ];
 
     $status_code  = $tracking_data['status_code'] ?? 0;
@@ -645,10 +655,13 @@ function shopforge_dashboard_tracking_widget( int $user_id ): void {
         <div class="shopforge-tracking-widget__head">
             <span class="shopforge-tracking-widget__label">
                 <i class="fa-solid fa-truck-fast" aria-hidden="true"></i>
-                Spedizione in corso
+                <?php esc_html_e( 'Shipment in progress', 'shopforge' ); ?>
             </span>
             <a href="<?php echo esc_url( $order_url ); ?>" class="shopforge-tracking-widget__link">
-                Ordine #<?php echo esc_html( $tracked_order->get_order_number() ); ?> →
+                <?php
+                /* translators: %s: order number */
+                printf( esc_html__( 'Order #%s', 'shopforge' ), esc_html( $tracked_order->get_order_number() ) );
+                ?> →
             </a>
         </div>
         <div class="shopforge-tracking-widget__body">
@@ -664,12 +677,12 @@ function shopforge_dashboard_tracking_widget( int $user_id ): void {
                 <?php endif; ?>
             </p>
             <p class="shopforge-tracking-widget__date">
-                <?php echo esc_html( date_i18n( 'd/m/Y H:i', $last_event['timestamp'] ?? time() ) ); ?>
+                <?php echo esc_html( date_i18n( get_option( 'date_format' ) . ' H:i', $last_event['timestamp'] ?? time() ) ); ?>
             </p>
             <?php elseif ( $tracking_number ) : ?>
             <p class="shopforge-tracking-widget__event">
-                Numero tracking: <strong><?php echo esc_html( $tracking_number ); ?></strong>
-                — In attesa di aggiornamenti dal corriere.
+                <?php esc_html_e( 'Tracking number:', 'shopforge' ); ?> <strong><?php echo esc_html( $tracking_number ); ?></strong>
+                — <?php esc_html_e( 'Waiting for carrier updates.', 'shopforge' ); ?>
             </p>
             <?php endif; ?>
         </div>

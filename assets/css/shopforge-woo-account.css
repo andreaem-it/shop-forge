@@ -1294,3 +1294,17 @@ body.shopforge-account-page .entry-content {
     margin-left: 0;
   }
 }
+/* ==========================================================================
+   SKIN — temi selezionabili (vedi sezione SKIN in shopforge-woo-shop.css).
+   Nell'area account tutte le ombre e i raggi passano dalle variabili,
+   quindi le skin agiscono solo su quelle: clean = piatto, cards = raggi ampi.
+   Duplicato qui perché questo file può caricarsi senza shopforge-woo-shop.css.
+   ========================================================================== */
+
+body.shopforge-skin-clean {
+  --shopforge-shadow: none;
+}
+
+body.shopforge-skin-cards {
+  --shopforge-radius: 14px;
+}

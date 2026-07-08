@@ -2,8 +2,8 @@
 /**
  * Plugin Name:  ShopForge
  * Plugin URI:   https://www.andreaem.it
- * Description:  Plugin modulare per WooCommerce — account area, tracking, wishlist, resi, preventivi, notifiche e UX improvements.
- * Version:      1.7.2
+ * Description:  Modular WooCommerce plugin — account area, tracking, wishlist, returns, quotes, notifications and UX improvements.
+ * Version:      1.8.1
  * Author:       Andrea Emili
  * Author URI:   https://www.andreaem.it
  * Text Domain:  shopforge
@@ -27,11 +27,34 @@ define( 'SHOPFORGE_FILE', __FILE__ );
 define( 'SHOPFORGE_DIR',  plugin_dir_path( __FILE__ ) );
 define( 'SHOPFORGE_URL',  plugin_dir_url( __FILE__ ) );
 
+// Traduzioni: plugin non ospitato su WordPress.org, quindi il caricamento
+// automatico non si applica — va richiamato esplicitamente.
+add_action( 'init', function () {
+    load_plugin_textdomain( 'shopforge', false, dirname( plugin_basename( SHOPFORGE_FILE ) ) . '/languages' );
+} );
+
 // License server endpoint
 define( 'SHOPFORGE_LICENSE_SERVER', 'https://licenses.andreaem.it/api.php?action=validate' );
 
-// URL kit FontAwesome — unico punto di configurazione
-define( 'SHOPFORGE_FA_KIT_URL', 'https://kit.fontawesome.com/051de31815.js' );
+// FontAwesome Free in bundle (assets/vendor/fontawesome) — nessun kit
+// esterno: i kit sono legati all'account/dominio e non redistribuibili.
+function shopforge_enqueue_fontawesome(): void {
+    if ( wp_style_is( 'shopforge-fontawesome', 'enqueued' ) ) {
+        return;
+    }
+    wp_enqueue_style(
+        'shopforge-fontawesome',
+        SHOPFORGE_URL . 'assets/vendor/fontawesome/css/all.min.css',
+        [],
+        '6.7.2'
+    );
+}
+
+// All'attivazione gli endpoint non sono ancora registrati: segna un flag,
+// il flush avviene su init dopo add_rewrite_endpoint (inc/shopforge-modules.php).
+register_activation_hook( __FILE__, function () {
+    update_option( 'shopforge_flush_rewrite', 1 );
+} );
 
 // Compatibilità WooCommerce HPOS
 add_action( 'before_woocommerce_init', function () {

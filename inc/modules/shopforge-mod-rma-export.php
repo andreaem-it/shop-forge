@@ -11,7 +11,7 @@ add_action( 'admin_init', function () {
 	if ( empty( $_GET['shopforge_rma_export_csv'] ) || empty( $_GET['post_type'] ) || 'shopforge_rma_request' !== $_GET['post_type'] ) return;
 
 	if ( ! current_user_can( 'manage_woocommerce' ) ) {
-		wp_die( 'Permessi insufficienti.' );
+		wp_die( esc_html__( 'Insufficient permissions.', 'shopforge' ) );
 	}
 
 	$args = [ 'post_type' => 'shopforge_rma_request', 'posts_per_page' => -1, 'post_status' => 'publish' ];
@@ -31,7 +31,7 @@ add_action( 'admin_init', function () {
 	header( 'Content-Disposition: attachment; filename=richieste-rma-' . gmdate( 'Y-m-d' ) . '.csv' );
 
 	$output = fopen( 'php://output', 'w' );
-	fputcsv( $output, [ 'ID', 'Tipo', 'Cliente', 'Email', 'Ordine', 'Prodotto', 'Quantità', 'Stato', 'Assegnata a', 'Data creazione', 'Motivo', 'Rimedio' ] );
+	fputcsv( $output, [ 'ID', __( 'Type', 'shopforge' ), __( 'Customer', 'shopforge' ), __( 'Email', 'shopforge' ), __( 'Order', 'shopforge' ), __( 'Product', 'shopforge' ), __( 'Quantity', 'shopforge' ), __( 'Status', 'shopforge' ), __( 'Assigned to', 'shopforge' ), __( 'Created', 'shopforge' ), __( 'Reason', 'shopforge' ), __( 'Remedy', 'shopforge' ) ] );
 
 	foreach ( $requests as $request ) {
 		$user_id       = (int) get_post_meta( $request->ID, '_shopforge_rma_user_id', true );

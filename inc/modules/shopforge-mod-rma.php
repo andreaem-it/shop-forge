@@ -43,14 +43,14 @@ if ( is_admin() ) {
 
 add_action( 'init', function () {
 	register_post_type( 'shopforge_rma_request', [
-		'label'               => 'Richiesta RMA',
+		'label'               => __( 'RMA Request', 'shopforge' ),
 		'labels'              => [
-			'name'          => 'Richieste RMA',
-			'singular_name' => 'Richiesta RMA',
-			'menu_name'     => 'Assistenza Prodotti',
-			'all_items'     => 'Tutte le Richieste',
-			'search_items'  => 'Cerca Richieste',
-			'not_found'     => 'Non trovato',
+			'name'          => __( 'RMA Requests', 'shopforge' ),
+			'singular_name' => __( 'RMA Request', 'shopforge' ),
+			'menu_name'     => __( 'Product Support', 'shopforge' ),
+			'all_items'     => __( 'All Requests', 'shopforge' ),
+			'search_items'  => __( 'Search Requests', 'shopforge' ),
+			'not_found'     => __( 'Not found', 'shopforge' ),
 		],
 		'supports'            => [ 'title' ],
 		'hierarchical'        => false,
@@ -76,16 +76,16 @@ add_action( 'init', function () {
 
 function shopforge_rma_get_statuses(): array {
 	return apply_filters( 'shopforge_rma_statuses', [
-		'aperta'            => 'Aperta',
-		'in_lavorazione'    => 'In Lavorazione',
-		'approvata'         => 'Approvata',
-		'attesa_spedizione' => 'In attesa di spedizione',
-		'prodotto_ricevuto' => 'Prodotto ricevuto',
-		'rimborsata'        => 'Rimborsata',
-		'sostituita'        => 'Sostituita',
-		'rifiutata'         => 'Rifiutata',
-		'annullata'         => 'Annullata dal cliente',
-		'chiusa'            => 'Chiusa',
+		'aperta'            => __( 'Open', 'shopforge' ),
+		'in_lavorazione'    => __( 'Processing', 'shopforge' ),
+		'approvata'         => __( 'Approved', 'shopforge' ),
+		'attesa_spedizione' => __( 'Awaiting shipment', 'shopforge' ),
+		'prodotto_ricevuto' => __( 'Product received', 'shopforge' ),
+		'rimborsata'        => __( 'Refunded', 'shopforge' ),
+		'sostituita'        => __( 'Replaced', 'shopforge' ),
+		'rifiutata'         => __( 'Rejected', 'shopforge' ),
+		'annullata'         => __( 'Cancelled by customer', 'shopforge' ),
+		'chiusa'            => __( 'Closed', 'shopforge' ),
 	] );
 }
 
@@ -107,27 +107,27 @@ function shopforge_rma_get_valid_order_statuses(): array {
 
 function shopforge_rma_get_motivo_options(): array {
 	return apply_filters( 'shopforge_rma_motivo_options', [
-		'danno_caduta_urto'    => 'Danno causato da caduta o urto',
-		'danneggiamento_acqua' => 'Danneggiamento dovuto ad acqua',
-		'non_si_accende'       => 'Non si accende',
-		'non_funziona'         => 'Non funziona correttamente',
-		'controllo_revisione'  => 'Controllo / Revisione / Pulizia',
-		'altro'                => 'Altro',
+		'danno_caduta_urto'    => __( 'Damage caused by drop or impact', 'shopforge' ),
+		'danneggiamento_acqua' => __( 'Water damage', 'shopforge' ),
+		'non_si_accende'       => __( 'Does not turn on', 'shopforge' ),
+		'non_funziona'         => __( 'Does not work properly', 'shopforge' ),
+		'controllo_revisione'  => __( 'Check / Service / Cleaning', 'shopforge' ),
+		'altro'                => __( 'Other', 'shopforge' ),
 	] );
 }
 
 function shopforge_rma_get_remedy_options( string $tipo_richiesta = 'assistenza' ): array {
 	if ( 'reso' === $tipo_richiesta ) {
 		return apply_filters( 'shopforge_rma_remedy_options_reso', [
-			'rimborso_restituzione' => 'Voglio richiedere un rimborso e restituire il prodotto (si applicano le condizioni).',
-			'sostituzione'          => 'Voglio richiedere la sostituzione del prodotto (si applicano le condizioni).',
+			'rimborso_restituzione' => __( 'I want to request a refund and return the product (conditions apply).', 'shopforge' ),
+			'sostituzione'          => __( 'I want to request a replacement of the product (conditions apply).', 'shopforge' ),
 		] );
 	}
 	return apply_filters( 'shopforge_rma_remedy_options_assistenza', [
-		'preventivo_riparazione' => 'Voglio ricevere un preventivo di riparazione',
-		'riparazione_150'        => 'Il servizio di riparazione può essere elaborato fino a 150 € più spese di spedizione, altrimenti voglio ricevere un preventivo',
-		'riparazione_350'        => 'Il servizio di riparazione può essere elaborato fino a 350 € più spese di spedizione, altrimenti voglio ricevere un preventivo',
-		'garanzia_europea'       => 'Voglio usufruire della garanzia legale europea del prodotto (documenti richiesti sono allegati)',
+		'preventivo_riparazione' => __( 'I want to receive a repair quote', 'shopforge' ),
+		'riparazione_150'        => __( 'The repair service can be processed up to €150 plus shipping, otherwise I want to receive a quote', 'shopforge' ),
+		'riparazione_350'        => __( 'The repair service can be processed up to €350 plus shipping, otherwise I want to receive a quote', 'shopforge' ),
+		'garanzia_europea'       => __( 'I want to use the European legal warranty of the product (required documents are attached)', 'shopforge' ),
 	] );
 }
 
@@ -371,9 +371,9 @@ function shopforge_rma_get_unread_messages_count( int $user_id ): int {
 }
 
 function shopforge_rma_get_message_author_label( bool $is_admin, int $user_id = 0 ): string {
-	if ( $is_admin ) return 'Supporto';
+	if ( $is_admin ) return __( 'Support', 'shopforge' );
 	$user = get_userdata( $user_id );
-	return $user ? $user->display_name : 'Cliente';
+	return $user ? $user->display_name : __( 'Customer', 'shopforge' );
 }
 
 
@@ -529,43 +529,44 @@ function shopforge_rma_create_request( array $data, array $uploaded_files = [] )
 	$s = shopforge_rma_sanitize_data( $data );
 
 	if ( empty( $s['user_id'] ) || empty( $s['order_id'] ) || empty( $s['product_id'] ) ) {
-		return new WP_Error( 'missing_fields', 'Campi obbligatori mancanti.' );
+		return new WP_Error( 'missing_fields', __( 'Required fields missing.', 'shopforge' ) );
 	}
 	if ( shopforge_rma_has_reached_daily_limit( $s['user_id'] ) ) {
-		return new WP_Error( 'rate_limited', 'Hai raggiunto il numero massimo di richieste consentite per oggi. Riprova domani.' );
+		return new WP_Error( 'rate_limited', __( 'You reached the maximum number of requests allowed today. Try again tomorrow.', 'shopforge' ) );
 	}
 	if ( ! shopforge_rma_verify_order_ownership( $s['order_id'], $s['user_id'] ) ) {
-		return new WP_Error( 'invalid_ownership', 'Ordine non valido.' );
+		return new WP_Error( 'invalid_ownership', __( 'Invalid order.', 'shopforge' ) );
 	}
 	if ( ! shopforge_rma_verify_product_in_order( $s['order_id'], $s['product_id'] ) ) {
-		return new WP_Error( 'invalid_product', 'Prodotto non presente nell\'ordine.' );
+		return new WP_Error( 'invalid_product', __( 'Product not in the order.', 'shopforge' ) );
 	}
 
 	$order   = wc_get_order( $s['order_id'] );
 	$product = wc_get_product( $s['product_id'] );
 	if ( ! $order || ! $product ) {
-		return new WP_Error( 'invalid_data', 'Dati non validi.' );
+		return new WP_Error( 'invalid_data', __( 'Invalid data.', 'shopforge' ) );
 	}
 	if ( shopforge_rma_is_product_excluded( $product ) ) {
-		return new WP_Error( 'product_excluded', 'Questo prodotto non è idoneo per richieste di reso o assistenza.' );
+		return new WP_Error( 'product_excluded', __( 'This product is not eligible for return or support requests.', 'shopforge' ) );
 	}
 
 	$quantity  = $s['quantita'] ?? 1;
 	$remaining = shopforge_rma_get_remaining_quantity( $s['order_id'], $s['product_id'] );
 	if ( $remaining <= 0 ) {
 		$existing = shopforge_rma_has_open_request( $s['user_id'], $s['order_id'], $s['product_id'] );
-		return new WP_Error( 'existing_request', 'Hai già richiesto reso/assistenza per tutte le unità di questo prodotto.', $existing );
+		return new WP_Error( 'existing_request', __( 'You already requested return/support for all units of this product.', 'shopforge' ), $existing );
 	}
 	if ( $quantity > $remaining ) $quantity = $remaining;
 
 	if ( ( $s['rimedio_scelto'] ?? '' ) === 'garanzia_europea' && shopforge_rma_is_warranty_expired( $order ) ) {
-		return new WP_Error( 'warranty_expired', 'Il periodo di garanzia legale per questo ordine è terminato.' );
+		return new WP_Error( 'warranty_expired', __( 'The legal warranty period for this order has ended.', 'shopforge' ) );
 	}
 
-	$tipo_label = ( $s['tipo_richiesta'] ?? 'assistenza' ) === 'reso' ? 'Reso' : 'Assistenza';
+	$tipo_label = ( $s['tipo_richiesta'] ?? 'assistenza' ) === 'reso' ? __( 'Return', 'shopforge' ) : __( 'Support', 'shopforge' );
 
 	$post_id = wp_insert_post( [
-		'post_title'   => sprintf( 'Richiesta %s - Ordine #%d - %s', $tipo_label, $order->get_order_number(), $product->get_name() ),
+		/* translators: 1: request type, 2: order number, 3: product name */
+		'post_title'   => sprintf( __( '%1$s request - Order #%2$s - %3$s', 'shopforge' ), $tipo_label, $order->get_order_number(), $product->get_name() ),
 		'post_content' => '',
 		'post_status'  => 'publish',
 		'post_type'    => 'shopforge_rma_request',
@@ -637,7 +638,7 @@ function shopforge_rma_get_my_requests_url(): string {
 
 add_action( 'woocommerce_account_shopforge-rma_endpoint', function () {
 	if ( isset( $_GET['request_sent'] ) && '1' === $_GET['request_sent'] ) {
-		echo '<div class="woocommerce-message">Richiesta inviata con successo.</div>';
+		echo '<div class="woocommerce-message">' . esc_html__( 'Request sent successfully.', 'shopforge' ) . '</div>';
 	}
 
 	if ( isset( $_GET['action'] ) && 'richiesta' === $_GET['action'] ) {
@@ -660,7 +661,7 @@ add_action( 'woocommerce_account_shopforge-rma_endpoint', function () {
  * Vista predefinita: ordini idonei con pulsanti "Richiedi assistenza/reso" per prodotto.
  */
 function shopforge_rma_render_orders_list(): void {
-	shopforge_account_section_header( 'Assistenza Prodotti', 'fa-solid fa-screwdriver-wrench' );
+	shopforge_account_section_header( __( 'Product Support', 'shopforge' ), 'fa-solid fa-screwdriver-wrench' );
 
 	$user_id = get_current_user_id();
 	$orders  = wc_get_orders( [
@@ -673,18 +674,18 @@ function shopforge_rma_render_orders_list(): void {
 	] );
 
 	if ( ! $orders ) {
-		shopforge_account_empty_state( 'fa-solid fa-screwdriver-wrench', 'Nessun ordine idoneo', 'Assistenza e resi sono disponibili per ordini completati o in lavorazione.' );
+		shopforge_account_empty_state( 'fa-solid fa-screwdriver-wrench', __( 'No eligible orders', 'shopforge' ), __( 'Support and returns are available for completed or processing orders.', 'shopforge' ) );
 		return;
 	}
 
 	$open_map = shopforge_rma_get_open_requests_map( $user_id );
 	$qty_map  = shopforge_rma_get_requested_quantities_map( $user_id );
 
-	echo '<p><a href="' . esc_url( shopforge_rma_get_my_requests_url() ) . '" class="shopforge-rma-btn shopforge-rma-btn--secondary">Le mie richieste</a></p>';
+	echo '<p><a href="' . esc_url( shopforge_rma_get_my_requests_url() ) . '" class="shopforge-rma-btn shopforge-rma-btn--secondary">' . esc_html__( 'My requests', 'shopforge' ) . '</a></p>';
 
 	foreach ( $orders as $order ) {
 		echo '<div class="shopforge-rma-order-card">';
-		echo '<p class="shopforge-rma-order-card__title">Ordine #' . esc_html( $order->get_order_number() ) . ' — ' . esc_html( $order->get_date_created()->date_i18n( 'd/m/Y' ) ) . '</p>';
+		echo '<p class="shopforge-rma-order-card__title">' . sprintf( /* translators: 1: order number, 2: order date */ esc_html__( 'Order #%1$s — %2$s', 'shopforge' ), esc_html( $order->get_order_number() ), esc_html( $order->get_date_created()->date_i18n( get_option( 'date_format' ) ) ) ) . '</p>';
 
 		foreach ( $order->get_items() as $item ) {
 			$product = $item->get_product();
@@ -699,15 +700,15 @@ function shopforge_rma_render_orders_list(): void {
 			echo '<div class="shopforge-rma-product-row__actions">';
 
 			if ( isset( $open_map[ $key ] ) ) {
-				echo '<a href="' . esc_url( add_query_arg( [ 'request_id' => $open_map[ $key ] ], wc_get_account_endpoint_url( 'shopforge-rma' ) ) ) . '" class="shopforge-rma-btn shopforge-rma-btn--secondary">Richiesta già aperta</a>';
+				echo '<a href="' . esc_url( add_query_arg( [ 'request_id' => $open_map[ $key ] ], wc_get_account_endpoint_url( 'shopforge-rma' ) ) ) . '" class="shopforge-rma-btn shopforge-rma-btn--secondary">' . esc_html__( 'Request already open', 'shopforge' ) . '</a>';
 			} elseif ( shopforge_rma_is_product_excluded( $product ) ) {
-				echo '<span class="shopforge-rma-note">Non disponibile per questo prodotto</span>';
+				echo '<span class="shopforge-rma-note">' . esc_html__( 'Not available for this product', 'shopforge' ) . '</span>';
 			} elseif ( shopforge_rma_get_remaining_quantity( $order_id, $product_id ) <= 0 ) {
-				echo '<span class="shopforge-rma-note">Tutte le unità già coperte da una richiesta</span>';
+				echo '<span class="shopforge-rma-note">' . esc_html__( 'All units already covered by a request', 'shopforge' ) . '</span>';
 			} else {
-				echo '<a href="' . esc_url( shopforge_rma_get_request_url( $order_id, $product_id, 'assistenza' ) ) . '" class="shopforge-rma-btn">Richiedi assistenza</a>';
+				echo '<a href="' . esc_url( shopforge_rma_get_request_url( $order_id, $product_id, 'assistenza' ) ) . '" class="shopforge-rma-btn">' . esc_html__( 'Request support', 'shopforge' ) . '</a>';
 				if ( ! shopforge_rma_is_return_period_expired( $order, $product ) ) {
-					echo '<a href="' . esc_url( shopforge_rma_get_request_url( $order_id, $product_id, 'reso' ) ) . '" class="shopforge-rma-btn shopforge-rma-btn--secondary">Richiedi reso</a>';
+					echo '<a href="' . esc_url( shopforge_rma_get_request_url( $order_id, $product_id, 'reso' ) ) . '" class="shopforge-rma-btn shopforge-rma-btn--secondary">' . esc_html__( 'Request return', 'shopforge' ) . '</a>';
 				}
 			}
 
@@ -722,7 +723,7 @@ function shopforge_rma_render_orders_list(): void {
  * "Le mie richieste": elenco cronologico delle richieste dell'utente.
  */
 function shopforge_rma_render_my_requests(): void {
-	shopforge_account_section_header( 'Le mie Richieste', 'fa-solid fa-screwdriver-wrench' );
+	shopforge_account_section_header( __( 'My Requests', 'shopforge' ), 'fa-solid fa-screwdriver-wrench' );
 
 	$user_id  = get_current_user_id();
 	$requests = get_posts( [
@@ -735,7 +736,7 @@ function shopforge_rma_render_my_requests(): void {
 	] );
 
 	if ( ! $requests ) {
-		shopforge_account_empty_state( 'fa-solid fa-screwdriver-wrench', 'Nessuna richiesta', 'Le richieste di assistenza o reso che apri appariranno qui.' );
+		shopforge_account_empty_state( 'fa-solid fa-screwdriver-wrench', __( 'No requests', 'shopforge' ), __( 'Support or return requests you open will appear here.', 'shopforge' ) );
 		return;
 	}
 
@@ -752,11 +753,11 @@ function shopforge_rma_render_my_requests(): void {
 				<span class="shopforge-rma-badge"><?php echo esc_html( shopforge_rma_get_status_label( $stato ) ); ?></span>
 			</div>
 			<p class="shopforge-rma-request-card__meta">
-				Ordine #<?php echo esc_html( $order_id ); ?> ·
-				<?php echo esc_html( 'reso' === $tipo ? 'Reso' : 'Assistenza' ); ?> ·
-				<?php echo esc_html( get_the_date( 'd/m/Y', $request ) ); ?>
+				<?php esc_html_e( 'Order', 'shopforge' ); ?> #<?php echo esc_html( $order_id ); ?> ·
+				<?php echo esc_html( 'reso' === $tipo ? __( 'Return', 'shopforge' ) : __( 'Support', 'shopforge' ) ); ?> ·
+				<?php echo esc_html( get_the_date( get_option( 'date_format' ), $request ) ); ?>
 			</p>
-			<a href="<?php echo esc_url( add_query_arg( [ 'request_id' => $request->ID ], wc_get_account_endpoint_url( 'shopforge-rma' ) ) ); ?>" class="shopforge-rma-btn shopforge-rma-btn--secondary">Visualizza Dettagli</a>
+			<a href="<?php echo esc_url( add_query_arg( [ 'request_id' => $request->ID ], wc_get_account_endpoint_url( 'shopforge-rma' ) ) ); ?>" class="shopforge-rma-btn shopforge-rma-btn--secondary"><?php esc_html_e( 'View Details', 'shopforge' ); ?></a>
 		</div>
 		<?php
 	}
@@ -792,7 +793,7 @@ function shopforge_rma_render_request_form(): void {
 		exit;
 	}
 
-	shopforge_account_section_header( 'assistenza' === $tipo ? 'Richiedi assistenza' : 'Richiedi reso', 'fa-solid fa-screwdriver-wrench' );
+	shopforge_account_section_header( 'assistenza' === $tipo ? __( 'Request support', 'shopforge' ) : __( 'Request return', 'shopforge' ), 'fa-solid fa-screwdriver-wrench' );
 
 	$warranty_expired = shopforge_rma_is_warranty_expired( $order );
 	$brand            = shopforge_rma_get_product_brand( $product );
@@ -814,16 +815,16 @@ function shopforge_rma_render_request_form(): void {
 
 		<?php if ( $remaining > 1 ) : ?>
 		<div class="shopforge-rma-field">
-			<label for="shopforge-rma-quantita">Quantità</label>
+			<label for="shopforge-rma-quantita"><?php esc_html_e( 'Quantity', 'shopforge' ); ?></label>
 			<input type="number" id="shopforge-rma-quantita" name="quantita" value="1" min="1" max="<?php echo esc_attr( $remaining ); ?>">
 		</div>
 		<?php endif; ?>
 
 		<?php if ( 'assistenza' === $tipo ) : ?>
 		<div class="shopforge-rma-field">
-			<label for="shopforge-rma-motivo">Motivo</label>
+			<label for="shopforge-rma-motivo"><?php esc_html_e( 'Reason', 'shopforge' ); ?></label>
 			<select id="shopforge-rma-motivo" name="motivo" required>
-				<option value="">— Seleziona —</option>
+				<option value="">— <?php esc_html_e( 'Select', 'shopforge' ); ?> —</option>
 				<?php foreach ( shopforge_rma_get_motivo_options() as $val => $label ) : ?>
 				<option value="<?php echo esc_attr( $val ); ?>"><?php echo esc_html( $label ); ?></option>
 				<?php endforeach; ?>
@@ -832,37 +833,40 @@ function shopforge_rma_render_request_form(): void {
 		<?php endif; ?>
 
 		<div class="shopforge-rma-field">
-			<label for="shopforge-rma-descrizione">Descrizione del problema</label>
+			<label for="shopforge-rma-descrizione"><?php esc_html_e( 'Description of the problem', 'shopforge' ); ?></label>
 			<textarea id="shopforge-rma-descrizione" name="descrizione_problema" rows="4" required></textarea>
 		</div>
 
 		<div class="shopforge-rma-field">
-			<label>Cosa preferisci?</label>
+			<label><?php esc_html_e( 'What would you prefer?', 'shopforge' ); ?></label>
 			<?php foreach ( shopforge_rma_get_remedy_options( $tipo ) as $val => $label ) :
 				$disabled = ( 'garanzia_europea' === $val && $warranty_expired );
 			?>
 			<label class="shopforge-rma-radio">
 				<input type="radio" name="rimedio_scelto" value="<?php echo esc_attr( $val ); ?>" <?php disabled( $disabled ); ?> <?php checked( ! $disabled && $val === array_key_first( shopforge_rma_get_remedy_options( $tipo ) ) ); ?>>
 				<?php echo esc_html( $label ); ?>
-				<?php if ( $disabled ) echo ' <em>(garanzia scaduta)</em>'; ?>
+				<?php if ( $disabled ) echo ' <em>(' . esc_html__( 'warranty expired', 'shopforge' ) . ')</em>'; ?>
 			</label>
 			<?php endforeach; ?>
 		</div>
 
 		<div class="shopforge-rma-field">
-			<label for="shopforge-rma-allegati">Foto o documenti <span>(opzionale)</span></label>
+			<label for="shopforge-rma-allegati"><?php esc_html_e( 'Photos or documents', 'shopforge' ); ?> <span>(<?php esc_html_e( 'optional', 'shopforge' ); ?>)</span></label>
 			<input type="file" id="shopforge-rma-allegati" name="allegati[]" multiple accept="image/*,.pdf">
 		</div>
 
-		<label class="shopforge-rma-check"><input type="checkbox" name="accetto_termini" value="1" required> Accetto i termini e condizioni del servizio.</label>
-		<label class="shopforge-rma-check"><input type="checkbox" name="accetto_privacy" value="1" required> Ho letto l'informativa privacy.</label>
+		<label class="shopforge-rma-check"><input type="checkbox" name="accetto_termini" value="1" required> <?php esc_html_e( 'I accept the terms and conditions of the service.', 'shopforge' ); ?></label>
+		<label class="shopforge-rma-check"><input type="checkbox" name="accetto_privacy" value="1" required> <?php esc_html_e( 'I have read the privacy policy.', 'shopforge' ); ?></label>
 		<label class="shopforge-rma-check"><input type="checkbox" name="accetto_procedura" value="1" required>
-			Dichiaro di aver compreso la procedura di reso/assistenza di <?php echo esc_html( $store_name ); ?> e le relative condizioni.
+			<?php
+			/* translators: %s: store name */
+			printf( esc_html__( 'I declare I understood the return/support procedure of %s and its conditions.', 'shopforge' ), esc_html( $store_name ) );
+			?>
 		</label>
 
 		<p class="shopforge-rma-error" id="shopforge-rma-error" style="display:none"></p>
 
-		<button type="submit" class="shopforge-rma-btn" id="shopforge-rma-submit">Invia richiesta</button>
+		<button type="submit" class="shopforge-rma-btn" id="shopforge-rma-submit"><?php esc_html_e( 'Send request', 'shopforge' ); ?></button>
 	</form>
 	<?php
 }
@@ -890,7 +894,8 @@ function shopforge_rma_render_request_detail( int $request_id ): void {
 	$rimedio    = get_post_meta( $request_id, '_shopforge_rma_rimedio_scelto', true );
 	$messages   = get_post_meta( $request_id, '_shopforge_rma_messages', true ) ?: [];
 
-	shopforge_account_section_header( 'Richiesta #' . $request_id, 'fa-solid fa-screwdriver-wrench' );
+	/* translators: %d: request ID */
+	shopforge_account_section_header( sprintf( __( 'Request #%d', 'shopforge' ), $request_id ), 'fa-solid fa-screwdriver-wrench' );
 
 	wp_enqueue_script( 'shopforge-rma' );
 	wp_localize_script( 'shopforge-rma', 'shopforgeRma', [
@@ -900,15 +905,15 @@ function shopforge_rma_render_request_detail( int $request_id ): void {
 		'requestId'    => $request_id,
 	] );
 	?>
-	<p><a href="<?php echo esc_url( shopforge_rma_get_my_requests_url() ); ?>">← Le mie richieste</a></p>
+	<p><a href="<?php echo esc_url( shopforge_rma_get_my_requests_url() ); ?>">← <?php esc_html_e( 'My requests', 'shopforge' ); ?></a></p>
 
 	<div class="shopforge-rma-request-detail">
-		<p><strong><?php echo esc_html( $product ? $product->get_name() : '#' . $product_id ); ?></strong> — Ordine #<?php echo esc_html( $order_id ); ?></p>
+		<p><strong><?php echo esc_html( $product ? $product->get_name() : '#' . $product_id ); ?></strong> — <?php esc_html_e( 'Order', 'shopforge' ); ?> #<?php echo esc_html( $order_id ); ?></p>
 		<p><span class="shopforge-rma-badge"><?php echo esc_html( shopforge_rma_get_status_label( $stato ) ); ?></span></p>
-		<p><?php echo esc_html( 'reso' === $tipo ? 'Reso' : 'Assistenza' ); ?><?php if ( $rimedio ) echo ' · ' . esc_html( shopforge_rma_get_remedy_options( $tipo )[ $rimedio ] ?? $rimedio ); ?></p>
+		<p><?php echo esc_html( 'reso' === $tipo ? __( 'Return', 'shopforge' ) : __( 'Support', 'shopforge' ) ); ?><?php if ( $rimedio ) echo ' · ' . esc_html( shopforge_rma_get_remedy_options( $tipo )[ $rimedio ] ?? $rimedio ); ?></p>
 
 		<?php if ( 'aperta' === $stato ) : ?>
-		<button type="button" class="shopforge-rma-btn shopforge-rma-btn--danger" id="shopforge-rma-cancel">Annulla richiesta</button>
+		<button type="button" class="shopforge-rma-btn shopforge-rma-btn--danger" id="shopforge-rma-cancel"><?php esc_html_e( 'Cancel request', 'shopforge' ); ?></button>
 		<?php endif; ?>
 
 		<div class="shopforge-rma-messages" id="shopforge-rma-messages">
@@ -916,8 +921,8 @@ function shopforge_rma_render_request_detail( int $request_id ): void {
 		</div>
 
 		<form class="shopforge-rma-message-form" id="shopforge-rma-message-form">
-			<textarea name="message_text" rows="3" placeholder="Scrivi un messaggio…" required></textarea>
-			<button type="submit" class="shopforge-rma-btn">Invia</button>
+			<textarea name="message_text" rows="3" placeholder="<?php esc_attr_e( 'Write a message…', 'shopforge' ); ?>" required></textarea>
+			<button type="submit" class="shopforge-rma-btn"><?php esc_html_e( 'Send', 'shopforge' ); ?></button>
 		</form>
 	</div>
 	<?php
@@ -929,7 +934,7 @@ function shopforge_rma_render_message( array $message ): void {
 	<div class="shopforge-rma-message <?php echo $is_admin ? 'is-admin' : 'is-customer'; ?>">
 		<div class="shopforge-rma-message__head">
 			<strong><?php echo esc_html( shopforge_rma_get_message_author_label( $is_admin, $message['user_id'] ?? 0 ) ); ?></strong>
-			<span><?php echo esc_html( ! empty( $message['date'] ) ? date_i18n( 'd/m/Y H:i', strtotime( $message['date'] ) ) : '' ); ?></span>
+			<span><?php echo esc_html( ! empty( $message['date'] ) ? date_i18n( get_option( 'date_format' ) . ' H:i', strtotime( $message['date'] ) ) : '' ); ?></span>
 		</div>
 		<div class="shopforge-rma-message__body"><?php echo wp_kses_post( wpautop( $message['message'] ?? '' ) ); ?></div>
 	</div>
@@ -943,14 +948,14 @@ function shopforge_rma_render_message( array $message ): void {
 
 add_action( 'wp_ajax_shopforge_rma_submit_request', function () {
 	if ( ! wp_verify_nonce( $_POST['nonce'] ?? '', 'shopforge_rma_submit_request' ) ) {
-		wp_send_json_error( [ 'message' => 'Sessione scaduta. Ricarica la pagina e riprova.' ] );
+		wp_send_json_error( [ 'message' => __( 'Session expired. Reload the page and try again.', 'shopforge' ) ] );
 	}
 	$user_id = get_current_user_id();
 	if ( ! $user_id ) {
-		wp_send_json_error( [ 'message' => 'Devi essere loggato.' ] );
+		wp_send_json_error( [ 'message' => __( 'You must be logged in.', 'shopforge' ) ] );
 	}
 	if ( ! shopforge_check_rate_limit( 'rma_submit_request', 15, $user_id ) ) {
-		wp_send_json_error( [ 'message' => 'Attendi qualche secondo prima di reinviare.' ] );
+		wp_send_json_error( [ 'message' => __( 'Wait a few seconds before sending again.', 'shopforge' ) ] );
 	}
 
 	$data = [
@@ -968,7 +973,7 @@ add_action( 'wp_ajax_shopforge_rma_submit_request', function () {
 	];
 
 	if ( '1' !== $data['accetto_termini'] || '1' !== $data['accetto_privacy'] || '1' !== $data['accetto_procedura'] ) {
-		wp_send_json_error( [ 'message' => 'Devi accettare tutte le condizioni per procedere.' ] );
+		wp_send_json_error( [ 'message' => __( 'You must accept all conditions to proceed.', 'shopforge' ) ] );
 	}
 
 	$uploaded_files = ! empty( $_FILES['allegati']['name'][0] ) ? shopforge_rma_handle_uploaded_files( $_FILES['allegati'] ) : [];
@@ -986,17 +991,17 @@ add_action( 'wp_ajax_shopforge_rma_submit_request', function () {
 
 add_action( 'wp_ajax_shopforge_rma_add_message', function () {
 	if ( ! wp_verify_nonce( $_POST['nonce'] ?? '', 'shopforge_rma_add_message' ) ) {
-		wp_send_json_error( [ 'message' => 'Sicurezza: nonce non valido.' ] );
+		wp_send_json_error( [ 'message' => __( 'Security: invalid nonce.', 'shopforge' ) ] );
 	}
 	$user_id    = get_current_user_id();
 	$request_id = absint( $_POST['request_id'] ?? 0 );
 	$text       = sanitize_textarea_field( $_POST['message_text'] ?? '' );
 
 	if ( ! $user_id || ! $request_id || ! $text ) {
-		wp_send_json_error( [ 'message' => 'Dati mancanti.' ] );
+		wp_send_json_error( [ 'message' => __( 'Missing data.', 'shopforge' ) ] );
 	}
 	if ( (int) get_post_meta( $request_id, '_shopforge_rma_user_id', true ) !== $user_id ) {
-		wp_send_json_error( [ 'message' => 'Richiesta non valida.' ] );
+		wp_send_json_error( [ 'message' => __( 'Invalid request.', 'shopforge' ) ] );
 	}
 
 	$messages   = get_post_meta( $request_id, '_shopforge_rma_messages', true ) ?: [];
@@ -1012,19 +1017,19 @@ add_action( 'wp_ajax_shopforge_rma_add_message', function () {
 
 add_action( 'wp_ajax_shopforge_rma_cancel_request', function () {
 	if ( ! wp_verify_nonce( $_POST['nonce'] ?? '', 'shopforge_rma_cancel_request' ) ) {
-		wp_send_json_error( [ 'message' => 'Sicurezza: nonce non valido.' ] );
+		wp_send_json_error( [ 'message' => __( 'Security: invalid nonce.', 'shopforge' ) ] );
 	}
 	$user_id    = get_current_user_id();
 	$request_id = absint( $_POST['request_id'] ?? 0 );
 
 	if ( ! $request_id || 'shopforge_rma_request' !== get_post_type( $request_id ) ) {
-		wp_send_json_error( [ 'message' => 'Richiesta non valida.' ] );
+		wp_send_json_error( [ 'message' => __( 'Invalid request.', 'shopforge' ) ] );
 	}
 	if ( (int) get_post_meta( $request_id, '_shopforge_rma_user_id', true ) !== $user_id ) {
-		wp_send_json_error( [ 'message' => 'Richiesta non valida.' ] );
+		wp_send_json_error( [ 'message' => __( 'Invalid request.', 'shopforge' ) ] );
 	}
 	if ( 'aperta' !== get_post_meta( $request_id, '_shopforge_rma_stato', true ) ) {
-		wp_send_json_error( [ 'message' => 'Questa richiesta è già in lavorazione e non può più essere annullata autonomamente.' ] );
+		wp_send_json_error( [ 'message' => __( 'This request is already being processed and can no longer be cancelled on your own.', 'shopforge' ) ] );
 	}
 
 	shopforge_rma_update_status( $request_id, 'annullata', $user_id );
@@ -1056,7 +1061,7 @@ add_action( 'wp_enqueue_scripts', function () {
 // =============================================================================
 
 add_action( 'add_meta_boxes', function () {
-	add_meta_box( 'shopforge-rma-product', 'Assistenza & Resi (RMA)', 'shopforge_rma_product_metabox_render', 'product', 'side', 'default' );
+	add_meta_box( 'shopforge-rma-product', __( 'Support & Returns (RMA)', 'shopforge' ), 'shopforge_rma_product_metabox_render', 'product', 'side', 'default' );
 } );
 
 function shopforge_rma_product_metabox_render( WP_Post $post ): void {

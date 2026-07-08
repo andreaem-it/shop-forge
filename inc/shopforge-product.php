@@ -143,11 +143,11 @@ add_shortcode( 'wc_price_iva_box', function ( $atts ) {
 	<div class="wc-iva-price-box">
 		<div class="wc-iva-price-main">
 			<?php echo wc_price( $price_including_tax ); ?>
-			<span class="wc-iva-label-main">IVA inclusa</span>
+			<span class="wc-iva-label-main"><?php esc_html_e( 'VAT included', 'shopforge' ); ?></span>
 		</div>
 		<div class="wc-iva-price-sub">
 			<?php echo wc_price( $price_excluding_tax ); ?>
-			<span class="wc-iva-label-sub">IVA esclusa</span>
+			<span class="wc-iva-label-sub"><?php esc_html_e( 'VAT excluded', 'shopforge' ); ?></span>
 		</div>
 	</div>
 	<?php
@@ -226,11 +226,12 @@ add_shortcode( 'data_consegna_prodotto', function () {
 		return '';
 	}
 
-	$shipping = [
-		'days'  => 3,
-		'label' => 'Corriere Espresso',
-	];
-	$cutoff_hour = 14;
+	// Giorni di spedizione e orario di cutoff filtrabili dal tema/plugin
+	$shipping = apply_filters( 'shopforge_delivery_estimate_args', [
+		'days'        => 3,
+		'cutoff_hour' => 14,
+	] );
+	$cutoff_hour = (int) $shipping['cutoff_hour'];
 	$timezone    = wp_timezone();
 	$now         = new DateTime( 'now', $timezone );
 
@@ -239,10 +240,10 @@ add_shortcode( 'data_consegna_prodotto', function () {
 		$date->modify( '+1 day' );
 	}
 
-	$holidays = array_merge(
+	$holidays = apply_filters( 'shopforge_delivery_holidays', array_merge(
 		shopforge_italian_holidays( (int) $date->format( 'Y' ) ),
 		shopforge_italian_holidays( (int) $date->format( 'Y' ) + 1 )
-	);
+	) );
 
 	$days_to_add = (int) $shipping['days'];
 	while ( $days_to_add > 0 ) {
@@ -283,7 +284,7 @@ add_shortcode( 'data_consegna_prodotto', function () {
 	}
 	$tempo_ordine .= $minutes . 'm';
 
-	$tooltip = 'La data riportata è indicativa e potrebbe subire slittamenti non imputabili al nostro controllo.';
+	$tooltip = __( 'The date shown is indicative and may be subject to delays beyond our control.', 'shopforge' );
 
 	return '
 		<div class="woocommerce-delivery-estimate-content" style="display:flex; align-items:flex-start; gap:10px; line-height:1.25;">
@@ -297,7 +298,7 @@ add_shortcode( 'data_consegna_prodotto', function () {
 </div>
 			<div class="woocommerce-delivery-estimate-text">
 				<div style="font-size:12px; font-weight:700; color:#1c2430;">
-					Consegna stimata
+					' . esc_html__( 'Estimated delivery', 'shopforge' ) . '
 				</div>
 				<div style="font-size:12px; font-weight:700; color:#000;">
 					<span title="' . esc_attr( $tooltip ) . '" style="cursor:help;">
@@ -305,8 +306,11 @@ add_shortcode( 'data_consegna_prodotto', function () {
 					</span>
 				</div>
 				<div style="font-size:12px; color:#1c2430; margin-top:4px;">
-					Ordina entro <strong style="color:#00a651;">' . esc_html( $tempo_ordine ) . '</strong>
-					per riceverlo entro la data stimata
+					' . sprintf(
+						/* translators: %s: remaining time, e.g. "3h 20m" */
+						esc_html__( 'Order within %s to receive it by the estimated date', 'shopforge' ),
+						'<strong style="color:#00a651;">' . esc_html( $tempo_ordine ) . '</strong>'
+					) . '
 				</div>
 			</div>
 		</div>';
@@ -338,7 +342,7 @@ add_shortcode( 'buy_now_button', function () {
 	], $checkout_url );
 
 	return sprintf(
-		'<a href="%s" class="mp-buy-now-button">Acquista ora</a>',
+		'<a href="%s" class="mp-buy-now-button">' . esc_html__( 'Buy now', 'shopforge' ) . '</a>',
 		esc_url( $url )
 	);
 } );
@@ -364,7 +368,7 @@ add_shortcode( 'stock_status_text', function ( $atts ) {
 
 	$is_in_stock = $product->is_in_stock();
 	$class       = $is_in_stock ? 'stock-status-available' : 'stock-status-out';
-	$label       = $is_in_stock ? 'Disponibile' : 'Non disponibile';
+	$label       = $is_in_stock ? __( 'In stock', 'shopforge' ) : __( 'Out of stock', 'shopforge' );
 
 	$inline_style = '';
 	if ( ! empty( $atts['font_size'] ) ) {

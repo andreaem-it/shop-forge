@@ -38,9 +38,9 @@ add_action( 'admin_menu', function () {
 
 function shopforge_admin_page_render(): void {
 	$tabs = [
-		'modules'    => [ 'label' => 'Moduli',    'icon' => 'fa-solid fa-puzzle-piece' ],
-		'license'    => [ 'label' => 'Licenza',    'icon' => 'fa-solid fa-key' ],
-		'shortcodes' => [ 'label' => 'Shortcode', 'icon' => 'fa-solid fa-code' ],
+		'modules'    => [ 'label' => __( 'Modules', 'shopforge' ),    'icon' => 'fa-solid fa-puzzle-piece' ],
+		'license'    => [ 'label' => __( 'License', 'shopforge' ),    'icon' => 'fa-solid fa-key' ],
+		'shortcodes' => [ 'label' => __( 'Shortcodes', 'shopforge' ), 'icon' => 'fa-solid fa-code' ],
 	];
 
 	$active_tab = sanitize_key( $_GET['tab'] ?? 'modules' );
@@ -50,8 +50,7 @@ function shopforge_admin_page_render(): void {
 
 	// FontAwesome per le icone (già usato dalla tab Moduli, qui garantito
 	// anche quando si apre direttamente su Licenza/Shortcode).
-	wp_enqueue_script( 'fontawesome-kit', SHOPFORGE_FA_KIT_URL, [], null, false );
-	wp_script_add_data( 'fontawesome-kit', 'crossorigin', 'anonymous' );
+	shopforge_enqueue_fontawesome();
 	?>
 	<div class="wrap shopforge-settings-wrap">
 
@@ -63,7 +62,7 @@ function shopforge_admin_page_render(): void {
 				ShopForge
 			</h1>
 			<p class="shopforge-settings-sub">
-				Licenza, moduli attivi e shortcode disponibili in un unico pannello.
+				<?php esc_html_e( 'License, active modules and available shortcodes in a single panel.', 'shopforge' ); ?>
 			</p>
 		</div>
 
@@ -90,7 +89,7 @@ function shopforge_admin_page_render(): void {
 					if ( function_exists( 'shopforge_admin_tab_modules' ) ) {
 						shopforge_admin_tab_modules();
 					} else {
-						echo '<p>Questa sezione richiede WooCommerce attivo.</p>';
+						echo '<p>' . esc_html__( 'This section requires WooCommerce to be active.', 'shopforge' ) . '</p>';
 					}
 			}
 			?>
@@ -128,65 +127,65 @@ function shopforge_admin_tab_shortcodes(): void {
 	$shortcodes = [
 		[
 			'name'  => 'shopforge_variation_description',
-			'desc'  => 'Mostra la descrizione della variante selezionata nella pagina prodotto (si aggiorna al cambio variante).',
+			'desc'  => __( 'Shows the description of the selected variation on the product page (updates when the variation changes).', 'shopforge' ),
 			'attrs' => [],
 			'example' => '[shopforge_variation_description]',
 		],
 		[
 			'name'  => 'wc_price_iva_box',
-			'desc'  => 'Box prezzo con doppio importo, IVA inclusa ed esclusa.',
-			'attrs' => [ 'id' => 'ID prodotto (opzionale, default: prodotto corrente)' ],
+			'desc'  => __( 'Price box with two amounts, VAT included and excluded.', 'shopforge' ),
+			'attrs' => [ 'id' => __( 'Product ID (optional, default: current product)', 'shopforge' ) ],
 			'example' => '[wc_price_iva_box]',
 		],
 		[
 			'name'  => 'data_consegna_prodotto',
-			'desc'  => 'Stima la data di consegna in base a giorni lavorativi, festivi italiani e orario di cutoff per l\'ordine.',
+			'desc'  => __( 'Estimates the delivery date based on business days, public holidays and the order cutoff time.', 'shopforge' ),
 			'attrs' => [],
 			'example' => '[data_consegna_prodotto]',
 		],
 		[
 			'name'  => 'buy_now_button',
-			'desc'  => 'Pulsante che aggiunge il prodotto al carrello e porta direttamente al checkout.',
+			'desc'  => __( 'Button that adds the product to the cart and goes straight to checkout.', 'shopforge' ),
 			'attrs' => [],
 			'example' => '[buy_now_button]',
 		],
 		[
 			'name'  => 'stock_status_text',
-			'desc'  => 'Etichetta di disponibilità (pallino colorato + testo "Disponibile"/"Non disponibile").',
+			'desc'  => __( 'Availability label (colored dot + "In stock"/"Out of stock" text).', 'shopforge' ),
 			'attrs' => [
-				'font_size'   => 'Dimensione font CSS (opzionale, es. "16px")',
-				'font_family' => 'Font-family CSS (opzionale)',
+				'font_size'   => __( 'CSS font size (optional, e.g. "16px")', 'shopforge' ),
+				'font_family' => __( 'CSS font-family (optional)', 'shopforge' ),
 			],
 			'example' => '[stock_status_text]',
 		],
 		[
 			'name'  => 'product_faq',
-			'desc'  => 'Domande frequenti del prodotto, gestite dal metabox "FAQ Prodotto" nella scheda prodotto.',
+			'desc'  => __( 'Product FAQ, managed from the "Product FAQ" metabox on the product edit screen.', 'shopforge' ),
 			'attrs' => [
-				'product_id' => 'ID prodotto (opzionale, default: prodotto corrente)',
-				'style'      => '"accordion" (default) oppure "list"',
+				'product_id' => __( 'Product ID (optional, default: current product)', 'shopforge' ),
+				'style'      => __( '"accordion" (default) or "list"', 'shopforge' ),
 			],
 			'example' => '[product_faq]',
 		],
 		[
 			'name'  => 'product_compatibility',
-			'desc'  => 'Lista di compatibilità del prodotto, gestita dal metabox "Compatibilità" nella scheda prodotto.',
-			'attrs' => [ 'product_id' => 'ID prodotto (opzionale, default: prodotto corrente)' ],
+			'desc'  => __( 'Product compatibility list, managed from the "Compatibility" metabox on the product edit screen.', 'shopforge' ),
+			'attrs' => [ 'product_id' => __( 'Product ID (optional, default: current product)', 'shopforge' ) ],
 			'example' => '[product_compatibility]',
 		],
 		[
 			'name'  => 'product_datasheets',
-			'desc'  => 'Schede tecniche PDF del prodotto, gestite dal metabox "Schede Tecniche (PDF)" nella scheda prodotto.',
-			'attrs' => [ 'product_id' => 'ID prodotto (opzionale, default: prodotto corrente)' ],
+			'desc'  => __( 'Product PDF datasheets, managed from the "Datasheets (PDF)" metabox on the product edit screen.', 'shopforge' ),
+			'attrs' => [ 'product_id' => __( 'Product ID (optional, default: current product)', 'shopforge' ) ],
 			'example' => '[product_datasheets]',
 		],
 	];
 	?>
 	<div class="shopforge-section-label">
 		<i class="fa-solid fa-code" aria-hidden="true"></i>
-		Shortcode disponibili
+		<?php esc_html_e( 'Available shortcodes', 'shopforge' ); ?>
 		<span class="shopforge-section-hint">
-			Usali in pagine, articoli, descrizioni prodotto o widget shortcode di Elementor.
+			<?php esc_html_e( 'Use them in pages, posts, product descriptions or Elementor shortcode widgets.', 'shopforge' ); ?>
 		</span>
 	</div>
 
@@ -209,8 +208,10 @@ function shopforge_admin_tab_shortcodes(): void {
 
 			<div class="shopforge-shortcode-card__example">
 				<code><?php echo esc_html( $sc['example'] ); ?></code>
-				<button type="button" class="button button-small shopforge-shortcode-copy" data-code="<?php echo esc_attr( $sc['example'] ); ?>">
-					Copia
+				<button type="button" class="button button-small shopforge-shortcode-copy"
+				        data-code="<?php echo esc_attr( $sc['example'] ); ?>"
+				        data-copied="<?php esc_attr_e( 'Copied!', 'shopforge' ); ?>">
+					<?php esc_html_e( 'Copy', 'shopforge' ); ?>
 				</button>
 			</div>
 		</div>
@@ -248,7 +249,7 @@ function shopforge_admin_tab_shortcodes(): void {
 		btn.addEventListener( 'click', function () {
 			navigator.clipboard.writeText( btn.dataset.code ).then( function () {
 				var original = btn.textContent;
-				btn.textContent = 'Copiato!';
+				btn.textContent = btn.dataset.copied;
 				setTimeout( function () { btn.textContent = original; }, 1500 );
 			} );
 		} );

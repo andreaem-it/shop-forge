@@ -19,7 +19,7 @@ do_action( 'woocommerce_before_cart' );
         <div class="shopforge-cart-card">
 
             <div class="shopforge-cart-card-header">
-                <h2><?php esc_html_e( 'Il tuo carrello', 'woocommerce' ); ?></h2>
+                <h2><?php esc_html_e( 'Your cart', 'shopforge' ); ?></h2>
                 <span class="shopforge-cart-count"><?php echo esc_html( WC()->cart->get_cart_contents_count() ); ?></span>
             </div>
 
@@ -113,7 +113,7 @@ do_action( 'woocommerce_before_cart' );
                 <div class="shopforge-cart-footer">
                     <button type="submit" class="shopforge-update-btn" name="update_cart" value="<?php esc_attr_e( 'Update cart', 'woocommerce' ); ?>">
                         <i class="fa-solid fa-rotate" aria-hidden="true"></i>
-                        <?php esc_html_e( 'Aggiorna carrello', 'woocommerce' ); ?>
+                        <?php esc_html_e( 'Update cart', 'woocommerce' ); ?>
                     </button>
                     <?php do_action( 'woocommerce_cart_actions' ); ?>
                     <?php wp_nonce_field( 'woocommerce-cart', 'woocommerce-cart-nonce' ); ?>

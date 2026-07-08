@@ -44,7 +44,7 @@ add_shortcode( 'product_faq', function ( $atts ) {
 	ob_start();
 	?>
 	<div class="shopforge-faq-section shopforge-faq-<?php echo esc_attr( $atts['style'] ); ?>">
-		<h2>Domande Frequenti</h2>
+		<h2><?php esc_html_e( 'Frequently Asked Questions', 'shopforge' ); ?></h2>
 		<div class="shopforge-faq-list">
 			<?php foreach ( $faqs as $faq ) : ?>
 				<div class="shopforge-faq-item">
@@ -90,7 +90,7 @@ add_shortcode( 'product_compatibility', function ( $atts ) {
 	ob_start();
 	?>
 	<div class="shopforge-compat-section">
-		<h2>Compatibilità</h2>
+		<h2><?php esc_html_e( 'Compatibility', 'shopforge' ); ?></h2>
 		<ul class="shopforge-compat-list">
 			<?php foreach ( $items as $item ) : ?>
 				<li><span class="dashicons dashicons-yes"></span><?php echo esc_html( $item ); ?></li>
@@ -128,7 +128,7 @@ add_shortcode( 'product_datasheets', function ( $atts ) {
 	ob_start();
 	?>
 	<div class="shopforge-datasheets-section">
-		<h2>Schede Tecniche</h2>
+		<h2><?php esc_html_e( 'Datasheets', 'shopforge' ); ?></h2>
 		<div class="shopforge-datasheets-list">
 			<?php foreach ( $datasheets as $datasheet ) :
 				$attachment_id = isset( $datasheet['attachment_id'] ) ? absint( $datasheet['attachment_id'] ) : 0;
@@ -177,7 +177,7 @@ add_action( 'wp_enqueue_scripts', function () {
 add_action( 'add_meta_boxes', function () {
 	add_meta_box(
 		'shopforge-product-faq',
-		'FAQ Prodotto',
+		__( 'Product FAQ', 'shopforge' ),
 		'shopforge_product_faq_metabox_render',
 		'product',
 		'normal',
@@ -196,7 +196,7 @@ function shopforge_product_faq_metabox_render( WP_Post $post ): void {
 			<?php shopforge_product_faq_row( $index, $faq ); ?>
 		<?php endforeach; ?>
 	</div>
-	<button type="button" class="button button-secondary" id="shopforge-add-faq-btn">+ Aggiungi FAQ</button>
+	<button type="button" class="button button-secondary" id="shopforge-add-faq-btn">+ <?php esc_html_e( 'Add FAQ', 'shopforge' ); ?></button>
 
 	<script>
 	jQuery( function ( $ ) {
@@ -221,13 +221,13 @@ function shopforge_product_faq_row( $index, array $faq ): void {
 	$answer   = $faq['answer'] ?? '';
 	?>
 	<div class="shopforge-mb-row">
-		<span class="shopforge-mb-row__label">Domanda</span>
-		<input type="text" name="shopforge_product_faqs[<?php echo esc_attr( $index ); ?>][question]" value="<?php echo esc_attr( $question ); ?>" placeholder="Es. Come faccio a contattarvi?">
+		<span class="shopforge-mb-row__label"><?php esc_html_e( 'Question', 'shopforge' ); ?></span>
+		<input type="text" name="shopforge_product_faqs[<?php echo esc_attr( $index ); ?>][question]" value="<?php echo esc_attr( $question ); ?>" placeholder="<?php esc_attr_e( 'E.g. How can I contact you?', 'shopforge' ); ?>">
 
-		<span class="shopforge-mb-row__label">Risposta</span>
-		<textarea name="shopforge_product_faqs[<?php echo esc_attr( $index ); ?>][answer]" placeholder="Es. Puoi contattarci via email…"><?php echo esc_textarea( $answer ); ?></textarea>
+		<span class="shopforge-mb-row__label"><?php esc_html_e( 'Answer', 'shopforge' ); ?></span>
+		<textarea name="shopforge_product_faqs[<?php echo esc_attr( $index ); ?>][answer]" placeholder="<?php esc_attr_e( 'E.g. You can contact us by email…', 'shopforge' ); ?>"><?php echo esc_textarea( $answer ); ?></textarea>
 
-		<button type="button" class="shopforge-remove-faq-btn">Rimuovi</button>
+		<button type="button" class="shopforge-remove-faq-btn"><?php esc_html_e( 'Remove', 'shopforge' ); ?></button>
 	</div>
 	<?php
 }
@@ -265,7 +265,7 @@ add_action( 'save_post_product', function ( int $product_id ): void {
 add_action( 'add_meta_boxes', function () {
 	add_meta_box(
 		'shopforge-product-compatibility',
-		'Compatibilità',
+		__( 'Compatibility', 'shopforge' ),
 		'shopforge_product_compatibility_metabox_render',
 		'product',
 		'normal',
@@ -284,7 +284,7 @@ function shopforge_product_compatibility_metabox_render( WP_Post $post ): void {
 			<?php shopforge_product_compatibility_row( $index, $item ); ?>
 		<?php endforeach; ?>
 	</div>
-	<button type="button" class="button button-secondary" id="shopforge-add-compatibility-btn">+ Aggiungi compatibilità</button>
+	<button type="button" class="button button-secondary" id="shopforge-add-compatibility-btn">+ <?php esc_html_e( 'Add compatibility', 'shopforge' ); ?></button>
 
 	<script>
 	jQuery( function ( $ ) {
@@ -307,8 +307,8 @@ function shopforge_product_compatibility_metabox_render( WP_Post $post ): void {
 function shopforge_product_compatibility_row( $index, string $item ): void {
 	?>
 	<div class="shopforge-mb-row">
-		<input type="text" name="shopforge_product_compatibility[<?php echo esc_attr( $index ); ?>]" value="<?php echo esc_attr( $item ); ?>" placeholder="Es. iOS 14+, Android 10+">
-		<button type="button" class="shopforge-remove-compatibility-btn">Rimuovi</button>
+		<input type="text" name="shopforge_product_compatibility[<?php echo esc_attr( $index ); ?>]" value="<?php echo esc_attr( $item ); ?>" placeholder="<?php esc_attr_e( 'E.g. iOS 14+, Android 10+', 'shopforge' ); ?>">
+		<button type="button" class="shopforge-remove-compatibility-btn"><?php esc_html_e( 'Remove', 'shopforge' ); ?></button>
 	</div>
 	<?php
 }
@@ -342,7 +342,7 @@ add_action( 'save_post_product', function ( int $product_id ): void {
 add_action( 'add_meta_boxes', function () {
 	add_meta_box(
 		'shopforge-product-datasheets',
-		'Schede Tecniche (PDF)',
+		__( 'Datasheets (PDF)', 'shopforge' ),
 		'shopforge_product_datasheets_metabox_render',
 		'product',
 		'normal',
@@ -368,7 +368,7 @@ function shopforge_product_datasheets_metabox_render( WP_Post $post ): void {
 			<?php shopforge_product_datasheet_row( $index, $datasheet ); ?>
 		<?php endforeach; ?>
 	</div>
-	<button type="button" class="button button-secondary" id="shopforge-add-datasheet-btn">+ Aggiungi Scheda Tecnica</button>
+	<button type="button" class="button button-secondary" id="shopforge-add-datasheet-btn">+ <?php esc_html_e( 'Add datasheet', 'shopforge' ); ?></button>
 
 	<script>
 	jQuery( function ( $ ) {
@@ -381,8 +381,8 @@ function shopforge_product_datasheets_metabox_render( WP_Post $post ): void {
 				const $input = $row.find( '.shopforge-datasheet-file-input' );
 
 				const frame = wp.media( {
-					title: 'Seleziona PDF',
-					button: { text: 'Usa questo file' },
+					title: '<?php echo esc_js( __( 'Select PDF', 'shopforge' ) ); ?>',
+					button: { text: '<?php echo esc_js( __( 'Use this file', 'shopforge' ) ); ?>' },
 					library: { type: 'application/pdf' },
 					multiple: false,
 				} );
@@ -425,17 +425,17 @@ function shopforge_product_datasheet_row( $index, array $datasheet ): void {
 	$filename      = $attachment ? basename( $attachment->post_title ) : '';
 	?>
 	<div class="shopforge-mb-row">
-		<span class="shopforge-mb-row__label">Scheda Tecnica</span>
+		<span class="shopforge-mb-row__label"><?php esc_html_e( 'Datasheet', 'shopforge' ); ?></span>
 		<div class="shopforge-datasheet-controls">
 			<div class="shopforge-datasheet-preview">
 				<?php if ( $filename ) : ?>
 					<span class="dashicons dashicons-media-document"></span> <?php echo esc_html( $filename ); ?>
 				<?php else : ?>
-					<span class="shopforge-datasheet-empty">Nessun file selezionato</span>
+					<span class="shopforge-datasheet-empty"><?php esc_html_e( 'No file selected', 'shopforge' ); ?></span>
 				<?php endif; ?>
 			</div>
-			<button type="button" class="button shopforge-datasheet-upload-btn">Seleziona PDF</button>
-			<button type="button" class="shopforge-remove-datasheet-btn">Rimuovi</button>
+			<button type="button" class="button shopforge-datasheet-upload-btn"><?php esc_html_e( 'Select PDF', 'shopforge' ); ?></button>
+			<button type="button" class="shopforge-remove-datasheet-btn"><?php esc_html_e( 'Remove', 'shopforge' ); ?></button>
 		</div>
 		<input type="hidden" class="shopforge-datasheet-file-input" name="shopforge_product_datasheets[<?php echo esc_attr( $index ); ?>][attachment_id]" value="<?php echo esc_attr( $attachment_id ); ?>">
 	</div>

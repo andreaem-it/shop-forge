@@ -84,25 +84,24 @@ body.woocommerce-checkout .woocommerce-info {
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
-   SFONDO PAGINA — fa emergere le card
-   -------------------------------------------------------------------------- */
-
-body.woocommerce-cart .woocommerce,
-body.woocommerce-checkout .woocommerce {
-  background: var(--shopforge-bg-soft);
-  border-radius: var(--shopforge-radius);
-  padding: 24px;
-}
-
-/* --------------------------------------------------------------------------
    LAYOUT GENERALE
    -------------------------------------------------------------------------- */
 
 .shopforge-cart-wrap {
   display: grid;
-  grid-template-columns: 1fr 340px;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 340px);
   gap: 20px;
   align-items: start;
+}
+
+/* Anti-tema: niente larghezze/float del tema dentro il layout carrello */
+.shopforge-cart-wrap > *,
+.shopforge-cart-wrap form.woocommerce-cart-form {
+  width: 100% !important;
+  max-width: none !important;
+  min-width: 0 !important;
+  float: none !important;
+  margin: 0 !important;
 }
 
 .shopforge-cart-sidebar {
@@ -118,7 +117,6 @@ body.woocommerce-checkout .woocommerce {
   background: #fff;
   border: 1px solid var(--shopforge-border);
   border-radius: var(--shopforge-radius);
-  box-shadow: var(--shopforge-shadow);
   overflow: hidden;
 }
 
@@ -133,7 +131,7 @@ body.woocommerce-checkout .woocommerce {
 
 .shopforge-cart-card-header h2 {
   margin: 0;
-  font-size: 18px;
+  font-size: 20px;
   color: var(--shopforge-text-main);
 }
 
@@ -161,7 +159,7 @@ body.woocommerce-checkout .woocommerce {
 
 .shopforge-cart-item {
   display: grid;
-  grid-template-columns: 72px 1fr 80px 80px 32px;
+  grid-template-columns: 72px minmax(0, 1fr) auto 80px 32px;
   align-items: center;
   gap: 16px;
   padding: 14px 20px;
@@ -248,12 +246,56 @@ body.woocommerce-checkout .woocommerce {
   margin-top: 4px;
 }
 
-/* Quantità */
-.shopforge-cart-item-qty .quantity,
+/* Quantità — controllo segmentato unificato [− | qty | +].
+   I temi (The7, Avada, ecc.) iniettano i propri pulsanti +/− dentro
+   .quantity con markup diverso: qui vengono normalizzati tutti. */
+.shopforge-cart-item-qty .quantity {
+  display: inline-flex !important;
+  align-items: stretch;
+  border: 1px solid var(--shopforge-border);
+  border-radius: var(--shopforge-radius);
+  background: #fff;
+  overflow: hidden;
+}
+
 .e-atc-qty-button-holder .quantity {
   display: inline-flex!important;
   justify-content: center;
-  
+}
+
+.shopforge-cart-item-qty .quantity button,
+.shopforge-cart-item-qty .quantity .minus,
+.shopforge-cart-item-qty .quantity .plus,
+.shopforge-cart-item-qty .quantity .qty-minus,
+.shopforge-cart-item-qty .quantity .qty-plus {
+  width: 30px;
+  min-height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0 !important;
+  border-radius: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  background: var(--shopforge-bg-soft) !important;
+  color: var(--shopforge-text-muted) !important;
+  box-shadow: none !important;
+  font-size: 14px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.shopforge-cart-item-qty .quantity button svg {
+  width: 14px;
+  height: 14px;
+}
+
+.shopforge-cart-item-qty .quantity button:hover,
+.shopforge-cart-item-qty .quantity .minus:hover,
+.shopforge-cart-item-qty .quantity .plus:hover {
+  background: #EFF6FF !important;
+  color: var(--shopforge-primary) !important;
 }
 
 .shopforge-cart-item-qty .quantity::after,
@@ -270,23 +312,34 @@ body.woocommerce-checkout .woocommerce {
 }
 
 .shopforge-cart-item-qty .qty {
-  width: 64px;
-  min-height: 38px;
+  width: 46px;
+  min-height: 36px;
   text-align: center;
-  border: 1px solid var(--shopforge-border);
-  border-radius: var(--shopforge-radius);
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
   font-size: 14px;
   font-weight: 600;
   color: var(--shopforge-text-main);
   background: #fff;
-  padding: 0 8px;
-  transition: border-color 0.15s, box-shadow 0.15s;
+  padding: 0 4px;
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+.shopforge-cart-item-qty .qty::-webkit-outer-spin-button,
+.shopforge-cart-item-qty .qty::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.shopforge-cart-item-qty .quantity:focus-within {
+  border-color: var(--shopforge-primary);
+  box-shadow: 0 0 0 3px rgba(0, 111, 239, 0.12);
 }
 
 .shopforge-cart-item-qty .qty:focus {
   outline: none;
-  border-color: var(--shopforge-primary);
-  box-shadow: 0 0 0 3px rgba(0, 111, 239, 0.12);
 }
 
 /* Subtotale */
@@ -335,7 +388,7 @@ body.woocommerce-checkout .woocommerce {
   justify-content: flex-end;
   padding: 14px 24px;
   border-top: 1px solid var(--shopforge-border-soft);
-  background: var(--shopforge-bg-soft);
+  background: #fff;
 }
 
 .shopforge-update-btn {
@@ -367,7 +420,6 @@ body.woocommerce-checkout .woocommerce {
   background: #fff;
   border: 1px solid var(--shopforge-border);
   border-radius: var(--shopforge-radius);
-  box-shadow: var(--shopforge-shadow);
   overflow: hidden;
 }
 
@@ -378,7 +430,7 @@ body.woocommerce-checkout .woocommerce {
 
 .shopforge-totals-header h3 {
   margin: 0;
-  font-size: 18px;
+  font-size: 20px;
   color: var(--shopforge-text-main);
 }
 
@@ -574,11 +626,23 @@ body.woocommerce-cart .checkout-button:hover {
    CHECKOUT
    ========================================================================== */
 
-body.woocommerce-checkout .woocommerce-checkout {
-  display: grid;
-  grid-template-columns: 1fr 380px;
-  gap: 24px;
+body.woocommerce-checkout form.woocommerce-checkout {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) minmax(300px, 380px) !important;
+  gap: 24px !important;
   align-items: start;
+}
+
+/* Neutralizza il layout checkout di qualsiasi tema (larghezze fisse,
+   float, flex sui figli diretti del form o sui nodi standard Woo) */
+body.woocommerce-checkout form.woocommerce-checkout > *,
+body.woocommerce-checkout .woocommerce-checkout #customer_details,
+body.woocommerce-checkout .woocommerce-checkout #order_review {
+  width: 100% !important;
+  max-width: none !important;
+  min-width: 0 !important;
+  float: none !important;
+  margin: 0 !important;
 }
 
 body.woocommerce-checkout #customer_details {
@@ -586,6 +650,19 @@ body.woocommerce-checkout #customer_details {
   display: flex;
   flex-direction: column;
   gap: 24px;
+}
+
+/* Colonna riepilogo: alcuni temi avvolgono #order_review in un wrapper.
+   Il caso senza wrapper è coperto dalla regola su #order_review. */
+body.woocommerce-checkout form.woocommerce-checkout > :has(#order_review) {
+  grid-column: 2;
+  grid-row: 1;
+  position: sticky;
+  top: 24px;
+}
+
+body.woocommerce-checkout form.woocommerce-checkout > :has(#order_review) #order_review {
+  position: static;
 }
 
 body.woocommerce-checkout #customer_details .col-1,
@@ -946,7 +1023,8 @@ body.woocommerce-order-received .woocommerce-table--order-details tfoot tr:last-
     grid-template-columns: 1fr;
   }
 
-  body.woocommerce-checkout #order_review {
+  body.woocommerce-checkout #order_review,
+  body.woocommerce-checkout form.woocommerce-checkout > :has(#order_review) {
     grid-column: 1;
     grid-row: auto;
     position: static;
@@ -1003,6 +1081,44 @@ body.woocommerce-order-received .woocommerce-table--order-details tfoot tr:last-
     border-right: 0;
     border-bottom: 1px solid var(--shopforge-border-soft);
   }
+}
+
+/* ==========================================================================
+   WOOCOMMERCE CHECKOUT BLOCK (Gutenberg)
+   Nota: scopato sulle classi del blocco, NON su body.woocommerce-checkout —
+   la classe body manca se la pagina non è quella configurata in WooCommerce.
+   ========================================================================== */
+
+/* Elementor: il widget post-content è un flex item e può collassare a 0
+   dentro container flex del tema; non deve mai succedere. */
+.elementor-widget-theme-post-content {
+  width: 100% !important;
+  min-width: 0 !important;
+}
+
+/* Contenimento del blocco checkout anche senza container del tema */
+.wp-block-woocommerce-checkout {
+  max-width: 1300px;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  padding: 24px 24px 48px !important;
+  box-sizing: border-box;
+}
+
+/* CTA Effettua ordine */
+.wc-block-components-checkout-place-order-button {
+  background: var(--shopforge-primary) !important;
+  color: #fff !important;
+  border: none !important;
+  border-radius: var(--shopforge-radius) !important;
+  font-size: 15px !important;
+  font-weight: 700 !important;
+  min-height: 48px;
+  transition: background 0.15s;
+}
+
+.wc-block-components-checkout-place-order-button:hover {
+  background: var(--shopforge-primary-hover) !important;
 }
 
 /* ==========================================================================
@@ -1241,4 +1357,114 @@ body.woocommerce-cart .wc-block-components-checkout-place-order-button {
 body.woocommerce-cart .wc-block-cart__submit-container .wc-block-cart__submit-button:hover,
 body.woocommerce-cart .wp-block-woocommerce-proceed-to-checkout-block a:hover {
   background: var(--shopforge-primary-hover) !important;
+}
+
+/* ==========================================================================
+   SKIN — temi selezionabili (ShopForge → Impostazioni → Tema)
+   La base di questo file è la skin "clean". Le altre skin sovrascrivono
+   layout ed elementi tramite la classe body .shopforge-skin-{slug},
+   assegnata globalmente o per pagina (carrello/checkout/account/shortcode).
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   SKIN CLEAN — piatto ovunque: le ombre di tutti i moduli passano da
+   --shopforge-shadow, azzerarla qui le spegne anche in account/RMA/tracker.
+   -------------------------------------------------------------------------- */
+
+body.shopforge-skin-clean {
+  --shopforge-shadow: none;
+}
+
+/* --------------------------------------------------------------------------
+   SKIN BOXED — pannello grigio, card in rilievo (stile ShopForge ≤1.7.4)
+   -------------------------------------------------------------------------- */
+
+body.shopforge-skin-boxed.woocommerce-cart .woocommerce,
+body.shopforge-skin-boxed.woocommerce-checkout .woocommerce {
+  background: var(--shopforge-bg-soft);
+  border-radius: var(--shopforge-radius);
+  padding: 24px;
+}
+
+body.shopforge-skin-boxed .shopforge-cart-card,
+body.shopforge-skin-boxed .shopforge-cart-totals,
+body.shopforge-skin-boxed.woocommerce-checkout .woocommerce-billing-fields,
+body.shopforge-skin-boxed.woocommerce-checkout .woocommerce-shipping-fields,
+body.shopforge-skin-boxed.woocommerce-checkout .woocommerce-additional-fields,
+body.shopforge-skin-boxed.woocommerce-checkout #order_review {
+  box-shadow: var(--shopforge-shadow);
+}
+
+body.shopforge-skin-boxed .shopforge-cart-footer {
+  background: var(--shopforge-bg-soft);
+}
+
+/* Checkout a blocchi: pannello + riepilogo in card bianca */
+body.shopforge-skin-boxed .wp-block-woocommerce-checkout {
+  background: var(--shopforge-bg-soft);
+  border-radius: var(--shopforge-radius);
+}
+
+body.shopforge-skin-boxed .wc-block-checkout__sidebar {
+  background: #fff;
+  border: 1px solid var(--shopforge-border);
+  border-radius: var(--shopforge-radius);
+  box-shadow: var(--shopforge-shadow);
+}
+
+/* --------------------------------------------------------------------------
+   SKIN CARDS — ogni prodotto è una card separata, angoli ampi
+   -------------------------------------------------------------------------- */
+
+body.shopforge-skin-cards {
+  --shopforge-radius: 14px;
+}
+
+body.shopforge-skin-cards .shopforge-cart-card {
+  background: transparent;
+  border: 0;
+  overflow: visible;
+}
+
+body.shopforge-skin-cards .shopforge-cart-card-header {
+  background: #fff;
+  border: 1px solid var(--shopforge-border);
+  border-radius: var(--shopforge-radius);
+  margin-bottom: 12px;
+}
+
+body.shopforge-skin-cards .shopforge-cart-item,
+body.shopforge-skin-cards .shopforge-cart-item:last-child {
+  background: #fff;
+  border: 1px solid var(--shopforge-border);
+  border-radius: var(--shopforge-radius);
+  box-shadow: var(--shopforge-shadow);
+  margin-bottom: 12px;
+}
+
+body.shopforge-skin-cards .shopforge-cart-footer {
+  background: transparent;
+  border-top: 0;
+  padding-right: 0;
+  padding-left: 0;
+}
+
+body.shopforge-skin-cards .shopforge-cart-totals {
+  box-shadow: var(--shopforge-shadow);
+}
+
+/* Checkout classico: card più staccate */
+body.shopforge-skin-cards.woocommerce-checkout .woocommerce-billing-fields,
+body.shopforge-skin-cards.woocommerce-checkout .woocommerce-shipping-fields,
+body.shopforge-skin-cards.woocommerce-checkout .woocommerce-additional-fields,
+body.shopforge-skin-cards.woocommerce-checkout #order_review {
+  box-shadow: var(--shopforge-shadow);
+}
+
+/* Checkout a blocchi: riepilogo in card arrotondata */
+body.shopforge-skin-cards .wc-block-checkout__sidebar {
+  background: #fff;
+  border: 1px solid var(--shopforge-border);
+  border-radius: var(--shopforge-radius);
+  box-shadow: var(--shopforge-shadow);
 }

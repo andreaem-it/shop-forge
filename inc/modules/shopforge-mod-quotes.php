@@ -23,14 +23,19 @@ add_action( 'woocommerce_account_shopforge-quotes_endpoint', function () {
 
 	$nonce = wp_create_nonce( 'shopforge_quote_' . $user_id );
 
-	shopforge_account_section_header( 'Preventivi', 'fa-solid fa-file-invoice', count( $quotes ) . ' richieste' );
+	shopforge_account_section_header(
+		__( 'Quotes', 'shopforge' ),
+		'fa-solid fa-file-invoice',
+		/* translators: %d: number of quote requests */
+		sprintf( _n( '%d request', '%d requests', count( $quotes ), 'shopforge' ), count( $quotes ) )
+	);
 
 	$status_labels = [
-		'pending'  => [ 'label' => 'In attesa', 'class' => 'pending' ],
-		'sent'     => [ 'label' => 'Inviato',   'class' => 'sent' ],
-		'accepted' => [ 'label' => 'Accettato', 'class' => 'accepted' ],
-		'declined' => [ 'label' => 'Rifiutato', 'class' => 'declined' ],
-		'expired'  => [ 'label' => 'Scaduto',   'class' => 'expired' ],
+		'pending'  => [ 'label' => __( 'Pending', 'shopforge' ),  'class' => 'pending' ],
+		'sent'     => [ 'label' => __( 'Sent', 'shopforge' ),     'class' => 'sent' ],
+		'accepted' => [ 'label' => __( 'Accepted', 'shopforge' ), 'class' => 'accepted' ],
+		'declined' => [ 'label' => __( 'Declined', 'shopforge' ), 'class' => 'declined' ],
+		'expired'  => [ 'label' => __( 'Expired', 'shopforge' ),  'class' => 'expired' ],
 	];
 	?>
 
@@ -38,44 +43,43 @@ add_action( 'woocommerce_account_shopforge-quotes_endpoint', function () {
 	<div class="shopforge-quote-new-card">
 		<button type="button" class="shopforge-quote-toggle" id="shopforge-quote-toggle">
 			<i class="fa-solid fa-plus" aria-hidden="true"></i>
-			Nuova richiesta di preventivo
+			<?php esc_html_e( 'New quote request', 'shopforge' ); ?>
 		</button>
 
 		<form id="shopforge-quote-form" class="shopforge-quote-form" style="display:none">
 			<p class="shopforge-quote-form__intro">
-				Elenca i prodotti per i quali desideri ricevere un preventivo.
-				Ti risponderemo via email nel più breve tempo possibile.
+				<?php esc_html_e( 'List the products you would like a quote for. We will reply by email as soon as possible.', 'shopforge' ); ?>
 			</p>
 
 			<div id="shopforge-quote-rows">
 				<div class="shopforge-quote-row-input">
-					<input type="text" class="shopforge-qrow-name" placeholder="Nome prodotto / codice SKU" required>
-					<input type="number" class="shopforge-qrow-qty" placeholder="Qtà" min="1" value="1">
-					<button type="button" class="shopforge-qrow-remove" aria-label="Rimuovi">
+					<input type="text" class="shopforge-qrow-name" placeholder="<?php esc_attr_e( 'Product name / SKU', 'shopforge' ); ?>" required>
+					<input type="number" class="shopforge-qrow-qty" placeholder="<?php esc_attr_e( 'Qty', 'shopforge' ); ?>" min="1" value="1">
+					<button type="button" class="shopforge-qrow-remove" aria-label="<?php esc_attr_e( 'Remove', 'shopforge' ); ?>">
 						<i class="fa-solid fa-xmark"></i>
 					</button>
 				</div>
 			</div>
 
 			<button type="button" class="shopforge-btn shopforge-btn--ghost" id="shopforge-quote-add-row">
-				<i class="fa-solid fa-plus"></i> Aggiungi prodotto
+				<i class="fa-solid fa-plus"></i> <?php esc_html_e( 'Add product', 'shopforge' ); ?>
 			</button>
 
 			<div class="shopforge-field">
-				<label for="shopforge-quote-notes">Note / richieste speciali <span style="font-weight:400;text-transform:none">(opzionale)</span></label>
-				<textarea id="shopforge-quote-notes" rows="3" placeholder="Varianti, quantità alternative, tempistiche…"></textarea>
+				<label for="shopforge-quote-notes"><?php esc_html_e( 'Notes / special requests', 'shopforge' ); ?> <span style="font-weight:400;text-transform:none">(<?php esc_html_e( 'optional', 'shopforge' ); ?>)</span></label>
+				<textarea id="shopforge-quote-notes" rows="3" placeholder="<?php esc_attr_e( 'Variants, alternative quantities, timing…', 'shopforge' ); ?>"></textarea>
 			</div>
 
 			<p class="shopforge-ret-error" id="shopforge-quote-error" style="display:none"></p>
 
 			<button type="submit" class="shopforge-modal__submit" id="shopforge-quote-submit">
-				<span id="shopforge-quote-label">Invia richiesta</span>
+				<span id="shopforge-quote-label"><?php esc_html_e( 'Send request', 'shopforge' ); ?></span>
 				<span class="shopforge-st-spinner" id="shopforge-quote-spinner" style="display:none"></span>
 			</button>
 
 			<div id="shopforge-quote-success" style="display:none" class="shopforge-ticket-success">
 				<i class="fa-solid fa-circle-check" aria-hidden="true"></i>
-				<p class="shopforge-ts__title">Richiesta inviata</p>
+				<p class="shopforge-ts__title"><?php esc_html_e( 'Request sent', 'shopforge' ); ?></p>
 				<p class="shopforge-ts__text" id="shopforge-quote-success-text"></p>
 			</div>
 		</form>
@@ -86,7 +90,7 @@ add_action( 'woocommerce_account_shopforge-quotes_endpoint', function () {
 	<div class="shopforge-quotes-list">
 		<?php foreach ( $quotes as $quote ) :
 			$st   = $status_labels[ $quote['status'] ] ?? $status_labels['pending'];
-			$date = date_i18n( 'd/m/Y \a\l\l\e H:i', strtotime( $quote['date'] ) );
+			$date = date_i18n( get_option( 'date_format' ) . ' H:i', strtotime( $quote['date'] ) );
 		?>
 		<div class="shopforge-quote-row-card">
 			<div class="shopforge-quote-row-card__head">
@@ -110,7 +114,7 @@ add_action( 'woocommerce_account_shopforge-quotes_endpoint', function () {
 				<?php if ( ! empty( $quote['reply'] ) ) : ?>
 				<div class="shopforge-quote-reply">
 					<p class="shopforge-quote-reply__label">
-						<i class="fa-solid fa-reply" aria-hidden="true"></i> Risposta del venditore:
+						<i class="fa-solid fa-reply" aria-hidden="true"></i> <?php esc_html_e( 'Seller reply:', 'shopforge' ); ?>
 					</p>
 					<p class="shopforge-quote-reply__text"><?php echo nl2br( esc_html( $quote['reply'] ) ); ?></p>
 				</div>
@@ -122,8 +126,8 @@ add_action( 'woocommerce_account_shopforge-quotes_endpoint', function () {
 	<?php else : ?>
 		<?php shopforge_account_empty_state(
 			'fa-solid fa-file-invoice',
-			'Nessuna richiesta di preventivo',
-			'Usa il modulo qui sopra per richiedere un preventivo personalizzato.'
+			__( 'No quote requests', 'shopforge' ),
+			__( 'Use the form above to request a custom quote.', 'shopforge' )
 		); ?>
 	<?php endif; ?>
 
@@ -132,6 +136,13 @@ add_action( 'woocommerce_account_shopforge-quotes_endpoint', function () {
 		'use strict';
 		var ajaxUrl = '<?php echo esc_url( admin_url('admin-ajax.php') ); ?>';
 		var nonce   = '<?php echo esc_js( $nonce ); ?>';
+		var i18n = {
+			atLeastOne: <?php echo wp_json_encode( __( 'Enter at least one product.', 'shopforge' ) ); ?>,
+			sending:    <?php echo wp_json_encode( __( 'Sending…', 'shopforge' ) ); ?>,
+			send:       <?php echo wp_json_encode( __( 'Send request', 'shopforge' ) ); ?>,
+			genericErr: <?php echo wp_json_encode( __( 'Error. Try again.', 'shopforge' ) ); ?>,
+			successTpl: <?php echo wp_json_encode( __( 'Ref. %1$s — you will receive a confirmation at %2$s', 'shopforge' ) ); ?>
+		};
 
 		document.getElementById('shopforge-quote-toggle')?.addEventListener('click', function () {
 			var form = document.getElementById('shopforge-quote-form');
@@ -172,9 +183,9 @@ add_action( 'woocommerce_account_shopforge-quotes_endpoint', function () {
 				if (name) items.push({ name: name, qty: qty });
 			});
 
-			if ( ! items.length) { err.textContent = 'Inserisci almeno un prodotto.'; err.style.display = 'block'; return; }
+			if ( ! items.length) { err.textContent = i18n.atLeastOne; err.style.display = 'block'; return; }
 
-			label.textContent = 'Invio in corso…';
+			label.textContent = i18n.sending;
 			spin.style.display = 'inline-block';
 			submit.disabled = true;
 
@@ -189,12 +200,12 @@ add_action( 'woocommerce_account_shopforge-quotes_endpoint', function () {
 			.then(function (d) {
 				if (d.success) {
 					document.getElementById('shopforge-quote-success').style.display = 'block';
-					document.getElementById('shopforge-quote-success-text').textContent = 'Rif. ' + d.data.ref + ' — riceverai conferma a ' + d.data.email;
+					document.getElementById('shopforge-quote-success-text').textContent = i18n.successTpl.replace('%1$s', d.data.ref).replace('%2$s', d.data.email);
 					submit.style.display = 'none';
 				} else {
-					err.textContent = d.data || 'Errore. Riprova.';
+					err.textContent = d.data || i18n.genericErr;
 					err.style.display = 'block';
-					label.textContent = 'Invia richiesta';
+					label.textContent = i18n.send;
 					spin.style.display = 'none';
 					submit.disabled = false;
 				}
@@ -214,15 +225,15 @@ add_action( 'wp_ajax_shopforge_submit_quote', 'shopforge_submit_quote_handler' )
 
 function shopforge_submit_quote_handler(): void {
 	$user_id = get_current_user_id();
-	if ( ! $user_id ) wp_send_json_error( 'Accesso non autorizzato.' );
+	if ( ! $user_id ) wp_send_json_error( __( 'Unauthorized access.', 'shopforge' ) );
 
 	if ( ! wp_verify_nonce( $_POST['nonce'] ?? '', 'shopforge_quote_' . $user_id ) ) {
-		wp_send_json_error( 'Sessione scaduta. Ricarica e riprova.' );
+		wp_send_json_error( __( 'Session expired. Reload and try again.', 'shopforge' ) );
 	}
 
 	if ( function_exists( 'shopforge_check_rate_limit' )
 		 && ! shopforge_check_rate_limit( 'submit_quote', 120 ) ) {
-		wp_send_json_error( 'Hai già inviato una richiesta di preventivo di recente. Attendi qualche minuto e riprova.' );
+		wp_send_json_error( __( 'You already sent a quote request recently. Wait a few minutes and try again.', 'shopforge' ) );
 	}
 
 	$items = [];
@@ -231,7 +242,7 @@ function shopforge_submit_quote_handler(): void {
 		$qty  = absint( $item['qty'] ?? 1 );
 		if ( $name ) $items[] = [ 'name' => $name, 'qty' => max( 1, $qty ) ];
 	}
-	if ( empty( $items ) ) wp_send_json_error( 'Inserisci almeno un prodotto.' );
+	if ( empty( $items ) ) wp_send_json_error( __( 'Enter at least one product.', 'shopforge' ) );
 
 	$notes = sanitize_textarea_field( $_POST['notes'] ?? '' );
 	$ref   = 'PRV-' . strtoupper( substr( md5( $user_id . time() ), 0, 8 ) );
@@ -244,7 +255,7 @@ function shopforge_submit_quote_handler(): void {
 	// Email admin + conferma cliente — via classi WooCommerce native
 	$quote_email_data = [
 		'ref'   => $ref,
-		'date'  => date_i18n( 'd/m/Y \a\l\l\e H:i', strtotime( $now ) ),
+		'date'  => date_i18n( get_option( 'date_format' ) . ' H:i', strtotime( $now ) ),
 		'items' => $items,
 		'notes' => $notes,
 	];
@@ -258,11 +269,12 @@ function shopforge_submit_quote_handler(): void {
 	}
 
 	do_action( 'shopforge_notification', $user_id, 'quote_received', [
-		'text' => 'La tua richiesta di preventivo ' . $ref . ' è stata ricevuta.',
+		/* translators: %s: quote reference */
+		'text' => sprintf( __( 'Your quote request %s has been received.', 'shopforge' ), $ref ),
 		'url'  => wc_get_account_endpoint_url( 'shopforge-quotes' ),
 	] );
 
-	wp_send_json_success( [ 'ref' => $ref, 'email' => $customer_email ] );
+	wp_send_json_success( [ 'ref' => $ref, 'email' => wp_get_current_user()->user_email ] );
 }
 
 
@@ -271,16 +283,16 @@ function shopforge_submit_quote_handler(): void {
 // =============================================================================
 
 add_action( 'admin_menu', function () {
-	add_submenu_page( 'woocommerce', 'Preventivi clienti', 'Preventivi', 'edit_shop_orders', 'shopforge-quotes', 'shopforge_admin_quotes_page' );
+	add_submenu_page( 'woocommerce', __( 'Customer quotes', 'shopforge' ), __( 'Quotes', 'shopforge' ), 'edit_shop_orders', 'shopforge-quotes', 'shopforge_admin_quotes_page' );
 } );
 
 function shopforge_admin_quotes_page(): void {
 	$status_map = [
-		'pending'  => [ 'label' => 'In attesa', 'bg' => '#FEF9C3', 'color' => '#854D0E' ],
-		'sent'     => [ 'label' => 'Inviato',   'bg' => '#DBEAFE', 'color' => '#1E40AF' ],
-		'accepted' => [ 'label' => 'Accettato', 'bg' => '#DCFCE7', 'color' => '#166534' ],
-		'declined' => [ 'label' => 'Rifiutato', 'bg' => '#FEE2E2', 'color' => '#991B1B' ],
-		'expired'  => [ 'label' => 'Scaduto',   'bg' => '#F3F4F6', 'color' => '#6B7280' ],
+		'pending'  => [ 'label' => __( 'Pending', 'shopforge' ),  'bg' => '#FEF9C3', 'color' => '#854D0E' ],
+		'sent'     => [ 'label' => __( 'Sent', 'shopforge' ),     'bg' => '#DBEAFE', 'color' => '#1E40AF' ],
+		'accepted' => [ 'label' => __( 'Accepted', 'shopforge' ), 'bg' => '#DCFCE7', 'color' => '#166534' ],
+		'declined' => [ 'label' => __( 'Declined', 'shopforge' ), 'bg' => '#FEE2E2', 'color' => '#991B1B' ],
+		'expired'  => [ 'label' => __( 'Expired', 'shopforge' ),  'bg' => '#F3F4F6', 'color' => '#6B7280' ],
 	];
 
 	$users = get_users( [ 'meta_key' => '_shopforge_quotes' ] );
@@ -293,18 +305,18 @@ function shopforge_admin_quotes_page(): void {
 	usort( $all, fn( $a, $b ) => strtotime( $b['date'] ) - strtotime( $a['date'] ) );
 	?>
 	<div class="wrap">
-		<h1>Preventivi clienti</h1>
+		<h1><?php esc_html_e( 'Customer quotes', 'shopforge' ); ?></h1>
 		<?php if ( empty( $all ) ) : ?>
-		<p>Nessuna richiesta ricevuta.</p>
+		<p><?php esc_html_e( 'No requests received.', 'shopforge' ); ?></p>
 		<?php else : ?>
 		<table class="wp-list-table widefat fixed striped" style="margin-top:16px">
 			<thead><tr>
-				<th style="width:110px">Riferimento</th>
-				<th>Cliente</th>
-				<th>Prodotti</th>
-				<th style="width:110px">Data</th>
-				<th style="width:110px">Stato</th>
-				<th style="width:90px">Azioni</th>
+				<th style="width:110px"><?php esc_html_e( 'Reference', 'shopforge' ); ?></th>
+				<th><?php esc_html_e( 'Customer', 'shopforge' ); ?></th>
+				<th><?php esc_html_e( 'Products', 'shopforge' ); ?></th>
+				<th style="width:110px"><?php esc_html_e( 'Date', 'shopforge' ); ?></th>
+				<th style="width:110px"><?php esc_html_e( 'Status', 'shopforge' ); ?></th>
+				<th style="width:90px"><?php esc_html_e( 'Actions', 'shopforge' ); ?></th>
 			</tr></thead>
 			<tbody>
 			<?php foreach ( $all as $q ) :
@@ -320,21 +332,21 @@ function shopforge_admin_quotes_page(): void {
 				</td>
 				<td><?php echo date_i18n( 'd/m/Y', strtotime( $q['date'] ) ); ?></td>
 				<td><span style="display:inline-block;padding:3px 8px;border-radius:999px;font-size:11px;font-weight:700;background:<?php echo esc_attr( $st['bg'] ); ?>;color:<?php echo esc_attr( $st['color'] ); ?>"><?php echo esc_html( $st['label'] ); ?></span></td>
-				<td><button type="button" class="button button-small shopforge-qadm-edit" data-key="<?php echo esc_attr( $key ); ?>">Gestisci</button></td>
+				<td><button type="button" class="button button-small shopforge-qadm-edit" data-key="<?php echo esc_attr( $key ); ?>"><?php esc_html_e( 'Manage', 'shopforge' ); ?></button></td>
 			</tr>
 			<tr class="shopforge-qadm-panel" id="shopforge-qpanel-<?php echo esc_attr( $key ); ?>" style="display:none">
 				<td colspan="6" style="background:#f9f9f9;padding:16px">
-					<label style="display:block;margin-bottom:8px;font-weight:600">Stato:
+					<label style="display:block;margin-bottom:8px;font-weight:600"><?php esc_html_e( 'Status:', 'shopforge' ); ?>
 						<select class="shopforge-qadm-status">
 							<?php foreach ( $status_map as $val => $info ) : ?>
 							<option value="<?php echo esc_attr( $val ); ?>" <?php selected( $q['status'], $val ); ?>><?php echo esc_html( $info['label'] ); ?></option>
 							<?php endforeach; ?>
 						</select>
 					</label>
-					<label style="display:block;margin-bottom:6px;font-weight:600">Risposta al cliente:</label>
+					<label style="display:block;margin-bottom:6px;font-weight:600"><?php esc_html_e( 'Reply to customer:', 'shopforge' ); ?></label>
 					<textarea class="widefat shopforge-qadm-reply" rows="4" style="margin-bottom:8px"><?php echo esc_textarea( $q['reply'] ?? '' ); ?></textarea>
 					<label style="display:block;margin-bottom:12px">
-						<input type="checkbox" class="shopforge-qadm-email" checked> Invia risposta via email
+						<input type="checkbox" class="shopforge-qadm-email" checked> <?php esc_html_e( 'Send reply by email', 'shopforge' ); ?>
 					</label>
 					<button type="button" class="button button-primary shopforge-qadm-save"
 					        data-user="<?php echo esc_attr( $q['_user_id'] ); ?>"
@@ -342,7 +354,7 @@ function shopforge_admin_quotes_page(): void {
 					        data-ref="<?php echo esc_attr( $q['ref'] ); ?>"
 					        data-email="<?php echo esc_attr( $q['_user_email'] ); ?>"
 					        data-name="<?php echo esc_attr( $q['_user_name'] ); ?>"
-					        data-nonce="<?php echo esc_attr( wp_create_nonce('shopforge_quote_admin') ); ?>">Salva</button>
+					        data-nonce="<?php echo esc_attr( wp_create_nonce('shopforge_quote_admin') ); ?>"><?php esc_html_e( 'Save', 'shopforge' ); ?></button>
 				</td>
 			</tr>
 			<?php endforeach; ?>
@@ -356,7 +368,7 @@ function shopforge_admin_quotes_page(): void {
 			var panel = document.getElementById('shopforge-qpanel-' + this.dataset.key);
 			var show  = panel.style.display === 'none';
 			panel.style.display = show ? 'table-row' : 'none';
-			this.textContent = show ? 'Chiudi' : 'Gestisci';
+			this.textContent = show ? <?php echo wp_json_encode( __( 'Close', 'shopforge' ) ); ?> : <?php echo wp_json_encode( __( 'Manage', 'shopforge' ) ); ?>;
 		});
 	});
 	document.querySelectorAll('.shopforge-qadm-save').forEach(function(btn){
@@ -371,7 +383,7 @@ function shopforge_admin_quotes_page(): void {
 					user_id:this.dataset.user, idx:this.dataset.idx, status:status, reply:reply,
 					send_email:doMail, customer_email:this.dataset.email, customer_name:this.dataset.name, ref:this.dataset.ref }).toString()
 			}).then(function(r){return r.json();}).then(function(d){
-				me.disabled = false; me.textContent = d.success ? '✓ Salvato' : '✗ Errore';
+				me.disabled = false; me.textContent = d.success ? '✓ ' + <?php echo wp_json_encode( __( 'Saved', 'shopforge' ) ); ?> : '✗ ' + <?php echo wp_json_encode( __( 'Error', 'shopforge' ) ); ?>;
 				if (d.success) setTimeout(function(){ location.reload(); }, 800);
 			});
 		});
@@ -406,13 +418,16 @@ add_action( 'wp_ajax_shopforge_admin_quote_update', function () {
 
 		wp_mail(
 			$customer_email,
-			sprintf( '[%s] Risposta preventivo — Rif. %s', $site_name, $ref ),
-			sprintf( "Gentile %s,\n\nAbbiamo elaborato la tua richiesta di preventivo (rif. %s).\n\n--- Risposta ---\n%s\n---\n\nGrazie,\n%s", $customer_name, $ref, $reply, $site_name ),
+			/* translators: 1: site name, 2: quote reference */
+			sprintf( __( '[%1$s] Quote reply — Ref. %2$s', 'shopforge' ), $site_name, $ref ),
+			/* translators: 1: customer name, 2: quote reference, 3: reply text, 4: site name */
+			sprintf( __( "Dear %1$s,\n\nWe processed your quote request (ref. %2$s).\n\n--- Reply ---\n%3$s\n---\n\nThank you,\n%4$s", 'shopforge' ), $customer_name, $ref, $reply, $site_name ),
 			[ 'Content-Type: text/plain; charset=UTF-8' ]
 		);
 
 		do_action( 'shopforge_notification', $user_id, 'quote_replied', [
-			'text' => 'Il tuo preventivo ' . $ref . ' ha ricevuto una risposta.',
+			/* translators: %s: quote reference */
+			'text' => sprintf( __( 'Your quote %s received a reply.', 'shopforge' ), $ref ),
 			'url'  => wc_get_account_endpoint_url( 'shopforge-quotes' ),
 		] );
 	}

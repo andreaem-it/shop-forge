@@ -17,16 +17,17 @@ add_action( 'woocommerce_account_shopforge-wishlist_endpoint', function () {
 	$wishlist = get_user_meta( $user_id, '_shopforge_wishlist', true ) ?: [];
 
 	shopforge_account_section_header(
-		'Lista desideri',
+		__( 'Wishlist', 'shopforge' ),
 		'fa-solid fa-heart',
-		count( $wishlist ) . ' ' . _n( 'prodotto salvato', 'prodotti salvati', count( $wishlist ) )
+		/* translators: %d: number of saved products */
+		sprintf( _n( '%d saved product', '%d saved products', count( $wishlist ), 'shopforge' ), count( $wishlist ) )
 	);
 
 	if ( empty( $wishlist ) ) {
 		shopforge_account_empty_state(
 			'fa-solid fa-heart',
-			'Nessun prodotto salvato',
-			'Aggiungi prodotti alla lista desideri per ritrovarli facilmente.'
+			__( 'No saved products', 'shopforge' ),
+			__( 'Add products to your wishlist to find them easily.', 'shopforge' )
 		);
 		return;
 	}
@@ -58,10 +59,10 @@ add_action( 'woocommerce_account_shopforge-wishlist_endpoint', function () {
 				<?php if ( $product->is_in_stock() ) : ?>
 				<a href="<?php echo esc_url( $product->add_to_cart_url() ); ?>"
 				   class="shopforge-btn shopforge-btn--primary">
-					<i class="fa-solid fa-cart-plus"></i> Aggiungi al carrello
+					<i class="fa-solid fa-cart-plus"></i> <?php esc_html_e( 'Add to cart', 'shopforge' ); ?>
 				</a>
 				<?php else : ?>
-				<span class="shopforge-badge shopforge-badge--muted">Non disponibile</span>
+				<span class="shopforge-badge shopforge-badge--muted"><?php esc_html_e( 'Out of stock', 'shopforge' ); ?></span>
 				<?php endif; ?>
 				<button type="button" class="shopforge-btn shopforge-btn--ghost shopforge-remove-wishlist"
 				        data-product="<?php echo esc_attr( $product_id ); ?>"
@@ -159,8 +160,8 @@ add_action( 'woocommerce_after_shop_loop_item', function () {
 	        data-product="<?php echo esc_attr( $product_id ); ?>"
 	        data-nonce="<?php echo esc_attr( $nonce ); ?>"
 	        data-login="<?php echo esc_url( $login_url ); ?>"
-	        aria-label="<?php echo $in_list ? 'Rimuovi dalla lista desideri' : 'Aggiungi alla lista desideri'; ?>"
-	        title="<?php echo $in_list ? 'Rimuovi dalla lista desideri' : 'Aggiungi alla lista desideri'; ?>">
+	        aria-label="<?php echo esc_attr( $in_list ? __( 'Remove from wishlist', 'shopforge' ) : __( 'Add to wishlist', 'shopforge' ) ); ?>"
+	        title="<?php echo esc_attr( $in_list ? __( 'Remove from wishlist', 'shopforge' ) : __( 'Add to wishlist', 'shopforge' ) ); ?>">
 		<i class="<?php echo $in_list ? 'fa-solid' : 'fa-regular'; ?> fa-heart" aria-hidden="true"></i>
 	</button>
 	<?php
@@ -190,10 +191,10 @@ add_action( 'woocommerce_after_add_to_cart_button', function () {
 	        data-product="<?php echo esc_attr( $product_id ); ?>"
 	        data-nonce="<?php echo esc_attr( $nonce ); ?>"
 	        data-login="<?php echo esc_url( $login_url ); ?>"
-	        aria-label="<?php echo $in_list ? 'Rimuovi dalla lista desideri' : 'Aggiungi alla lista desideri'; ?>">
+	        aria-label="<?php echo esc_attr( $in_list ? __( 'Remove from wishlist', 'shopforge' ) : __( 'Add to wishlist', 'shopforge' ) ); ?>">
 		<i class="<?php echo $in_list ? 'fa-solid' : 'fa-regular'; ?> fa-heart" aria-hidden="true"></i>
 		<span class="shopforge-wl-btn__label">
-			<?php echo $in_list ? 'Nella lista desideri' : 'Aggiungi alla lista desideri'; ?>
+			<?php echo esc_html( $in_list ? __( 'In your wishlist', 'shopforge' ) : __( 'Add to wishlist', 'shopforge' ) ); ?>
 		</span>
 	</button>
 	<?php
@@ -209,6 +210,11 @@ add_action( 'wp_footer', function () {
 	(function () {
 		'use strict';
 		var ajaxUrl = '<?php echo esc_url( admin_url('admin-ajax.php') ); ?>';
+		var i18n = {
+			inList:   <?php echo wp_json_encode( __( 'In your wishlist', 'shopforge' ) ); ?>,
+			add:      <?php echo wp_json_encode( __( 'Add to wishlist', 'shopforge' ) ); ?>,
+			remove:   <?php echo wp_json_encode( __( 'Remove from wishlist', 'shopforge' ) ); ?>
+		};
 
 		document.addEventListener('click', function (e) {
 			var btn = e.target.closest('.shopforge-wl-btn');
@@ -246,11 +252,11 @@ add_action( 'wp_footer', function () {
 
 				var label = btn.querySelector('.shopforge-wl-btn__label');
 				if (label) {
-					label.textContent = added ? 'Nella lista desideri' : 'Aggiungi alla lista desideri';
+					label.textContent = added ? i18n.inList : i18n.add;
 				}
 
-				btn.setAttribute('aria-label', added ? 'Rimuovi dalla lista desideri' : 'Aggiungi alla lista desideri');
-				btn.setAttribute('title', added ? 'Rimuovi dalla lista desideri' : 'Aggiungi alla lista desideri');
+				btn.setAttribute('aria-label', added ? i18n.remove : i18n.add);
+				btn.setAttribute('title', added ? i18n.remove : i18n.add);
 
 				// Feedback visivo breve
 				btn.classList.add('shopforge-wl-btn--pulse');

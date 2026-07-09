@@ -164,6 +164,16 @@ function shopforge_modules_registry(): array {
 			'menu_label'  => __( 'Receipts', 'shopforge' ),
 		],
 
+		'checkout-fields' => [
+			'id'          => 'checkout-fields',
+			'type'        => 'module',
+			'label'       => __( 'Italian Fiscal Checkout Fields', 'shopforge' ),
+			'description' => __( 'Adds Customer type (Private/Business), Tax code, VAT number, SDI code and PEC to checkout — native to the block checkout, with fields shown/required based on the selected customer type.', 'shopforge' ),
+			'icon'        => 'fa-solid fa-id-card',
+			'file'        => 'shopforge-mod-checkout-fields.php',
+			'menu_item'   => false,
+		],
+
 	];
 }
 

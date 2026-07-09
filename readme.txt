@@ -6,7 +6,7 @@ Tested up to: 6.7
 Requires PHP: 8.0
 WC requires at least: 7.0
 WC tested up to: 9.9
-Stable tag: 1.10.4
+Stable tag: 1.11.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -36,6 +36,7 @@ so you only load the code and CSS you actually use.
 * **Notifications** — an in-account notification center fed by real events (order status, tickets, returns, RMA, quotes, back-in-stock wishlist items).
 * **Loyalty Points** — customers earn points on completed orders (reversed if later refunded/cancelled) and redeem them for a discount coupon. Earn rate, point value and minimum redemption are configurable.
 * **PDF Receipts** — generates a real server-side PDF receipt for each order (not a fiscal invoice), with a choice of visual templates, your logo, company details and a footer note. Downloadable from the order page and the customer account, with one-click email delivery.
+* **Italian Fiscal Checkout Fields** — adds Customer type (Private/Business), Tax code, VAT number, SDI code and PEC to the block checkout, natively (WooCommerce Blocks Additional Fields API). Fields are shown and required based on the selected customer type. Classic (shortcode) checkout is not covered.
 
 = Shortcodes =
 
@@ -84,6 +85,10 @@ No, shipment tracking relies on 17track.net's public API. You need to register y
 Yes, all strings are wrapped for translation with the `shopforge` text domain. An Italian translation is bundled; a `.pot` file is included under `languages/` for adding more.
 
 == Changelog ==
+
+= 1.11.0 =
+* New "Italian Fiscal Checkout Fields" module: Customer type (Private/Business), Tax code, VAT number, SDI code and PEC registered natively via the WooCommerce Blocks Additional Checkout Fields API — no third-party plugin needed, and the right fields are conditionally shown/required depending on the selected customer type. Only works with the block-based checkout.
+* Full Italian translation for the new module (740/740 strings, 100% coverage).
 
 = 1.10.4 =
 * Account dashboard stat cards (Total orders / Processing / Delivered / Quotes) now use a dynamic column count instead of a fixed 4, so the row fills correctly when the Quotes module is disabled (3 cards).

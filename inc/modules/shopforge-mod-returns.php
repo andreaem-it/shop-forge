@@ -696,7 +696,7 @@ add_action( 'add_meta_boxes', function () {
 	foreach ( [ 'shop_order', 'woocommerce_page_wc-orders' ] as $screen ) {
 		add_meta_box(
 			'shopforge-returns',
-			'↩ ' . __( 'Withdrawal requests', 'shopforge' ),
+			__( 'Withdrawal requests', 'shopforge' ),
 			'shopforge_returns_metabox_render',
 			$screen,
 			'normal',

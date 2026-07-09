@@ -15,7 +15,7 @@ document.querySelectorAll('.shopforge-save-status').forEach(function(btn) {
 			      '&idx=' + idx + '&status=' + encodeURIComponent(select.value) +
 			      '&reply=' + encodeURIComponent(reply ? reply.value : '')
 		}).then(function(r){ return r.json(); }).then(function(d) {
-			btn.textContent = d.success ? '✓ Salvato' : '✗';
+			btn.textContent = d.success ? 'Salvato' : 'Errore';
 			setTimeout(function(){ location.reload(); }, 800);
 		});
 	});
@@ -37,7 +37,7 @@ document.querySelectorAll('.shopforge-ret-save-st').forEach(function(btn) {
 			      '&status=' + encodeURIComponent(sel.value) +
 			      '&reply=' + encodeURIComponent(replyVal)
 		}).then(function(r){ return r.json(); }).then(function(d) {
-			btn.textContent = d.success ? '✓ Salvato' : '✗';
+			btn.textContent = d.success ? 'Salvato' : 'Errore';
 			if (d.success) setTimeout(function(){ location.reload(); }, 600);
 		});
 	});

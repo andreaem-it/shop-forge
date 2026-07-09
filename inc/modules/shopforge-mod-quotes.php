@@ -383,7 +383,7 @@ function shopforge_admin_quotes_page(): void {
 					user_id:this.dataset.user, idx:this.dataset.idx, status:status, reply:reply,
 					send_email:doMail, customer_email:this.dataset.email, customer_name:this.dataset.name, ref:this.dataset.ref }).toString()
 			}).then(function(r){return r.json();}).then(function(d){
-				me.disabled = false; me.textContent = d.success ? '✓ ' + <?php echo wp_json_encode( __( 'Saved', 'shopforge' ) ); ?> : '✗ ' + <?php echo wp_json_encode( __( 'Error', 'shopforge' ) ); ?>;
+				me.disabled = false; me.textContent = d.success ? <?php echo wp_json_encode( __( 'Saved', 'shopforge' ) ); ?> : <?php echo wp_json_encode( __( 'Error', 'shopforge' ) ); ?>;
 				if (d.success) setTimeout(function(){ location.reload(); }, 800);
 			});
 		});

@@ -21,9 +21,9 @@ function shopforge_order_tracker_progress( string $status ): int {
 	$map = [
 		'pending'    => 1, // Ricevuto (in attesa pagamento)
 		'on-hold'    => 1, // Ricevuto (in attesa verifica)
-		'processing' => 3, // Ricevuto ✓ · Pagato ✓ · In Preparazione ←
-		'spedito'    => 4, // + Spedito ←
-		'completed'  => 6, // tutti ✓ (progress > 5 → tutti is-completed)
+		'processing' => 3, // Ricevuto, Pagato, In Preparazione
+		'spedito'    => 4, // + Spedito
+		'completed'  => 6, // tutti gli step (progress > 5 -> tutti is-completed)
 	];
 	return $map[ $status ] ?? 1;
 }
@@ -466,7 +466,7 @@ add_action( 'add_meta_boxes', function () {
 	foreach ( [ 'shop_order', 'woocommerce_page_wc-orders' ] as $screen ) {
 		add_meta_box(
 			'shopforge-tickets',
-			'📩 ' . __( 'Support requests', 'shopforge' ),
+			__( 'Support requests', 'shopforge' ),
 			'shopforge_tickets_metabox_render',
 			$screen,
 			'normal',
@@ -846,7 +846,7 @@ function shopforge_admin_support_page(): void {
 				})
 			}).then(function(r){ return r.json(); }).then(function(data){
 				me.disabled = false;
-				me.textContent = data.success ? <?php echo wp_json_encode( __( 'Saved ✓', 'shopforge' ) ); ?> : <?php echo wp_json_encode( __( 'Error', 'shopforge' ) ); ?>;
+				me.textContent = data.success ? <?php echo wp_json_encode( __( 'Saved', 'shopforge' ) ); ?> : <?php echo wp_json_encode( __( 'Error', 'shopforge' ) ); ?>;
 				setTimeout(function(){ me.textContent = <?php echo wp_json_encode( __( 'Save', 'shopforge' ) ); ?>; }, 2500);
 			}).catch(function(){
 				me.disabled = false; me.textContent = <?php echo wp_json_encode( __( 'Error', 'shopforge' ) ); ?>;

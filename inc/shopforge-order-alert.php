@@ -96,7 +96,7 @@ add_action( 'admin_notices', function () {
 	?>
 	<div class="notice notice-warning shopforge-order-alert">
 		<p>
-			⚠️ <strong><?php esc_html_e( 'This order has open customer requests:', 'shopforge' ); ?></strong>
+			<strong><?php esc_html_e( 'This order has open customer requests:', 'shopforge' ); ?></strong>
 			<?php foreach ( $summary as $item ) : ?>
 			<a href="<?php echo esc_url( $item['url'] ); ?>" class="shopforge-order-alert__item"><?php echo esc_html( $item['label'] ); ?></a>
 			<?php endforeach; ?>

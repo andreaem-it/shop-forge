@@ -33,7 +33,7 @@ add_action( 'add_meta_boxes', function () {
 	// Classic orders
 	add_meta_box(
 		'shopforge-tracking',
-		'📦 ' . __( 'Shipment Tracking', 'shopforge' ),
+		__( 'Shipment Tracking', 'shopforge' ),
 		'shopforge_tracking_metabox_render',
 		'shop_order',
 		'side',
@@ -42,7 +42,7 @@ add_action( 'add_meta_boxes', function () {
 	// HPOS (WC 7+)
 	add_meta_box(
 		'shopforge-tracking',
-		'📦 ' . __( 'Shipment Tracking', 'shopforge' ),
+		__( 'Shipment Tracking', 'shopforge' ),
 		'shopforge_tracking_metabox_render',
 		'woocommerce_page_wc-orders',
 		'side',
@@ -90,7 +90,7 @@ function shopforge_tracking_metabox_render( $post_or_order ): void {
 			<button type="button" class="shopforge-mb-clear" id="shopforge-clear-cache"
 			        data-order="<?php echo esc_attr( $order->get_id() ); ?>"
 			        data-nonce="<?php echo esc_attr( wp_create_nonce( 'shopforge_clear_cache' ) ); ?>">
-				🔄 <?php esc_html_e( 'Refresh cache', 'shopforge' ); ?>
+				<?php esc_html_e( 'Refresh cache', 'shopforge' ); ?>
 			</button>
 			<span class="shopforge-mb-status" id="shopforge-cache-status"></span>
 		</div>
@@ -105,7 +105,7 @@ function shopforge_tracking_metabox_render( $post_or_order ): void {
 				headers: {'Content-Type':'application/x-www-form-urlencoded'},
 				body: 'action=shopforge_clear_tracking_cache&order_id=' + btn.dataset.order + '&nonce=' + btn.dataset.nonce
 			}).then(function(r){ return r.json(); }).then(function(d) {
-				status.textContent = d.success ? '✓ ' + <?php echo wp_json_encode( __( 'Cache cleared', 'shopforge' ) ); ?> : '✗ ' + <?php echo wp_json_encode( __( 'Error', 'shopforge' ) ); ?>;
+				status.textContent = d.success ? <?php echo wp_json_encode( __( 'Cache cleared', 'shopforge' ) ); ?> : <?php echo wp_json_encode( __( 'Error', 'shopforge' ) ); ?>;
 				btn.disabled = false;
 				setTimeout(function(){ status.textContent=''; }, 3000);
 			});

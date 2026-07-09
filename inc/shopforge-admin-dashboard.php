@@ -148,8 +148,8 @@ add_action( 'wp_dashboard_setup', function () {
 	if ( ! current_user_can( 'manage_woocommerce' ) ) return;
 	if ( ! class_exists( 'WooCommerce' ) ) return;
 
-	wp_add_dashboard_widget( 'shopforge_dash_sales', '🛒 ' . __( 'ShopForge — Sales', 'shopforge' ), 'shopforge_render_dashboard_sales_widget' );
-	wp_add_dashboard_widget( 'shopforge_dash_requests', '💬 ' . __( 'ShopForge — Customer Requests', 'shopforge' ), 'shopforge_render_dashboard_requests_widget' );
+	wp_add_dashboard_widget( 'shopforge_dash_sales', __( 'ShopForge — Sales', 'shopforge' ), 'shopforge_render_dashboard_sales_widget' );
+	wp_add_dashboard_widget( 'shopforge_dash_requests', __( 'ShopForge — Customer Requests', 'shopforge' ), 'shopforge_render_dashboard_requests_widget' );
 } );
 
 function shopforge_render_dashboard_sales_widget(): void {
@@ -189,8 +189,8 @@ function shopforge_render_dashboard_sales_widget(): void {
 	</div>
 
 	<p class="shopforge-dash-footer">
-		<a href="<?php echo esc_url( admin_url( 'edit.php?post_type=shop_order' ) ); ?>"><?php esc_html_e( 'View all orders', 'shopforge' ); ?> →</a>
-		<a href="<?php echo esc_url( admin_url( 'admin.php?page=wc-admin&path=/analytics/overview' ) ); ?>"><?php esc_html_e( 'Full analytics', 'shopforge' ); ?> →</a>
+		<a href="<?php echo esc_url( admin_url( 'edit.php?post_type=shop_order' ) ); ?>"><?php esc_html_e( 'View all orders', 'shopforge' ); ?></a>
+		<a href="<?php echo esc_url( admin_url( 'admin.php?page=wc-admin&path=/analytics/overview' ) ); ?>"><?php esc_html_e( 'Full analytics', 'shopforge' ); ?></a>
 	</p>
 	<?php
 	shopforge_dashboard_widget_styles();
@@ -205,11 +205,11 @@ function shopforge_render_dashboard_requests_widget(): void {
 		[ 'count' => $s['open_rma'],       'label' => __( 'Open RMA', 'shopforge' ),        'url' => admin_url( 'edit.php?post_type=shopforge_rma_request' ) ],
 		[ 'count' => $s['pending_quotes'], 'label' => __( 'Pending quotes', 'shopforge' ),  'url' => admin_url( 'admin.php?page=shopforge-quotes' ) ],
 	];
-	$type_meta = [
-		'ticket' => [ 'icon' => '📩', 'label' => __( 'Ticket', 'shopforge' ) ],
-		'return' => [ 'icon' => '↩️', 'label' => __( 'Withdrawal', 'shopforge' ) ],
-		'rma'    => [ 'icon' => '🛠️', 'label' => __( 'RMA', 'shopforge' ) ],
-		'quote'  => [ 'icon' => '📄', 'label' => __( 'Quote', 'shopforge' ) ],
+	$type_labels = [
+		'ticket' => __( 'Ticket', 'shopforge' ),
+		'return' => __( 'Withdrawal', 'shopforge' ),
+		'rma'    => __( 'RMA', 'shopforge' ),
+		'quote'  => __( 'Quote', 'shopforge' ),
 	];
 	?>
 	<div class="shopforge-dash-badges">
@@ -224,13 +224,13 @@ function shopforge_render_dashboard_requests_widget(): void {
 	<?php if ( ! empty( $s['recent'] ) ) : ?>
 	<ul class="shopforge-dash-recent">
 		<?php foreach ( $s['recent'] as $item ) :
-			$tm = $type_meta[ $item['type'] ] ?? [ 'icon' => '•', 'label' => '' ];
-			$date = $item['date'] ? date_i18n( get_option( 'date_format' ), strtotime( $item['date'] ) ) : '';
+			$type_label = $type_labels[ $item['type'] ] ?? '';
+			$date       = $item['date'] ? date_i18n( get_option( 'date_format' ), strtotime( $item['date'] ) ) : '';
 		?>
 		<li>
 			<a href="<?php echo esc_url( $item['url'] ); ?>">
-				<span class="shopforge-dash-recent__icon"><?php echo esc_html( $tm['icon'] ); ?></span>
-				<span class="shopforge-dash-recent__text"><?php echo esc_html( $tm['label'] . ': ' . wp_trim_words( $item['text'], 8 ) ); ?></span>
+				<span class="shopforge-dash-recent__type"><?php echo esc_html( $type_label ); ?></span>
+				<span class="shopforge-dash-recent__text"><?php echo esc_html( wp_trim_words( $item['text'], 8 ) ); ?></span>
 				<span class="shopforge-dash-recent__date"><?php echo esc_html( $date ); ?></span>
 			</a>
 		</li>
@@ -280,7 +280,11 @@ function shopforge_dashboard_widget_styles(): void {
 		display: flex; align-items: center; gap: 8px;
 		padding: 8px 2px; text-decoration: none; color: #1d2327;
 	}
-	.shopforge-dash-recent__icon { flex-shrink: 0; }
+	.shopforge-dash-recent__type {
+		flex-shrink: 0; font-size: 10px; font-weight: 700; text-transform: uppercase;
+		letter-spacing: .04em; color: #2271b1; background: #f0f6fc;
+		padding: 2px 6px; border-radius: 3px;
+	}
 	.shopforge-dash-recent__text { flex: 1; font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 	.shopforge-dash-recent__date { flex-shrink: 0; font-size: 11px; color: #8c8f94; }
 

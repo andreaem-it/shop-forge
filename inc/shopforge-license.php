@@ -71,7 +71,7 @@ add_action( 'wp_ajax_shopforge_validate_license', function () {
 		shopforge_set_license_key( $key );
 		shopforge_set_license_data( $body );
 
-		$message = __( 'License valid ✓', 'shopforge' );
+		$message = __( 'License valid', 'shopforge' );
 		$details = [];
 
 		if ( ! empty( $body['reseller_name'] ) ) {
@@ -199,7 +199,7 @@ function shopforge_admin_tab_license(): void {
 		if (!key) {
 			message.style.background = '#fee';
 			message.style.color = '#c33';
-			message.textContent = '✗ ' + <?php echo wp_json_encode( __( 'Enter a key', 'shopforge' ) ); ?>;
+			message.textContent = <?php echo wp_json_encode( __( 'Enter a key', 'shopforge' ) ); ?>;
 			status.style.display = 'block';
 			return;
 		}
@@ -227,13 +227,13 @@ function shopforge_admin_tab_license(): void {
 			if (data.valid) {
 				message.style.background = '#eef';
 				message.style.color = '#060';
-				message.textContent = '✓ ' + (data.message || <?php echo wp_json_encode( __( 'License valid', 'shopforge' ) ); ?>);
+				message.textContent = data.message || <?php echo wp_json_encode( __( 'License valid', 'shopforge' ) ); ?>;
 				details.innerHTML = data.details || '';
 				setTimeout(() => location.reload(), 1500);
 			} else {
 				message.style.background = '#fee';
 				message.style.color = '#c33';
-				message.textContent = '✗ ' + (data.message || <?php echo wp_json_encode( __( 'License not valid', 'shopforge' ) ); ?>);
+				message.textContent = data.message || <?php echo wp_json_encode( __( 'License not valid', 'shopforge' ) ); ?>;
 				details.innerHTML = '';
 			}
 
@@ -244,7 +244,7 @@ function shopforge_admin_tab_license(): void {
 			status.style.display = 'block';
 			message.style.background = '#fee';
 			message.style.color = '#c33';
-			message.textContent = '✗ ' + <?php echo wp_json_encode( __( 'Error:', 'shopforge' ) ); ?> + ' ' + err.message;
+			message.textContent = <?php echo wp_json_encode( __( 'Error:', 'shopforge' ) ); ?> + ' ' + err.message;
 			details.innerHTML = '';
 			btn.disabled = false;
 		});

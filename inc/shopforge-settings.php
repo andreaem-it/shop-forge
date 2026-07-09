@@ -236,7 +236,7 @@ function shopforge_admin_tab_modules(): void {
 	?>
 		<?php if ( ! empty( $_GET['updated'] ) ) : ?>
 		<div class="notice notice-success is-dismissible">
-			<p>✓ <?php esc_html_e( 'Settings saved.', 'shopforge' ); ?>
+			<p><?php esc_html_e( 'Settings saved.', 'shopforge' ); ?>
 			<?php if ( count( $enabled ) === 0 ) : ?>
 				<strong><?php esc_html_e( 'Warning:', 'shopforge' ); ?></strong> <?php esc_html_e( 'no module or feature is active.', 'shopforge' ); ?>
 			<?php endif; ?>

@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
 add_filter( 'woocommerce_thankyou_order_received_text', function ( $text, $order ) {
 	return '
 		<div class="custom-order-confirmation-alert">
-			<div class="custom-order-confirmation-icon">✓</div>
+			<div class="custom-order-confirmation-icon"><svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="5 13 10 18 19 7"></polyline></svg></div>
 			<div class="custom-order-confirmation-content">
 				<h2>' . esc_html__( 'Order received successfully', 'shopforge' ) . '</h2>
 				<p>' . esc_html( $text ) . '</p>

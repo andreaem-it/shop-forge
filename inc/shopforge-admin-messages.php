@@ -43,7 +43,6 @@ function shopforge_get_all_customer_requests(): array {
 				$items[] = [
 					'type'         => 'ticket',
 					'type_label'   => __( 'Ticket', 'shopforge' ),
-					'type_icon'    => '📩',
 					'status'       => $status,
 					'status_label' => 'open' === $status ? __( 'Open', 'shopforge' ) : __( 'Closed', 'shopforge' ),
 					'is_open'      => 'open' === $status,
@@ -64,7 +63,6 @@ function shopforge_get_all_customer_requests(): array {
 					$items[] = [
 						'type'         => 'return',
 						'type_label'   => __( 'Withdrawal', 'shopforge' ),
-						'type_icon'    => '↩️',
 						'status'       => $status,
 						'status_label' => shopforge_return_get_status_label_safe( $status ),
 						'is_open'      => $is_open,
@@ -98,7 +96,6 @@ function shopforge_get_all_customer_requests(): array {
 			$items[] = [
 				'type'         => 'rma',
 				'type_label'   => __( 'RMA', 'shopforge' ),
-				'type_icon'    => '🛠️',
 				'status'       => $status,
 				'status_label' => function_exists( 'shopforge_rma_get_status_label' ) ? shopforge_rma_get_status_label( $status ) : $status,
 				'is_open'      => in_array( $status, $open_statuses, true ),
@@ -121,7 +118,6 @@ function shopforge_get_all_customer_requests(): array {
 				$items[] = [
 					'type'         => 'quote',
 					'type_label'   => __( 'Quote', 'shopforge' ),
-					'type_icon'    => '📄',
 					'status'       => $status,
 					'status_label' => shopforge_quote_get_status_label_safe( $status ),
 					'is_open'      => in_array( $status, [ 'pending', 'sent' ], true ),
@@ -175,7 +171,7 @@ add_action( 'admin_menu', function () {
 	if ( ! class_exists( 'WooCommerce' ) ) return;
 	add_menu_page(
 		__( 'Messages', 'shopforge' ),
-		'💬 ' . __( 'Messages', 'shopforge' ),
+		__( 'Messages', 'shopforge' ),
 		'edit_shop_orders',
 		'shopforge-messages',
 		'shopforge_render_messages_page',
@@ -274,7 +270,7 @@ function shopforge_render_messages_page(): void {
 			<tbody>
 				<?php foreach ( $page_items as $item ) : ?>
 				<tr class="<?php echo $item['is_open'] ? 'shopforge-msg-row--open' : ''; ?>">
-					<td><?php echo esc_html( $item['type_icon'] ); ?> <?php echo esc_html( $item['type_label'] ); ?></td>
+					<td><?php echo esc_html( $item['type_label'] ); ?></td>
 					<td>
 						<?php echo esc_html( $item['customer'] ?: '—' ); ?>
 						<?php if ( $item['email'] ) : ?><br><small><?php echo esc_html( $item['email'] ); ?></small><?php endif; ?>

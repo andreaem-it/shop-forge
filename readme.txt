@@ -6,7 +6,7 @@ Tested up to: 6.7
 Requires PHP: 8.0
 WC requires at least: 7.0
 WC tested up to: 9.9
-Stable tag: 1.9.0
+Stable tag: 1.9.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -83,6 +83,10 @@ No, shipment tracking relies on 17track.net's public API. You need to register y
 Yes, all strings are wrapped for translation with the `shopforge` text domain. An Italian translation is bundled; a `.pot` file is included under `languages/` for adding more.
 
 == Changelog ==
+
+= 1.9.1 =
+* Removed all emoji from admin UI, notices and JS feedback text — plain text and native icons only.
+* Completed the Italian translation: all strings introduced in 1.9.0 (Loyalty Points, order alert, dashboard widgets, Messages page) are now translated, 100% coverage verified against source.
 
 = 1.9.0 =
 * New Loyalty Points module: earn on completed orders (reversed on refund/cancel), redeem for a discount coupon, configurable earn rate/point value/minimum redemption.

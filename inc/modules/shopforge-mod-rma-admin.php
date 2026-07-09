@@ -344,9 +344,9 @@ function shopforge_rma_details_metabox_render( WP_Post $post ): void {
 			<th><?php esc_html_e( 'Acceptances', 'shopforge' ); ?></th>
 			<td>
 				<ul style="list-style:none;padding:0">
-					<li><?php echo '1' === get_post_meta( $post->ID, '_shopforge_rma_accetto_termini', true ) ? '✓' : '✗'; ?> <?php esc_html_e( 'Terms and conditions', 'shopforge' ); ?></li>
-					<li><?php echo '1' === get_post_meta( $post->ID, '_shopforge_rma_accetto_privacy', true ) ? '✓' : '✗'; ?> <?php esc_html_e( 'Privacy policy', 'shopforge' ); ?></li>
-					<li><?php echo '1' === get_post_meta( $post->ID, '_shopforge_rma_accetto_procedura', true ) ? '✓' : '✗'; ?> <?php esc_html_e( 'Return procedure and conditions', 'shopforge' ); ?></li>
+					<li><?php echo '1' === get_post_meta( $post->ID, '_shopforge_rma_accetto_termini', true ) ? esc_html__( 'Yes', 'shopforge' ) : esc_html__( 'No', 'shopforge' ); ?> — <?php esc_html_e( 'Terms and conditions', 'shopforge' ); ?></li>
+					<li><?php echo '1' === get_post_meta( $post->ID, '_shopforge_rma_accetto_privacy', true ) ? esc_html__( 'Yes', 'shopforge' ) : esc_html__( 'No', 'shopforge' ); ?> — <?php esc_html_e( 'Privacy policy', 'shopforge' ); ?></li>
+					<li><?php echo '1' === get_post_meta( $post->ID, '_shopforge_rma_accetto_procedura', true ) ? esc_html__( 'Yes', 'shopforge' ) : esc_html__( 'No', 'shopforge' ); ?> — <?php esc_html_e( 'Return procedure and conditions', 'shopforge' ); ?></li>
 				</ul>
 			</td>
 		</tr>

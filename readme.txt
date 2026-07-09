@@ -6,7 +6,7 @@ Tested up to: 6.7
 Requires PHP: 8.0
 WC requires at least: 7.0
 WC tested up to: 9.9
-Stable tag: 1.10.1
+Stable tag: 1.10.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -84,6 +84,10 @@ No, shipment tracking relies on 17track.net's public API. You need to register y
 Yes, all strings are wrapped for translation with the `shopforge` text domain. An Italian translation is bundled; a `.pot` file is included under `languages/` for adding more.
 
 == Changelog ==
+
+= 1.10.2 =
+* Fixed the "Withdrawal window expired" card: the withdrawal buttons now use the plugin's global primary color (one was hardcoded to an unrelated gray, the other was accidentally near-white with white text and effectively invisible).
+* Removed a redundant wrapper and a dead CSS rule left over from that layout change; the button's right-anchoring was already handled by the card's flex layout.
 
 = 1.10.1 =
 * Fixed the Receipts settings tab rendering with no styling (borrowed CSS classes that only load on the Modules tab; the tab now ships its own scoped styles).

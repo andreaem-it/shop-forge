@@ -6,7 +6,7 @@ Tested up to: 6.7
 Requires PHP: 8.0
 WC requires at least: 7.0
 WC tested up to: 9.9
-Stable tag: 1.11.0
+Stable tag: 1.11.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -85,6 +85,9 @@ No, shipment tracking relies on 17track.net's public API. You need to register y
 Yes, all strings are wrapped for translation with the `shopforge` text domain. An Italian translation is bundled; a `.pot` file is included under `languages/` for adding more.
 
 == Changelog ==
+
+= 1.11.1 =
+* The Modules settings page (Core features / Modules / Configuration / Theme / Colors) is now split into sub-tabs instead of one long scrolling page.
 
 = 1.11.0 =
 * New "Italian Fiscal Checkout Fields" module: Customer type (Private/Business), Tax code, VAT number, SDI code and PEC registered natively via the WooCommerce Blocks Additional Checkout Fields API — no third-party plugin needed, and the right fields are conditionally shown/required depending on the selected customer type. Only works with the block-based checkout.

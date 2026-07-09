@@ -83,7 +83,7 @@
 	.shopforge-recesso-card--done .shopforge-recesso-card__icon {
 		background: #DCFCE7; color: #15803D;
 	}
-	.shopforge-recesso-card__body { flex: 1; min-width: 0; justify-content: space-between; }
+	.shopforge-recesso-card__body { flex: 1; min-width: 0; }
 	.shopforge-recesso-card__title {
 		margin: 0 0 4px; font-size: 13px; font-weight: 800;
 		color: var(--shopforge-text-main);

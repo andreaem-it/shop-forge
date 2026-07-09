@@ -6,7 +6,7 @@ Tested up to: 6.7
 Requires PHP: 8.0
 WC requires at least: 7.0
 WC tested up to: 9.9
-Stable tag: 1.10.3
+Stable tag: 1.10.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -84,6 +84,10 @@ No, shipment tracking relies on 17track.net's public API. You need to register y
 Yes, all strings are wrapped for translation with the `shopforge` text domain. An Italian translation is bundled; a `.pot` file is included under `languages/` for adding more.
 
 == Changelog ==
+
+= 1.10.4 =
+* Account dashboard stat cards (Total orders / Processing / Delivered / Quotes) now use a dynamic column count instead of a fixed 4, so the row fills correctly when the Quotes module is disabled (3 cards).
+* Loyalty points moved out of the stat cards into a small badge above the Log out button (star + number, "Loyalty points" label), shown only when the Loyalty module is active.
 
 = 1.10.3 =
 * Fixed the "Withdrawal request sent" card: the "All my returns" button was falling below the text instead of anchoring to the right. Both withdrawal cards now anchor their action button via flex + space-between on the card body.

@@ -97,8 +97,11 @@ body.shopforge-account-page .entry-content {
    -------------------------------------------------------------------------- */
 
 .woocommerce-account .woocommerce-MyAccount-navigation {
+  /* flex-basis (non width) governa la larghezza nel layout a due colonne:
+     se il widget nav viene usato da solo, fuori da .woocommerce-account
+     .woocommerce, resta un elemento di blocco normale e si allarga al
+     100% del contenitore invece di restare bloccato a 260px. */
   flex: 0 0 260px;
-  width: 260px;
   min-width: 0;
   background: #fff;
   border: 1px solid var(--shopforge-border);
@@ -774,16 +777,6 @@ body.shopforge-account-page .entry-content {
   }
 }
 
-/* Larghezza fissa sidebar: solo desktop — sotto 860px vince il layout
-   colonna/nav-orizzontale del blocco @media sopra. */
-@media (min-width: 861px) {
-  .woocommerce-MyAccount-navigation {
-      float: left;
-      width: 260px;
-      padding-right: 0px;
-  }
-}
-
 /* ==========================================================================
    BNCOM — Stili uniformi per tutte le sezioni account
    ========================================================================== */
@@ -1218,6 +1211,16 @@ body.shopforge-account-page .entry-content {
   border: 1px solid var(--shopforge-border);
 }
 .shopforge-btn--ghost:hover { background: var(--shopforge-border-soft); }
+.shopforge-btn--secondary {
+  background: var(--shopforge-bg-soft);
+  color: var(--shopforge-text-main) !important;
+  border: 1px solid var(--shopforge-border);
+}
+.shopforge-btn--secondary:hover { background: var(--shopforge-border-soft); }
+.shopforge-btn--danger {
+  background: #DC2626; color: #fff !important;
+}
+.shopforge-btn--danger:hover { background: #B91C1C; }
 
 .shopforge-badge {
   display: inline-flex; align-items: center;

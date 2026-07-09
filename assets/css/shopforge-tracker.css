@@ -479,7 +479,9 @@
 		text-transform: uppercase; letter-spacing: .05em;
 	}
 	.shopforge-field select,
-	.shopforge-field textarea {
+	.shopforge-field textarea,
+	.shopforge-field input[type="text"],
+	.shopforge-field input[type="number"] {
 		width: 100%; padding: 10px 12px;
 		border: 1px solid var(--shopforge-border);
 		border-radius: var(--shopforge-radius);
@@ -489,12 +491,38 @@
 		font-family: inherit;
 	}
 	.shopforge-field select:focus,
-	.shopforge-field textarea:focus {
+	.shopforge-field textarea:focus,
+	.shopforge-field input[type="text"]:focus,
+	.shopforge-field input[type="number"]:focus {
 		outline: none;
 		border-color: var(--shopforge-primary);
 		box-shadow: 0 0 0 3px rgba(0,111,239,.1);
 	}
 	.shopforge-field textarea { resize: vertical; min-height: 110px; }
+
+	/* ---- Radio custom (usato da resi e assistenza prodotti) ---- */
+	.shopforge-radio-group { display: flex; flex-direction: column; gap: 10px; }
+	.shopforge-radio {
+		display: flex !important; align-items: center !important; gap: 10px;
+		cursor: pointer; font-weight: 400 !important;
+		text-transform: none !important; font-size: 13px !important;
+		color: var(--shopforge-text-main) !important; letter-spacing: normal !important;
+	}
+	.shopforge-radio input[type=radio] { display: none; }
+	.shopforge-radio__box {
+		width: 18px; height: 18px; flex-shrink: 0;
+		border-radius: 50%; border: 2px solid var(--shopforge-border);
+		background: #fff; position: relative;
+		transition: border-color .15s;
+	}
+	.shopforge-radio input:checked + .shopforge-radio__box {
+		border-color: var(--shopforge-primary);
+	}
+	.shopforge-radio input:checked + .shopforge-radio__box::after {
+		content: ""; position: absolute;
+		inset: 3px; border-radius: 50%;
+		background: var(--shopforge-primary);
+	}
 
 	/* ---- Lista prodotti ---- */
 	.shopforge-product-list {

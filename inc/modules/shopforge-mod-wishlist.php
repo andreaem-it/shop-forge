@@ -10,6 +10,47 @@
 
 defined( 'ABSPATH' ) || exit;
 
+// ---- Notifica "di nuovo disponibile" a chi ha il prodotto in wishlist ----
+
+/**
+ * Ad ogni cambio di stato scorta: se il prodotto torna disponibile e non
+ * abbiamo già notificato questo giro (guardia via post meta, azzerata
+ * quando il prodotto torna di nuovo esaurito), avvisa tutti gli utenti che
+ * lo hanno salvato in wishlist. Ricerca diretta su usermeta — un WP_User_Query
+ * su tutti gli utenti sarebbe troppo costoso da eseguire ad ogni sync stock.
+ */
+add_action( 'woocommerce_product_set_stock_status', function ( int $product_id, string $status, $product ) {
+	$notified_flag = '_shopforge_wishlist_notified';
+
+	if ( 'instock' !== $status ) {
+		delete_post_meta( $product_id, $notified_flag );
+		return;
+	}
+
+	if ( get_post_meta( $product_id, $notified_flag, true ) ) {
+		return;
+	}
+	update_post_meta( $product_id, $notified_flag, 1 );
+
+	global $wpdb;
+	$user_ids = $wpdb->get_col( $wpdb->prepare(
+		"SELECT user_id FROM {$wpdb->usermeta} WHERE meta_key = '_shopforge_wishlist' AND meta_value LIKE %s",
+		'%i:' . $product_id . ';%'
+	) );
+	if ( ! $user_ids ) return;
+
+	$product_name = $product instanceof WC_Product ? $product->get_name() : get_the_title( $product_id );
+	$url          = get_permalink( $product_id );
+
+	foreach ( $user_ids as $user_id ) {
+		do_action( 'shopforge_notification', (int) $user_id, 'back_in_stock', [
+			/* translators: %s: product name */
+			'text' => sprintf( __( '%s is back in stock', 'shopforge' ), $product_name ),
+			'url'  => $url,
+		] );
+	}
+}, 10, 3 );
+
 // ---- Contenuto endpoint ----
 
 add_action( 'woocommerce_account_shopforge-wishlist_endpoint', function () {

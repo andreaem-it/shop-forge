@@ -595,7 +595,7 @@ add_action( 'wp_ajax_shopforge_update_ticket_status', function () {
 	$order->update_meta_data( '_shopforge_tickets', $tickets );
 	$order->save();
 
-	// Email al cliente solo se cambia stato o c'è una risposta nuova
+	// Email + notifica in-app al cliente solo se cambia stato o c'è una risposta nuova
 	if ( $status !== $prev_status || $reply ) {
 		$mailer    = WC()->mailer();
 		$wc_emails = $mailer->get_emails();
@@ -607,6 +607,19 @@ add_action( 'wp_ajax_shopforge_update_ticket_status', function () {
 				'reply'      => $reply,
 			] );
 		}
+
+		$customer_id = (int) $order->get_customer_id();
+		if ( $customer_id ) {
+			do_action( 'shopforge_notification', $customer_id, 'ticket', [
+				/* translators: %s: order number */
+				'text' => sprintf( __( 'Update on your support request — Order #%s', 'shopforge' ), $order->get_order_number() ),
+				'url'  => $order->get_view_order_url(),
+			] );
+		}
+	}
+
+	if ( function_exists( 'shopforge_dashboard_flush_cache' ) ) {
+		shopforge_dashboard_flush_cache();
 	}
 
 	wp_send_json_success();

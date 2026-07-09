@@ -1,0 +1,121 @@
+/* ShopForge — Loyalty Points
+   Campi (.shopforge-field), pulsanti (.shopforge-btn) e badge base
+   (.shopforge-badge) sono componenti condivisi — vedi shopforge-tracker.css
+   e shopforge-woo-account.css, caricati su tutte le pagine account.
+   Qui restano solo le parti specifiche del modulo. */
+
+.shopforge-loyalty-balance-card {
+	background: #fff;
+	border: 1px solid var(--shopforge-border, #DCE6F2);
+	border-radius: var(--shopforge-radius, 8px);
+	box-shadow: var(--shopforge-shadow, none);
+	padding: 24px;
+	margin-bottom: 20px;
+}
+
+.shopforge-loyalty-balance-card__points {
+	display: flex;
+	align-items: baseline;
+	gap: 8px;
+}
+.shopforge-loyalty-balance-card__value {
+	font-size: 32px;
+	font-weight: 800;
+	color: var(--shopforge-primary, #006FEF);
+	line-height: 1;
+}
+.shopforge-loyalty-balance-card__label {
+	font-size: 14px;
+	font-weight: 600;
+	color: var(--shopforge-text-muted, #64748B);
+	text-transform: uppercase;
+	letter-spacing: .04em;
+}
+.shopforge-loyalty-balance-card__worth {
+	margin: 6px 0 18px;
+	font-size: 13px;
+	color: var(--shopforge-text-muted, #64748B);
+}
+
+.shopforge-loyalty-redeem-form .shopforge-field {
+	max-width: 320px;
+}
+
+.shopforge-loyalty-error {
+	padding: 10px 14px; margin: 10px 0;
+	background: #FEF2F2; border: 1px solid #FECACA;
+	border-radius: var(--shopforge-radius, 8px);
+	color: #991B1B; font-size: 13px; line-height: 1.5;
+}
+
+.shopforge-loyalty-note {
+	font-size: 12px;
+	color: var(--shopforge-text-muted, #64748B);
+}
+
+.shopforge-loyalty-success {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	margin-top: 12px;
+	padding: 10px 14px;
+	background: #F0FDF4;
+	border: 1px solid #86EFAC;
+	border-radius: var(--shopforge-radius, 8px);
+	color: #166534;
+	font-size: 13px;
+	font-weight: 700;
+}
+.shopforge-loyalty-success i { color: #16A34A; }
+
+.shopforge-loyalty-history__title {
+	display: flex; align-items: center; gap: 8px;
+	font-size: 15px; font-weight: 700;
+	color: var(--shopforge-text-main, #07172F);
+	margin: 0 0 14px;
+	padding-bottom: 10px;
+	border-bottom: 1px solid var(--shopforge-border, #DCE6F2);
+}
+.shopforge-loyalty-history__title i { color: var(--shopforge-primary, #006FEF); font-size: 14px; }
+
+.shopforge-loyalty-history-list {
+	display: flex;
+	flex-direction: column;
+	gap: 1px;
+	background: var(--shopforge-border-soft, #EEF2F7);
+	border: 1px solid var(--shopforge-border, #DCE6F2);
+	border-radius: var(--shopforge-radius, 8px);
+	overflow: hidden;
+}
+.shopforge-loyalty-history-row {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	padding: 12px 16px;
+	background: #fff;
+}
+.shopforge-loyalty-history-row__ref {
+	flex: 1;
+	font-size: 13px;
+	color: var(--shopforge-text-main, #07172F);
+}
+.shopforge-loyalty-history-row__points {
+	font-size: 13px;
+	font-weight: 700;
+	color: #16A34A;
+}
+.shopforge-loyalty-history-row__points.is-negative { color: #DC2626; }
+.shopforge-loyalty-history-row__date {
+	font-size: 12px;
+	color: var(--shopforge-text-muted, #64748B);
+	white-space: nowrap;
+}
+
+.shopforge-loyalty-badge--earn    { background: #DCFCE7; color: #166534; }
+.shopforge-loyalty-badge--reverse { background: #FEE2E2; color: #991B1B; }
+.shopforge-loyalty-badge--redeem  { background: #DBEAFE; color: #1E40AF; }
+
+@media (max-width: 600px) {
+	.shopforge-loyalty-history-row { flex-wrap: wrap; }
+	.shopforge-loyalty-history-row__date { width: 100%; order: 4; }
+}

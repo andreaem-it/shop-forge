@@ -18,6 +18,9 @@ $shopforge_options = [
 	'shopforge_flush_rewrite',
 	'shopforge_license_data',
 	'shopforge_license_key',
+	'shopforge_loyalty_earn_rate',
+	'shopforge_loyalty_min_redeem',
+	'shopforge_loyalty_point_value',
 	'shopforge_modules_enabled',
 	'shopforge_return_window_days',
 	'shopforge_rma_excluded_categories',
@@ -32,6 +35,9 @@ $shopforge_options = [
 foreach ( $shopforge_options as $shopforge_option ) {
 	delete_option( $shopforge_option );
 }
+
+delete_transient( 'shopforge_dash_sales' );
+delete_transient( 'shopforge_dash_requests' );
 
 // RMA requests custom post type content.
 $shopforge_rma_ids = get_posts( [

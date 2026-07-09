@@ -518,6 +518,14 @@ function shopforge_rma_notify_status_update( int $post_id, string $status, int $
 	if ( isset( $emails['ShopForge_Email_RMA_Status_Update'] ) ) {
 		$emails['ShopForge_Email_RMA_Status_Update']->trigger( $order, $rma_data );
 	}
+
+	if ( $user_id ) {
+		do_action( 'shopforge_notification', $user_id, 'rma_status', [
+			/* translators: %d: RMA request ID */
+			'text' => sprintf( __( 'Update on your product support request #%d', 'shopforge' ), $post_id ),
+			'url'  => add_query_arg( [ 'request_id' => $post_id ], wc_get_account_endpoint_url( 'shopforge-rma' ) ),
+		] );
+	}
 }
 
 /**
@@ -681,7 +689,7 @@ function shopforge_rma_render_orders_list(): void {
 	$open_map = shopforge_rma_get_open_requests_map( $user_id );
 	$qty_map  = shopforge_rma_get_requested_quantities_map( $user_id );
 
-	echo '<p><a href="' . esc_url( shopforge_rma_get_my_requests_url() ) . '" class="shopforge-rma-btn shopforge-rma-btn--secondary">' . esc_html__( 'My requests', 'shopforge' ) . '</a></p>';
+	echo '<p><a href="' . esc_url( shopforge_rma_get_my_requests_url() ) . '" class="shopforge-btn shopforge-btn--secondary">' . esc_html__( 'My requests', 'shopforge' ) . '</a></p>';
 
 	foreach ( $orders as $order ) {
 		echo '<div class="shopforge-rma-order-card">';
@@ -700,15 +708,15 @@ function shopforge_rma_render_orders_list(): void {
 			echo '<div class="shopforge-rma-product-row__actions">';
 
 			if ( isset( $open_map[ $key ] ) ) {
-				echo '<a href="' . esc_url( add_query_arg( [ 'request_id' => $open_map[ $key ] ], wc_get_account_endpoint_url( 'shopforge-rma' ) ) ) . '" class="shopforge-rma-btn shopforge-rma-btn--secondary">' . esc_html__( 'Request already open', 'shopforge' ) . '</a>';
+				echo '<a href="' . esc_url( add_query_arg( [ 'request_id' => $open_map[ $key ] ], wc_get_account_endpoint_url( 'shopforge-rma' ) ) ) . '" class="shopforge-btn shopforge-btn--secondary">' . esc_html__( 'Request already open', 'shopforge' ) . '</a>';
 			} elseif ( shopforge_rma_is_product_excluded( $product ) ) {
 				echo '<span class="shopforge-rma-note">' . esc_html__( 'Not available for this product', 'shopforge' ) . '</span>';
 			} elseif ( shopforge_rma_get_remaining_quantity( $order_id, $product_id ) <= 0 ) {
 				echo '<span class="shopforge-rma-note">' . esc_html__( 'All units already covered by a request', 'shopforge' ) . '</span>';
 			} else {
-				echo '<a href="' . esc_url( shopforge_rma_get_request_url( $order_id, $product_id, 'assistenza' ) ) . '" class="shopforge-rma-btn">' . esc_html__( 'Request support', 'shopforge' ) . '</a>';
+				echo '<a href="' . esc_url( shopforge_rma_get_request_url( $order_id, $product_id, 'assistenza' ) ) . '" class="shopforge-btn shopforge-btn--primary">' . esc_html__( 'Request support', 'shopforge' ) . '</a>';
 				if ( ! shopforge_rma_is_return_period_expired( $order, $product ) ) {
-					echo '<a href="' . esc_url( shopforge_rma_get_request_url( $order_id, $product_id, 'reso' ) ) . '" class="shopforge-rma-btn shopforge-rma-btn--secondary">' . esc_html__( 'Request return', 'shopforge' ) . '</a>';
+					echo '<a href="' . esc_url( shopforge_rma_get_request_url( $order_id, $product_id, 'reso' ) ) . '" class="shopforge-btn shopforge-btn--secondary">' . esc_html__( 'Request return', 'shopforge' ) . '</a>';
 				}
 			}
 
@@ -757,7 +765,7 @@ function shopforge_rma_render_my_requests(): void {
 				<?php echo esc_html( 'reso' === $tipo ? __( 'Return', 'shopforge' ) : __( 'Support', 'shopforge' ) ); ?> ·
 				<?php echo esc_html( get_the_date( get_option( 'date_format' ), $request ) ); ?>
 			</p>
-			<a href="<?php echo esc_url( add_query_arg( [ 'request_id' => $request->ID ], wc_get_account_endpoint_url( 'shopforge-rma' ) ) ); ?>" class="shopforge-rma-btn shopforge-rma-btn--secondary"><?php esc_html_e( 'View Details', 'shopforge' ); ?></a>
+			<a href="<?php echo esc_url( add_query_arg( [ 'request_id' => $request->ID ], wc_get_account_endpoint_url( 'shopforge-rma' ) ) ); ?>" class="shopforge-btn shopforge-btn--secondary"><?php esc_html_e( 'View Details', 'shopforge' ); ?></a>
 		</div>
 		<?php
 	}
@@ -814,14 +822,14 @@ function shopforge_rma_render_request_form(): void {
 		<p><strong><?php echo esc_html( $product->get_name() ); ?></strong><?php if ( $brand ) echo ' — ' . esc_html( $brand ); ?></p>
 
 		<?php if ( $remaining > 1 ) : ?>
-		<div class="shopforge-rma-field">
+		<div class="shopforge-field">
 			<label for="shopforge-rma-quantita"><?php esc_html_e( 'Quantity', 'shopforge' ); ?></label>
 			<input type="number" id="shopforge-rma-quantita" name="quantita" value="1" min="1" max="<?php echo esc_attr( $remaining ); ?>">
 		</div>
 		<?php endif; ?>
 
 		<?php if ( 'assistenza' === $tipo ) : ?>
-		<div class="shopforge-rma-field">
+		<div class="shopforge-field">
 			<label for="shopforge-rma-motivo"><?php esc_html_e( 'Reason', 'shopforge' ); ?></label>
 			<select id="shopforge-rma-motivo" name="motivo" required>
 				<option value="">— <?php esc_html_e( 'Select', 'shopforge' ); ?> —</option>
@@ -832,25 +840,28 @@ function shopforge_rma_render_request_form(): void {
 		</div>
 		<?php endif; ?>
 
-		<div class="shopforge-rma-field">
+		<div class="shopforge-field">
 			<label for="shopforge-rma-descrizione"><?php esc_html_e( 'Description of the problem', 'shopforge' ); ?></label>
 			<textarea id="shopforge-rma-descrizione" name="descrizione_problema" rows="4" required></textarea>
 		</div>
 
-		<div class="shopforge-rma-field">
+		<div class="shopforge-field">
 			<label><?php esc_html_e( 'What would you prefer?', 'shopforge' ); ?></label>
+			<div class="shopforge-radio-group">
 			<?php foreach ( shopforge_rma_get_remedy_options( $tipo ) as $val => $label ) :
 				$disabled = ( 'garanzia_europea' === $val && $warranty_expired );
 			?>
-			<label class="shopforge-rma-radio">
+			<label class="shopforge-radio">
 				<input type="radio" name="rimedio_scelto" value="<?php echo esc_attr( $val ); ?>" <?php disabled( $disabled ); ?> <?php checked( ! $disabled && $val === array_key_first( shopforge_rma_get_remedy_options( $tipo ) ) ); ?>>
+				<span class="shopforge-radio__box"></span>
 				<?php echo esc_html( $label ); ?>
 				<?php if ( $disabled ) echo ' <em>(' . esc_html__( 'warranty expired', 'shopforge' ) . ')</em>'; ?>
 			</label>
 			<?php endforeach; ?>
+			</div>
 		</div>
 
-		<div class="shopforge-rma-field">
+		<div class="shopforge-field">
 			<label for="shopforge-rma-allegati"><?php esc_html_e( 'Photos or documents', 'shopforge' ); ?> <span>(<?php esc_html_e( 'optional', 'shopforge' ); ?>)</span></label>
 			<input type="file" id="shopforge-rma-allegati" name="allegati[]" multiple accept="image/*,.pdf">
 		</div>
@@ -866,7 +877,7 @@ function shopforge_rma_render_request_form(): void {
 
 		<p class="shopforge-rma-error" id="shopforge-rma-error" style="display:none"></p>
 
-		<button type="submit" class="shopforge-rma-btn" id="shopforge-rma-submit"><?php esc_html_e( 'Send request', 'shopforge' ); ?></button>
+		<button type="submit" class="shopforge-btn shopforge-btn--primary" id="shopforge-rma-submit"><?php esc_html_e( 'Send request', 'shopforge' ); ?></button>
 	</form>
 	<?php
 }
@@ -913,7 +924,7 @@ function shopforge_rma_render_request_detail( int $request_id ): void {
 		<p><?php echo esc_html( 'reso' === $tipo ? __( 'Return', 'shopforge' ) : __( 'Support', 'shopforge' ) ); ?><?php if ( $rimedio ) echo ' · ' . esc_html( shopforge_rma_get_remedy_options( $tipo )[ $rimedio ] ?? $rimedio ); ?></p>
 
 		<?php if ( 'aperta' === $stato ) : ?>
-		<button type="button" class="shopforge-rma-btn shopforge-rma-btn--danger" id="shopforge-rma-cancel"><?php esc_html_e( 'Cancel request', 'shopforge' ); ?></button>
+		<button type="button" class="shopforge-btn shopforge-btn--danger" id="shopforge-rma-cancel"><?php esc_html_e( 'Cancel request', 'shopforge' ); ?></button>
 		<?php endif; ?>
 
 		<div class="shopforge-rma-messages" id="shopforge-rma-messages">
@@ -922,7 +933,7 @@ function shopforge_rma_render_request_detail( int $request_id ): void {
 
 		<form class="shopforge-rma-message-form" id="shopforge-rma-message-form">
 			<textarea name="message_text" rows="3" placeholder="<?php esc_attr_e( 'Write a message…', 'shopforge' ); ?>" required></textarea>
-			<button type="submit" class="shopforge-rma-btn"><?php esc_html_e( 'Send', 'shopforge' ); ?></button>
+			<button type="submit" class="shopforge-btn shopforge-btn--primary"><?php esc_html_e( 'Send', 'shopforge' ); ?></button>
 		</form>
 	</div>
 	<?php
@@ -1050,6 +1061,10 @@ add_action( 'wp_enqueue_scripts', function () {
 	// (mai registrati nel registro interno di WC via woocommerce_get_query_vars).
 	// get_query_var() legge i query var di WP direttamente, sempre affidabile.
 	if ( false !== get_query_var( 'shopforge-rma', false ) ) {
+		// Niente dipendenza hard su shopforge-tracker: quel foglio (dove vive
+		// il componente condiviso .shopforge-field/.shopforge-radio) si carica
+		// solo se 'styles-account' è attivo. Dichiararlo come dep bloccherebbe
+		// l'enqueue di questo file quando quell'handle non esiste.
 		wp_enqueue_style( 'shopforge-rma', SHOPFORGE_URL . 'assets/css/shopforge-rma.css', [], SHOPFORGE_VERSION );
 	}
 	wp_register_script( 'shopforge-rma', SHOPFORGE_URL . 'assets/js/shopforge-rma.js', [], SHOPFORGE_VERSION, true );

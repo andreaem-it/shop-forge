@@ -140,6 +140,18 @@ function shopforge_modules_registry(): array {
 			'menu_label'  => __( 'Notifications', 'shopforge' ),
 		],
 
+		'loyalty' => [
+			'id'          => 'loyalty',
+			'type'        => 'module',
+			'label'       => __( 'Loyalty Points', 'shopforge' ),
+			'description' => __( 'Customers earn points on completed orders and redeem them for a discount coupon. Earn rate, point value and minimum redemption are configurable.', 'shopforge' ),
+			'icon'        => 'fa-solid fa-star',
+			'file'        => 'shopforge-mod-loyalty.php',
+			'menu_item'   => true,
+			'endpoint'    => 'shopforge-loyalty',
+			'menu_label'  => __( 'Loyalty Points', 'shopforge' ),
+		],
+
 	];
 }
 

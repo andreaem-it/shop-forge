@@ -6,7 +6,7 @@ Tested up to: 6.7
 Requires PHP: 8.0
 WC requires at least: 7.0
 WC tested up to: 9.9
-Stable tag: 1.8.0
+Stable tag: 1.9.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -33,7 +33,8 @@ so you only load the code and CSS you actually use.
 * **Quotes** — customers request a custom quote for a list of products; the shop owner replies from a dedicated admin page.
 * **Support & Returns** — a two-step withdrawal ("recesso") flow compliant with EU consumer law, with an automatic confirmation email.
 * **Product Support (RMA)** — structured repair / replacement / refund requests per order line, with a message thread, CSV export, print view and stats.
-* **Notifications** — an in-account notification center fed by real events (order status, tickets, returns, quotes).
+* **Notifications** — an in-account notification center fed by real events (order status, tickets, returns, RMA, quotes, back-in-stock wishlist items).
+* **Loyalty Points** — customers earn points on completed orders (reversed if later refunded/cancelled) and redeem them for a discount coupon. Earn rate, point value and minimum redemption are configurable.
 
 = Shortcodes =
 
@@ -47,6 +48,12 @@ so you only load the code and CSS you actually use.
 * `[product_datasheets]` — PDF datasheets, managed from a metabox.
 
 Full attribute reference is available in-app under ShopForge → Shortcodes.
+
+= Admin tools =
+
+* **Open-requests alert** — editing an order shows a banner if it has open support tickets, withdrawal requests or RMA, linking straight to each one.
+* **Dashboard widgets** — two widgets on the native WordPress Dashboard: a sales overview (orders/revenue, 7-day chart) and a customer-requests overview (open counts + recent activity across tickets, withdrawals, RMA and quotes).
+* **Messages** — a single admin page aggregating every customer request (tickets, withdrawals, RMA, quotes) with type/status filters and search, each row linking to where it is actually managed. Data stays where it already lives; this is an overview, not a new store.
 
 == Installation ==
 
@@ -76,6 +83,16 @@ No, shipment tracking relies on 17track.net's public API. You need to register y
 Yes, all strings are wrapped for translation with the `shopforge` text domain. An Italian translation is bundled; a `.pot` file is included under `languages/` for adding more.
 
 == Changelog ==
+
+= 1.9.0 =
+* New Loyalty Points module: earn on completed orders (reversed on refund/cancel), redeem for a discount coupon, configurable earn rate/point value/minimum redemption.
+* New admin order-edit alert for orders with open tickets, withdrawal requests or RMA.
+* New WordPress Dashboard widgets: sales overview with a 7-day chart, and a customer-requests overview with recent activity.
+* New unified "Messages" admin page aggregating tickets, withdrawals, RMA and quotes with filters and search.
+* Notifications now also cover ticket/return/RMA status updates and wishlist back-in-stock.
+* Auto-issue a store-credit coupon and set order status to Refunded when a withdrawal request is approved as refunded.
+* Fixed returns modal not becoming visible, unified modal/support-panel text sizes, unified RMA form styling with the rest of the account UI.
+* Fixed account navigation not stretching to full width outside the two-column layout.
 
 = 1.8.0 =
 * Full English base + Italian translation, translation-ready throughout.

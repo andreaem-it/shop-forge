@@ -36,8 +36,12 @@ function shopforge_add_notification( int $user_id, string $type, array $data ): 
 		'order_status'   => 'fa-solid fa-box',
 		'ticket'         => 'fa-solid fa-headset',
 		'return_status'  => 'fa-solid fa-rotate-left',
+		'rma_status'     => 'fa-solid fa-screwdriver-wrench',
 		'quote_received' => 'fa-solid fa-file-invoice',
 		'quote_replied'  => 'fa-solid fa-file-invoice',
+		'back_in_stock'  => 'fa-solid fa-heart',
+		'loyalty_earned' => 'fa-solid fa-star',
+		'loyalty_redeemed' => 'fa-solid fa-star',
 	];
 
 	$notifications   = get_user_meta( $user_id, '_shopforge_notifications', true ) ?: [];

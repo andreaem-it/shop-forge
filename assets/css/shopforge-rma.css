@@ -1,28 +1,6 @@
-/* ShopForge — Assistenza Prodotti (RMA) */
-
-.shopforge-rma-btn {
-	display: inline-flex;
-	align-items: center;
-	gap: 6px;
-	padding: 9px 16px;
-	background: var(--shopforge-primary, #006FEF);
-	color: #fff;
-	border: none;
-	border-radius: var(--shopforge-radius, 8px);
-	font-size: 13px;
-	font-weight: 700;
-	text-decoration: none;
-	cursor: pointer;
-}
-.shopforge-rma-btn:hover { opacity: .9; color: #fff; }
-
-.shopforge-rma-btn--secondary {
-	background: var(--shopforge-bg-soft, #F0F7FF);
-	color: var(--shopforge-text-main, #07172F);
-	border: 1px solid var(--shopforge-border, #DCE6F2);
-}
-
-.shopforge-rma-btn--danger { background: #DC2626; }
+/* ShopForge — Assistenza Prodotti (RMA)
+   I pulsanti usano il componente condiviso .shopforge-btn (vedi
+   shopforge-woo-account.css), non più una variante propria del modulo. */
 
 .shopforge-rma-note {
 	font-size: 12px;
@@ -33,6 +11,7 @@
 	background: #fff;
 	border: 1px solid var(--shopforge-border, #DCE6F2);
 	border-radius: var(--shopforge-radius, 8px);
+	box-shadow: var(--shopforge-shadow, none);
 	padding: 16px 18px;
 	margin-bottom: 16px;
 }
@@ -63,6 +42,7 @@
 	background: #fff;
 	border: 1px solid var(--shopforge-border, #DCE6F2);
 	border-radius: var(--shopforge-radius, 8px);
+	box-shadow: var(--shopforge-shadow, none);
 	padding: 16px 18px;
 	margin-bottom: 12px;
 }
@@ -90,30 +70,14 @@
 	color: var(--shopforge-primary, #006FEF);
 }
 
+/* Campi (.shopforge-field) e radio (.shopforge-radio) sono componenti
+   condivisi con Assistenza/Resi/Preventivi — vedi shopforge-tracker.css,
+   caricato su tutte le pagine account. Qui restano solo le parti
+   specifiche del form RMA che non hanno un equivalente condiviso. */
+
 .shopforge-rma-form {
 	max-width: 560px;
 }
-.shopforge-rma-field {
-	margin-bottom: 16px;
-}
-.shopforge-rma-field label {
-	display: block;
-	font-weight: 700;
-	font-size: 12px;
-	margin-bottom: 6px;
-}
-.shopforge-rma-field input[type="text"],
-.shopforge-rma-field input[type="number"],
-.shopforge-rma-field select,
-.shopforge-rma-field textarea {
-	width: 100%;
-	padding: 8px 10px;
-	border: 1px solid var(--shopforge-border, #DCE6F2);
-	border-radius: 6px;
-	box-sizing: border-box;
-	font-size: 13px;
-}
-.shopforge-rma-radio,
 .shopforge-rma-check {
 	display: block;
 	font-size: 13px;
@@ -121,9 +85,10 @@
 	font-weight: 400;
 }
 .shopforge-rma-error {
-	color: #DC2626;
-	font-size: 13px;
-	margin: 10px 0;
+	padding: 10px 14px; margin: 10px 0;
+	background: #FEF2F2; border: 1px solid #FECACA;
+	border-radius: var(--shopforge-radius, 8px);
+	color: #991B1B; font-size: 13px; line-height: 1.5;
 }
 
 .shopforge-rma-request-detail {

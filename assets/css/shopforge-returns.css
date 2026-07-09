@@ -153,29 +153,8 @@
 	}
 	.shopforge-declaration-notice i { margin-top: 2px; flex-shrink: 0; }
 
-	/* ---- Radio buttons ---- */
-	.shopforge-radio-group { display: flex; flex-direction: column; gap: 10px; }
-	.shopforge-radio {
-		display: flex !important; align-items: center !important; gap: 10px;
-		cursor: pointer; font-weight: 400 !important;
-		text-transform: none !important; font-size: 13px !important;
-		color: var(--shopforge-text-main) !important; letter-spacing: normal !important;
-	}
-	.shopforge-radio input[type=radio] { display: none; }
-	.shopforge-radio__box {
-		width: 18px; height: 18px; flex-shrink: 0;
-		border-radius: 50%; border: 2px solid var(--shopforge-border);
-		background: #fff; position: relative;
-		transition: border-color .15s;
-	}
-	.shopforge-radio input:checked + .shopforge-radio__box {
-		border-color: var(--shopforge-primary);
-	}
-	.shopforge-radio input:checked + .shopforge-radio__box::after {
-		content: ""; position: absolute;
-		inset: 3px; border-radius: 50%;
-		background: var(--shopforge-primary);
-	}
+	/* ---- Radio buttons: .shopforge-radio è un componente condiviso,
+	   vedi shopforge-tracker.css (caricato su tutte le pagine account). ---- */
 
 	/* ---- Step 2 actions ---- */
 	.shopforge-step2-actions {

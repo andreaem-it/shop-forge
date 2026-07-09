@@ -863,6 +863,19 @@ add_action( 'wp_ajax_shopforge_update_return_status', function () {
 				'coupon_code' => $coupon_code,
 			] );
 		}
+
+		$customer_id = (int) $order->get_customer_id();
+		if ( $customer_id ) {
+			do_action( 'shopforge_notification', $customer_id, 'return_status', [
+				/* translators: %s: withdrawal reference */
+				'text' => sprintf( __( 'Update on your withdrawal request %s', 'shopforge' ), $returns[ $idx ]['ref'] ?? '' ),
+				'url'  => wc_get_account_endpoint_url( 'shopforge-returns' ),
+			] );
+		}
+	}
+
+	if ( function_exists( 'shopforge_dashboard_flush_cache' ) ) {
+		shopforge_dashboard_flush_cache();
 	}
 
 	wp_send_json_success( [ 'coupon_code' => $coupon_code, 'coupon_error' => $coupon_error ] );

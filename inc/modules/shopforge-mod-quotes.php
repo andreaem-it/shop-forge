@@ -432,6 +432,10 @@ add_action( 'wp_ajax_shopforge_admin_quote_update', function () {
 		] );
 	}
 
+	if ( function_exists( 'shopforge_dashboard_flush_cache' ) ) {
+		shopforge_dashboard_flush_cache();
+	}
+
 	wp_send_json_success();
 } );
 

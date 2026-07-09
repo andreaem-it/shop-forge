@@ -33,6 +33,7 @@ function shopforge_nav_icons(): array {
         'shopforge-returns'           => 'fa-solid fa-rotate-left',
         'shopforge-rma'               => 'fa-solid fa-screwdriver-wrench',
         'shopforge-notices'           => 'fa-solid fa-bell',
+        'shopforge-loyalty'           => 'fa-solid fa-star',
 
         // Plugin italiani / YITH / WooCommerce estensioni (endpoint comuni)
         'resi-assistenza'         => 'fa-solid fa-headset',
@@ -465,6 +466,18 @@ function shopforge_render_account_dashboard(): void {
             'value'     => count( $quotes ),
             'link_text' => __( 'Go to quotes', 'shopforge' ),
             'url'       => wc_get_account_endpoint_url( 'shopforge-quotes' ),
+        ];
+    }
+
+    // Card loyalty solo se il modulo è attivo (altrimenti il link è un 404)
+    if ( function_exists( 'shopforge_is_module_active' ) && shopforge_is_module_active( 'loyalty' )
+         && function_exists( 'shopforge_loyalty_get_balance' ) ) {
+        $stats[] = [
+            'icon'      => 'fa-solid fa-star',
+            'label'     => __( 'Loyalty points', 'shopforge' ),
+            'value'     => shopforge_loyalty_get_balance( $user_id ),
+            'link_text' => __( 'Redeem points', 'shopforge' ),
+            'url'       => wc_get_account_endpoint_url( 'shopforge-loyalty' ),
         ];
     }
     ?>

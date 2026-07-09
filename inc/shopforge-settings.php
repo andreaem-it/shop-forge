@@ -58,6 +58,15 @@ add_action( 'admin_post_shopforge_save_modules', function () {
 
 	update_option( 'shopforge_17track_key', sanitize_text_field( $_POST['shopforge_17track_key'] ?? '' ) );
 
+	$loyalty_earn_rate = max( 0, (float) ( $_POST['shopforge_loyalty_earn_rate'] ?? 1 ) );
+	update_option( 'shopforge_loyalty_earn_rate', $loyalty_earn_rate );
+
+	$loyalty_point_value = max( 0, (float) ( $_POST['shopforge_loyalty_point_value'] ?? 0.05 ) );
+	update_option( 'shopforge_loyalty_point_value', $loyalty_point_value );
+
+	$loyalty_min_redeem = max( 1, (int) ( $_POST['shopforge_loyalty_min_redeem'] ?? 100 ) );
+	update_option( 'shopforge_loyalty_min_redeem', $loyalty_min_redeem );
+
 	// ---- Tema (skin) ----
 	$theme = sanitize_key( $_POST['shopforge_theme'] ?? 'boxed' );
 	if ( ! isset( shopforge_theme_presets()[ $theme ] ) ) {
@@ -344,6 +353,54 @@ function shopforge_admin_tab_modules(): void {
 					       class="shopforge-config-input">
 					<p class="shopforge-config-desc">
 						<?php esc_html_e( 'Required by the Shipment tracking module. Get a free key at api.17track.net. Without a key the tracking widget is not shown.', 'shopforge' ); ?>
+					</p>
+				</div>
+
+				<div class="shopforge-config-field">
+					<label for="shopforge_loyalty_earn_rate">
+						<i class="fa-solid fa-star" aria-hidden="true"></i>
+						<?php esc_html_e( 'Loyalty — points per currency unit spent', 'shopforge' ); ?>
+					</label>
+					<input type="number"
+					       id="shopforge_loyalty_earn_rate"
+					       name="shopforge_loyalty_earn_rate"
+					       value="<?php echo esc_attr( get_option( 'shopforge_loyalty_earn_rate', 1 ) ); ?>"
+					       min="0" step="0.1"
+					       class="shopforge-config-input">
+					<p class="shopforge-config-desc">
+						<?php esc_html_e( 'Points awarded per currency unit spent, credited when an order is marked Completed and reversed if it is later refunded or cancelled.', 'shopforge' ); ?>
+					</p>
+				</div>
+
+				<div class="shopforge-config-field">
+					<label for="shopforge_loyalty_point_value">
+						<i class="fa-solid fa-coins" aria-hidden="true"></i>
+						<?php esc_html_e( 'Loyalty — value of 1 point (redemption)', 'shopforge' ); ?>
+					</label>
+					<input type="number"
+					       id="shopforge_loyalty_point_value"
+					       name="shopforge_loyalty_point_value"
+					       value="<?php echo esc_attr( get_option( 'shopforge_loyalty_point_value', 0.05 ) ); ?>"
+					       min="0" step="0.01"
+					       class="shopforge-config-input">
+					<p class="shopforge-config-desc">
+						<?php esc_html_e( 'Currency value of a single point when redeemed for a discount coupon. Default: 0.05 (100 points = 5 in your currency).', 'shopforge' ); ?>
+					</p>
+				</div>
+
+				<div class="shopforge-config-field">
+					<label for="shopforge_loyalty_min_redeem">
+						<i class="fa-solid fa-star-half-stroke" aria-hidden="true"></i>
+						<?php esc_html_e( 'Loyalty — minimum points to redeem', 'shopforge' ); ?>
+					</label>
+					<input type="number"
+					       id="shopforge_loyalty_min_redeem"
+					       name="shopforge_loyalty_min_redeem"
+					       value="<?php echo esc_attr( get_option( 'shopforge_loyalty_min_redeem', 100 ) ); ?>"
+					       min="1" step="1"
+					       class="shopforge-config-input">
+					<p class="shopforge-config-desc">
+						<?php esc_html_e( 'Minimum point balance a customer must have before the redeem form appears.', 'shopforge' ); ?>
 					</p>
 				</div>
 

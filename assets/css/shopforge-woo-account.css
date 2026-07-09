@@ -256,13 +256,61 @@ body.shopforge-account-page .entry-content {
   color: var(--shopforge-primary);
 }
 
+.shopforge-account-header-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.shopforge-loyalty-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 6px 16px;
+  border: 1px solid var(--shopforge-border);
+  border-radius: 12px;
+  background: #fff;
+  text-decoration: none !important;
+  transition: border-color 0.18s;
+}
+
+.shopforge-loyalty-badge:hover {
+  border-color: var(--shopforge-primary);
+}
+
+.shopforge-loyalty-badge__row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--shopforge-text-main);
+}
+
+.shopforge-loyalty-badge__row i {
+  color: #F59E0B;
+  font-size: 14px;
+}
+
+.shopforge-loyalty-badge__label {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--shopforge-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
 /* --------------------------------------------------------------------------
    STAT CARDS
    -------------------------------------------------------------------------- */
 
 .shopforge-account-stats {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 16px;
 }
 
@@ -756,6 +804,13 @@ body.shopforge-account-page .entry-content {
   .shopforge-account-welcome {
     flex-direction: column;
     align-items: flex-start;
+  }
+
+  .shopforge-account-header-actions {
+    align-items: flex-start;
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-between;
   }
 
   .shopforge-account-stats {

@@ -469,16 +469,11 @@ function shopforge_render_account_dashboard(): void {
         ];
     }
 
-    // Card loyalty solo se il modulo è attivo (altrimenti il link è un 404)
+    // Punteggio loyalty solo se il modulo è attivo (altrimenti il link è un 404)
+    $loyalty_balance = null;
     if ( function_exists( 'shopforge_is_module_active' ) && shopforge_is_module_active( 'loyalty' )
          && function_exists( 'shopforge_loyalty_get_balance' ) ) {
-        $stats[] = [
-            'icon'      => 'fa-solid fa-star',
-            'label'     => __( 'Loyalty points', 'shopforge' ),
-            'value'     => shopforge_loyalty_get_balance( $user_id ),
-            'link_text' => __( 'Redeem points', 'shopforge' ),
-            'url'       => wc_get_account_endpoint_url( 'shopforge-loyalty' ),
-        ];
+        $loyalty_balance = shopforge_loyalty_get_balance( $user_id );
     }
     ?>
     <div class="shopforge-account-dashboard">
@@ -493,10 +488,21 @@ function shopforge_render_account_dashboard(): void {
                 ?></h2>
                 <p><?php esc_html_e( 'From here you can manage orders, addresses, personal data, payment methods, quotes and sales requests.', 'shopforge' ); ?></p>
             </div>
-            <a class="shopforge-account-logout" href="<?php echo esc_url( wc_logout_url() ); ?>">
-                <i class="fa-solid fa-right-from-bracket" aria-hidden="true"></i>
-                <?php esc_html_e( 'Log out', 'shopforge' ); ?>
-            </a>
+            <div class="shopforge-account-header-actions">
+                <?php if ( null !== $loyalty_balance ) : ?>
+                <a class="shopforge-loyalty-badge" href="<?php echo esc_url( wc_get_account_endpoint_url( 'shopforge-loyalty' ) ); ?>">
+                    <span class="shopforge-loyalty-badge__row">
+                        <i class="fa-solid fa-star" aria-hidden="true"></i>
+                        <strong><?php echo esc_html( $loyalty_balance ); ?></strong>
+                    </span>
+                    <span class="shopforge-loyalty-badge__label"><?php esc_html_e( 'Loyalty points', 'shopforge' ); ?></span>
+                </a>
+                <?php endif; ?>
+                <a class="shopforge-account-logout" href="<?php echo esc_url( wc_logout_url() ); ?>">
+                    <i class="fa-solid fa-right-from-bracket" aria-hidden="true"></i>
+                    <?php esc_html_e( 'Log out', 'shopforge' ); ?>
+                </a>
+            </div>
         </div>
 
         <!-- Statistiche -->

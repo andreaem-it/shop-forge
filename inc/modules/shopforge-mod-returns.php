@@ -339,13 +339,15 @@ add_action( 'woocommerce_order_details_before_order_table', function ( WC_Order 
 			<i class="fa-solid fa-clock" aria-hidden="true"></i>
 		</div>
 		<div class="shopforge-recesso-card__body">
-			<p class="shopforge-recesso-card__title"><?php esc_html_e( 'Withdrawal window expired', 'shopforge' ); ?></p>
-			<p class="shopforge-recesso-card__text">
-				<?php
-				/* translators: %d: number of days */
-				printf( esc_html__( 'The %d-day period to exercise the right of withdrawal has expired. For any need, contact our store.', 'shopforge' ), (int) $window );
-				?>
-			</p>
+			<div class="shopforge-recesso-card_container">
+				<p class="shopforge-recesso-card__title"><?php esc_html_e( 'Withdrawal window expired', 'shopforge' ); ?></p>
+				<p class="shopforge-recesso-card__text">
+					<?php
+					/* translators: %d: number of days */
+					printf( esc_html__( 'The %d-day period to exercise the right of withdrawal has expired. For any need, contact our store.', 'shopforge' ), (int) $window );
+					?>
+				</p>
+			</div>
 		</div>
 		<?php if ( $contact_url ) : ?>
 		<a href="<?php echo esc_url( $contact_url ); ?>" class="shopforge-recesso-btn shopforge-recesso-btn--secondary">

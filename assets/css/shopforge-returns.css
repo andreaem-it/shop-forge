@@ -62,14 +62,14 @@
 		background: #FFEDD5; color: #C2410C;
 	}
 	.shopforge-recesso-btn--secondary {
-		background: #64748B; text-decoration: none;
+		background: var(--shopforge-primary); text-decoration: none;
 		display: inline-flex; align-items: center; gap: 7px;
 		padding: 10px 18px; color: #fff;
 		font-size: 13px; font-weight: 700;
 		border-radius: var(--shopforge-radius);
 		white-space: nowrap; transition: background .2s;
 	}
-	.shopforge-recesso-btn--secondary:hover { background: #475569; color: #fff; }
+	.shopforge-recesso-btn--secondary:hover { background: var(--shopforge-primary-hover); color: #fff; }
 	.shopforge-recesso-expired-note {
 		flex-shrink: 0; display: flex; align-items: center; gap: 7px;
 		font-size: 13px; font-weight: 600; color: #92400E;
@@ -83,7 +83,7 @@
 	.shopforge-recesso-card--done .shopforge-recesso-card__icon {
 		background: #DCFCE7; color: #15803D;
 	}
-	.shopforge-recesso-card__body { flex: 1; min-width: 0; }
+	.shopforge-recesso-card__body { flex: 1; min-width: 0; justify-content: space-between; }
 	.shopforge-recesso-card__title {
 		margin: 0 0 4px; font-size: 13px; font-weight: 800;
 		color: var(--shopforge-text-main);
@@ -96,13 +96,13 @@
 		flex-shrink: 0;
 		display: inline-flex; align-items: center; gap: 8px;
 		padding: 10px 18px;
-		background: #B45309; color: #fff;
+		background: var(--shopforge-primary); color: #fff;
 		font-size: 13px; font-weight: 700;
 		border: none; border-radius: var(--shopforge-radius);
 		cursor: pointer; white-space: nowrap;
 		transition: background .2s;
 	}
-	.shopforge-recesso-btn:hover { background: #92400E; }
+	.shopforge-recesso-btn:hover { background: var(--shopforge-primary-hover); }
 
 	/* ---- Step indicator ---- */
 	.shopforge-steps {

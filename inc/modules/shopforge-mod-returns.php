@@ -302,29 +302,31 @@ add_action( 'woocommerce_order_details_before_order_table', function ( WC_Order 
 			<i class="fa-solid fa-rotate-left" aria-hidden="true"></i>
 		</div>
 		<div class="shopforge-recesso-card__body">
-			<p class="shopforge-recesso-card__title"><?php esc_html_e( 'Withdrawal request sent', 'shopforge' ); ?></p>
-			<p class="shopforge-recesso-card__text">
-				<?php if ( $_last_return ) : ?>
-				<?php esc_html_e( 'Ref.', 'shopforge' ); ?> <strong><?php echo esc_html( $_last_return['ref'] ); ?></strong> —
-				<?php esc_html_e( 'Status:', 'shopforge' ); ?> <span style="display:inline-block;padding:1px 8px;border-radius:999px;font-size:12px;font-weight:700;background:<?php echo esc_attr( $_ret_st['bg'] ); ?>;color:<?php echo esc_attr( $_ret_st['color'] ); ?>">
-					<?php echo esc_html( $_ret_st['label'] ); ?>
-				</span>
-				<?php if ( ! empty( $_last_return['reply'] ) ) : ?>
-				<br><span style="display:block;margin-top:8px;padding:7px 10px;background:#EFF6FF;border-left:3px solid #3B82F6;border-radius:0 4px 4px 0;font-size:13px;">
-					<strong style="font-size:11px;color:#1D4ED8;display:block;margin-bottom:2px;"><?php esc_html_e( 'Message from the store:', 'shopforge' ); ?></strong>
-					<?php echo esc_html( $_last_return['reply'] ); ?>
-				</span>
-				<?php endif; ?>
-				<?php if ( ! empty( $_last_return['coupon_code'] ) ) : ?>
-				<br><span style="display:block;margin-top:8px;padding:7px 10px;background:#F0FDF4;border-left:3px solid #16A34A;border-radius:0 4px 4px 0;font-size:13px;color:#166534;">
-					<?php
-					/* translators: %s: coupon code */
-					printf( esc_html__( 'Your store credit coupon: %s', 'shopforge' ), '<code>' . esc_html( $_last_return['coupon_code'] ) . '</code>' );
-					?>
-				</span>
-				<?php endif; ?>
-				<?php endif; ?>
-			</p>
+			<div class="shopforge-recesso-card__content">
+				<p class="shopforge-recesso-card__title"><?php esc_html_e( 'Withdrawal request sent', 'shopforge' ); ?></p>
+				<p class="shopforge-recesso-card__text">
+					<?php if ( $_last_return ) : ?>
+					<?php esc_html_e( 'Ref.', 'shopforge' ); ?> <strong><?php echo esc_html( $_last_return['ref'] ); ?></strong> —
+					<?php esc_html_e( 'Status:', 'shopforge' ); ?> <span style="display:inline-block;padding:1px 8px;border-radius:999px;font-size:12px;font-weight:700;background:<?php echo esc_attr( $_ret_st['bg'] ); ?>;color:<?php echo esc_attr( $_ret_st['color'] ); ?>">
+						<?php echo esc_html( $_ret_st['label'] ); ?>
+					</span>
+					<?php if ( ! empty( $_last_return['reply'] ) ) : ?>
+					<br><span style="display:block;margin-top:8px;padding:7px 10px;background:#EFF6FF;border-left:3px solid #3B82F6;border-radius:0 4px 4px 0;font-size:13px;">
+						<strong style="font-size:11px;color:#1D4ED8;display:block;margin-bottom:2px;"><?php esc_html_e( 'Message from the store:', 'shopforge' ); ?></strong>
+						<?php echo esc_html( $_last_return['reply'] ); ?>
+					</span>
+					<?php endif; ?>
+					<?php if ( ! empty( $_last_return['coupon_code'] ) ) : ?>
+					<br><span style="display:block;margin-top:8px;padding:7px 10px;background:#F0FDF4;border-left:3px solid #16A34A;border-radius:0 4px 4px 0;font-size:13px;color:#166534;">
+						<?php
+						/* translators: %s: coupon code */
+						printf( esc_html__( 'Your store credit coupon: %s', 'shopforge' ), '<code>' . esc_html( $_last_return['coupon_code'] ) . '</code>' );
+						?>
+					</span>
+					<?php endif; ?>
+					<?php endif; ?>
+				</p>
+			</div>
 			<a href="<?php echo esc_url( wc_get_account_endpoint_url('shopforge-returns') ); ?>" class="shopforge-recesso-btn shopforge-recesso-btn--secondary">
 				<i class="fa-solid fa-list" aria-hidden="true"></i>
 				<?php esc_html_e( 'All my returns', 'shopforge' ); ?>
@@ -339,25 +341,27 @@ add_action( 'woocommerce_order_details_before_order_table', function ( WC_Order 
 			<i class="fa-solid fa-clock" aria-hidden="true"></i>
 		</div>
 		<div class="shopforge-recesso-card__body">
-			<p class="shopforge-recesso-card__title"><?php esc_html_e( 'Withdrawal window expired', 'shopforge' ); ?></p>
-			<p class="shopforge-recesso-card__text">
-				<?php
-				/* translators: %d: number of days */
-				printf( esc_html__( 'The %d-day period to exercise the right of withdrawal has expired. For any need, contact our store.', 'shopforge' ), (int) $window );
-				?>
-			</p>
+			<div class="shopforge-recesso-card__content">
+				<p class="shopforge-recesso-card__title"><?php esc_html_e( 'Withdrawal window expired', 'shopforge' ); ?></p>
+				<p class="shopforge-recesso-card__text">
+					<?php
+					/* translators: %d: number of days */
+					printf( esc_html__( 'The %d-day period to exercise the right of withdrawal has expired. For any need, contact our store.', 'shopforge' ), (int) $window );
+					?>
+				</p>
+			</div>
+			<?php if ( $contact_url ) : ?>
+			<a href="<?php echo esc_url( $contact_url ); ?>" class="shopforge-recesso-btn shopforge-recesso-btn--secondary">
+				<i class="fa-solid fa-headset" aria-hidden="true"></i>
+				<?php esc_html_e( 'Contact the store', 'shopforge' ); ?>
+			</a>
+			<?php else : ?>
+			<span class="shopforge-recesso-expired-note">
+				<i class="fa-solid fa-headset" aria-hidden="true"></i>
+				<?php esc_html_e( 'Contact the store for assistance', 'shopforge' ); ?>
+			</span>
+			<?php endif; ?>
 		</div>
-		<?php if ( $contact_url ) : ?>
-		<a href="<?php echo esc_url( $contact_url ); ?>" class="shopforge-recesso-btn shopforge-recesso-btn--secondary">
-			<i class="fa-solid fa-headset" aria-hidden="true"></i>
-			<?php esc_html_e( 'Contact the store', 'shopforge' ); ?>
-		</a>
-		<?php else : ?>
-		<span class="shopforge-recesso-expired-note">
-			<i class="fa-solid fa-headset" aria-hidden="true"></i>
-			<?php esc_html_e( 'Contact the store for assistance', 'shopforge' ); ?>
-		</span>
-		<?php endif; ?>
 	</div>
 
 	<?php else : ?>

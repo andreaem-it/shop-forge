@@ -83,7 +83,11 @@
 	.shopforge-recesso-card--done .shopforge-recesso-card__icon {
 		background: #DCFCE7; color: #15803D;
 	}
-	.shopforge-recesso-card__body { flex: 1; min-width: 0; }
+	.shopforge-recesso-card__body {
+		flex: 1; min-width: 0;
+		display: flex; align-items: center; justify-content: space-between; gap: 14px;
+	}
+	.shopforge-recesso-card__content { min-width: 0; }
 	.shopforge-recesso-card__title {
 		margin: 0 0 4px; font-size: 13px; font-weight: 800;
 		color: var(--shopforge-text-main);
@@ -216,6 +220,7 @@
 
 	@media (max-width: 600px) {
 		.shopforge-recesso-card { flex-wrap: wrap; }
+		.shopforge-recesso-card__body { flex-wrap: wrap; }
 		.shopforge-recesso-btn { width: 100%; justify-content: center; }
 		.shopforge-step2-actions { flex-wrap: wrap; }
 	}

@@ -152,6 +152,18 @@ function shopforge_modules_registry(): array {
 			'menu_label'  => __( 'Loyalty Points', 'shopforge' ),
 		],
 
+		'receipts' => [
+			'id'          => 'receipts',
+			'type'        => 'module',
+			'label'       => __( 'PDF Receipts', 'shopforge' ),
+			'description' => __( 'Generates a real PDF receipt for each order, with a choice of visual templates, your logo, company details and footer notes. Downloadable from the order page and the customer account, with one-click email delivery.', 'shopforge' ),
+			'icon'        => 'fa-solid fa-file-invoice-dollar',
+			'file'        => 'shopforge-mod-receipts.php',
+			'menu_item'   => true,
+			'endpoint'    => 'shopforge-receipts',
+			'menu_label'  => __( 'Receipts', 'shopforge' ),
+		],
+
 	];
 }
 

@@ -6,7 +6,7 @@ Tested up to: 6.7
 Requires PHP: 8.0
 WC requires at least: 7.0
 WC tested up to: 9.9
-Stable tag: 1.9.1
+Stable tag: 1.10.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -35,6 +35,7 @@ so you only load the code and CSS you actually use.
 * **Product Support (RMA)** — structured repair / replacement / refund requests per order line, with a message thread, CSV export, print view and stats.
 * **Notifications** — an in-account notification center fed by real events (order status, tickets, returns, RMA, quotes, back-in-stock wishlist items).
 * **Loyalty Points** — customers earn points on completed orders (reversed if later refunded/cancelled) and redeem them for a discount coupon. Earn rate, point value and minimum redemption are configurable.
+* **PDF Receipts** — generates a real server-side PDF receipt for each order (not a fiscal invoice), with a choice of visual templates, your logo, company details and a footer note. Downloadable from the order page and the customer account, with one-click email delivery.
 
 = Shortcodes =
 
@@ -83,6 +84,10 @@ No, shipment tracking relies on 17track.net's public API. You need to register y
 Yes, all strings are wrapped for translation with the `shopforge` text domain. An Italian translation is bundled; a `.pot` file is included under `languages/` for adding more.
 
 == Changelog ==
+
+= 1.10.0 =
+* New PDF Receipts module: real server-generated PDF (Dompdf), 3 visual templates (Modern/Classic/Minimal), configurable company details/logo/footer note, one-click download from the order page and customer account, one-click email delivery. This is a receipt, not a fiscal invoice — no electronic-invoicing (SDI) integration.
+* Italian translation completed for all new strings, 100% coverage verified against source (728/728).
 
 = 1.9.1 =
 * Removed all emoji from admin UI, notices and JS feedback text — plain text and native icons only.

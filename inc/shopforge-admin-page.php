@@ -43,6 +43,10 @@ function shopforge_admin_page_render(): void {
 		'shortcodes' => [ 'label' => __( 'Shortcodes', 'shopforge' ), 'icon' => 'fa-solid fa-code' ],
 	];
 
+	if ( function_exists( 'shopforge_is_module_active' ) && shopforge_is_module_active( 'receipts' ) ) {
+		$tabs['receipts'] = [ 'label' => __( 'Receipts', 'shopforge' ), 'icon' => 'fa-solid fa-receipt' ];
+	}
+
 	$active_tab = sanitize_key( $_GET['tab'] ?? 'modules' );
 	if ( ! isset( $tabs[ $active_tab ] ) ) {
 		$active_tab = 'modules';
@@ -84,6 +88,11 @@ function shopforge_admin_page_render(): void {
 					break;
 				case 'shortcodes':
 					shopforge_admin_tab_shortcodes();
+					break;
+				case 'receipts':
+					if ( function_exists( 'shopforge_admin_tab_receipts' ) ) {
+						shopforge_admin_tab_receipts();
+					}
 					break;
 				default:
 					if ( function_exists( 'shopforge_admin_tab_modules' ) ) {

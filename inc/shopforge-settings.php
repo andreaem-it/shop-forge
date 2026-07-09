@@ -257,8 +257,31 @@ function shopforge_admin_tab_modules(): void {
 			<input type="hidden" name="action" value="shopforge_save_modules">
 
 			<!-- ═══════════════════════════════════════════
+			     SOTTO-NAVIGAZIONE: separa le sezioni in tab
+			     (stesso form, stesso submit — solo la vista cambia)
+			     ═══════════════════════════════════════════ -->
+			<div class="shopforge-subtabs" role="tablist">
+				<button type="button" class="shopforge-subtab is-active" data-subtab="core">
+					<i class="fa-solid fa-sliders" aria-hidden="true"></i> <?php esc_html_e( 'Core features', 'shopforge' ); ?>
+				</button>
+				<button type="button" class="shopforge-subtab" data-subtab="modules">
+					<i class="fa-solid fa-puzzle-piece" aria-hidden="true"></i> <?php esc_html_e( 'Modules', 'shopforge' ); ?>
+				</button>
+				<button type="button" class="shopforge-subtab" data-subtab="config">
+					<i class="fa-solid fa-gear" aria-hidden="true"></i> <?php esc_html_e( 'Configuration', 'shopforge' ); ?>
+				</button>
+				<button type="button" class="shopforge-subtab" data-subtab="theme">
+					<i class="fa-solid fa-swatchbook" aria-hidden="true"></i> <?php esc_html_e( 'Theme', 'shopforge' ); ?>
+				</button>
+				<button type="button" class="shopforge-subtab" data-subtab="colors">
+					<i class="fa-solid fa-palette" aria-hidden="true"></i> <?php esc_html_e( 'Colors', 'shopforge' ); ?>
+				</button>
+			</div>
+
+			<!-- ═══════════════════════════════════════════
 			     SEZIONE 1: FUNZIONALITÀ BASE
 			     ═══════════════════════════════════════════ -->
+			<div class="shopforge-subtab-panel is-active" data-subtab-panel="core">
 			<div class="shopforge-section-label">
 				<i class="fa-solid fa-sliders" aria-hidden="true"></i>
 				<?php esc_html_e( 'Core features', 'shopforge' ); ?>
@@ -275,10 +298,12 @@ function shopforge_admin_tab_modules(): void {
 				</div>
 				<?php endforeach; ?>
 			</div>
+			</div>
 
 			<!-- ═══════════════════════════════════════════
 			     SEZIONE 2: MODULI
 			     ═══════════════════════════════════════════ -->
+			<div class="shopforge-subtab-panel" data-subtab-panel="modules">
 			<div class="shopforge-section-label">
 				<i class="fa-solid fa-puzzle-piece" aria-hidden="true"></i>
 				<?php esc_html_e( 'Modules', 'shopforge' ); ?>
@@ -295,10 +320,12 @@ function shopforge_admin_tab_modules(): void {
 				</div>
 				<?php endforeach; ?>
 			</div>
+			</div>
 
 			<!-- ═══════════════════════════════════════════
 			     SEZIONE 3: CONFIGURAZIONE
 			     ═══════════════════════════════════════════ -->
+			<div class="shopforge-subtab-panel" data-subtab-panel="config">
 			<div class="shopforge-section-label">
 				<i class="fa-solid fa-gear" aria-hidden="true"></i>
 				<?php esc_html_e( 'Configuration', 'shopforge' ); ?>
@@ -405,10 +432,12 @@ function shopforge_admin_tab_modules(): void {
 				</div>
 
 			</div>
+			</div>
 
 			<!-- ═══════════════════════════════════════════
 			     SEZIONE 4: TEMA
 			     ═══════════════════════════════════════════ -->
+			<div class="shopforge-subtab-panel" data-subtab-panel="theme">
 			<div class="shopforge-section-label">
 				<i class="fa-solid fa-swatchbook" aria-hidden="true"></i>
 				<?php esc_html_e( 'Theme', 'shopforge' ); ?>
@@ -462,10 +491,12 @@ function shopforge_admin_tab_modules(): void {
 					<?php endforeach; ?>
 				</div>
 			</div>
+			</div>
 
 			<!-- ═══════════════════════════════════════════
 			     SEZIONE 5: COLORI
 			     ═══════════════════════════════════════════ -->
+			<div class="shopforge-subtab-panel" data-subtab-panel="colors">
 			<div class="shopforge-section-label">
 				<i class="fa-solid fa-palette" aria-hidden="true"></i>
 				<?php esc_html_e( 'Colors', 'shopforge' ); ?>
@@ -522,6 +553,7 @@ function shopforge_admin_tab_modules(): void {
 					<div class="shopforge-color-preview__border" id="shopforge-preview-border"><?php esc_html_e( 'Card border', 'shopforge' ); ?></div>
 				</div>
 			</div>
+			</div>
 
 			<div class="shopforge-settings-actions">
 				<?php submit_button( __( 'Save settings', 'shopforge' ), 'primary large', 'submit', false ); ?>
@@ -530,6 +562,24 @@ function shopforge_admin_tab_modules(): void {
 
 	<script>
 	jQuery(document).ready(function($){
+		// Sotto-tab: mostra un solo pannello alla volta (stesso form/submit)
+		var shopforgeSubtab = ( location.hash || '' ).replace( '#', '' ) || 'core';
+		function shopforgeShowSubtab( id ) {
+			if ( ! $( '.shopforge-subtab-panel[data-subtab-panel="' + id + '"]' ).length ) {
+				id = 'core';
+			}
+			$( '.shopforge-subtab' ).removeClass( 'is-active' );
+			$( '.shopforge-subtab[data-subtab="' + id + '"]' ).addClass( 'is-active' );
+			$( '.shopforge-subtab-panel' ).removeClass( 'is-active' );
+			$( '.shopforge-subtab-panel[data-subtab-panel="' + id + '"]' ).addClass( 'is-active' );
+		}
+		$( '.shopforge-subtab' ).on( 'click', function () {
+			var id = $( this ).data( 'subtab' );
+			shopforgeShowSubtab( id );
+			history.replaceState( null, '', '#' + id );
+		} );
+		shopforgeShowSubtab( shopforgeSubtab );
+
 		// Inizializza tutti i color picker
 		$('.shopforge-color-picker').wpColorPicker({
 			change: function(){ shopforgeUpdatePreview(); },
@@ -563,6 +613,27 @@ function shopforge_admin_tab_modules(): void {
 	</script>
 
 	<style>
+	/* ---- Sotto-tab (Funzionalità / Moduli / Configurazione / Tema / Colori) ---- */
+	.shopforge-subtabs {
+		display: flex; flex-wrap: wrap; gap: 6px;
+		margin: 16px 0 24px; padding-bottom: 14px;
+		border-bottom: 1px solid #dcdcde;
+	}
+	.shopforge-subtab {
+		display: inline-flex; align-items: center; gap: 7px;
+		padding: 8px 16px;
+		background: #fff; border: 1px solid #dcdcde; border-radius: 999px;
+		color: #646970; font-size: 13px; font-weight: 600;
+		cursor: pointer; transition: border-color .15s, color .15s, background .15s;
+	}
+	.shopforge-subtab i { font-size: 12px; }
+	.shopforge-subtab:hover { border-color: #2271b1; color: #2271b1; }
+	.shopforge-subtab.is-active {
+		background: #2271b1; border-color: #2271b1; color: #fff;
+	}
+	.shopforge-subtab-panel { display: none; }
+	.shopforge-subtab-panel.is-active { display: block; }
+
 	/* ---- Banner licenza mancante ---- */
 	.shopforge-license-banner {
 		display: flex; align-items: center; gap: 10px;

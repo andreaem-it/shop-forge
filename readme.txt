@@ -6,7 +6,7 @@ Tested up to: 6.7
 Requires PHP: 8.0
 WC requires at least: 7.0
 WC tested up to: 9.9
-Stable tag: 1.11.1
+Stable tag: 1.12.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -85,6 +85,9 @@ No, shipment tracking relies on 17track.net's public API. You need to register y
 Yes, all strings are wrapped for translation with the `shopforge` text domain. An Italian translation is bundled; a `.pot` file is included under `languages/` for adding more.
 
 == Changelog ==
+
+= 1.12.0 =
+* Reworked 1.11.1's sub-tabs into real top-level tabs, reusing the same License/Shortcodes/Receipts tab navigation instead of a nested second-level one: Core features, Modules, Configuration, Theme and Colors are now their own pages, each with its own form and save action, so saving one section never touches another.
 
 = 1.11.1 =
 * The Modules settings page (Core features / Modules / Configuration / Theme / Colors) is now split into sub-tabs instead of one long scrolling page.

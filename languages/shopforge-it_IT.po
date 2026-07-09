@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ShopForge 1.9.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-09 17:02+0200\n"
+"POT-Creation-Date: 2026-07-09 17:22+0200\n"
 "PO-Revision-Date: 2026-07-09 12:00+0000\n"
 "Last-Translator: Andrea Emili\n"
 "Language-Team: Italian\n"
@@ -53,7 +53,9 @@ msgstr "Inserisci una Partita IVA valida di 11 cifre."
 msgid ""
 "Enter a valid 7-character SDI code (Codice Destinatario), or leave it as "
 "zeros if you provided a PEC address."
-msgstr "Inserisci un Codice Destinatario valido di 7 caratteri, oppure lascialo a zeri se hai indicato un indirizzo PEC."
+msgstr ""
+"Inserisci un Codice Destinatario valido di 7 caratteri, oppure lascialo a "
+"zeri se hai indicato un indirizzo PEC."
 
 #: inc/modules/shopforge-mod-checkout-fields.php:186
 msgid "Enter a valid PEC email address."
@@ -90,7 +92,7 @@ msgstr "Creazione del coupon non riuscita."
 #: inc/modules/shopforge-mod-receipts.php:247
 #: inc/modules/shopforge-mod-receipts.php:408
 #: inc/modules/shopforge-mod-returns.php:594
-#: inc/shopforge-order-tracker.php:318 inc/shopforge-settings.php:25
+#: inc/shopforge-order-tracker.php:318 inc/shopforge-settings.php:60
 msgid "Unauthorized access."
 msgstr "Accesso non autorizzato."
 
@@ -716,7 +718,7 @@ msgstr "Usa il logo del sito se impostato. Consigliato PNG o JPG."
 msgid "Select logo"
 msgstr "Seleziona logo"
 
-#: inc/modules/shopforge-mod-receipts.php:523 inc/shopforge-settings.php:527
+#: inc/modules/shopforge-mod-receipts.php:523 inc/shopforge-settings.php:274
 msgid "Save settings"
 msgstr "Salva impostazioni"
 
@@ -2172,31 +2174,47 @@ msgstr "Azzera"
 msgid "No requests match this filter."
 msgstr "Nessuna richiesta corrisponde a questo filtro."
 
-#: inc/shopforge-admin-page.php:41 inc/shopforge-settings.php:284
+#: inc/shopforge-admin-page.php:41 inc/shopforge-settings.php:295
+msgid "Core features"
+msgstr "Funzionalità di base"
+
+#: inc/shopforge-admin-page.php:42 inc/shopforge-settings.php:341
 msgid "Modules"
 msgstr "Moduli"
 
-#: inc/shopforge-admin-page.php:42
+#: inc/shopforge-admin-page.php:43 inc/shopforge-settings.php:374
+msgid "Configuration"
+msgstr "Configurazione"
+
+#: inc/shopforge-admin-page.php:44 inc/shopforge-settings.php:498
+msgid "Theme"
+msgstr "Tema"
+
+#: inc/shopforge-admin-page.php:45 inc/shopforge-settings.php:592
+msgid "Colors"
+msgstr "Colori"
+
+#: inc/shopforge-admin-page.php:46
 msgid "License"
 msgstr "Licenza"
 
-#: inc/shopforge-admin-page.php:43
+#: inc/shopforge-admin-page.php:47
 msgid "Shortcodes"
 msgstr "Shortcode"
 
-#: inc/shopforge-admin-page.php:47 inc/shopforge-modules.php:164
+#: inc/shopforge-admin-page.php:51 inc/shopforge-modules.php:164
 msgid "Receipts"
 msgstr "Ricevute"
 
-#: inc/shopforge-admin-page.php:69
+#: inc/shopforge-admin-page.php:73
 msgid "License, active modules and available shortcodes in a single panel."
 msgstr "Licenza, moduli attivi e shortcode disponibili in un unico pannello."
 
-#: inc/shopforge-admin-page.php:101
+#: inc/shopforge-admin-page.php:91
 msgid "This section requires WooCommerce to be active."
 msgstr "Questa sezione richiede WooCommerce attivo."
 
-#: inc/shopforge-admin-page.php:139
+#: inc/shopforge-admin-page.php:156
 msgid ""
 "Shows the description of the selected variation on the product page (updates "
 "when the variation changes)."
@@ -2204,16 +2222,16 @@ msgstr ""
 "Mostra la descrizione della variante selezionata nella pagina prodotto (si "
 "aggiorna al cambio variante)."
 
-#: inc/shopforge-admin-page.php:145
+#: inc/shopforge-admin-page.php:162
 msgid "Price box with two amounts, VAT included and excluded."
 msgstr "Box prezzo con doppio importo, IVA inclusa ed esclusa."
 
-#: inc/shopforge-admin-page.php:146 inc/shopforge-admin-page.php:174
-#: inc/shopforge-admin-page.php:182 inc/shopforge-admin-page.php:188
+#: inc/shopforge-admin-page.php:163 inc/shopforge-admin-page.php:191
+#: inc/shopforge-admin-page.php:199 inc/shopforge-admin-page.php:205
 msgid "Product ID (optional, default: current product)"
 msgstr "ID prodotto (opzionale, default: prodotto corrente)"
 
-#: inc/shopforge-admin-page.php:151
+#: inc/shopforge-admin-page.php:168
 msgid ""
 "Estimates the delivery date based on business days, public holidays and the "
 "order cutoff time."
@@ -2221,27 +2239,27 @@ msgstr ""
 "Stima la data di consegna in base a giorni lavorativi, festivi e orario di "
 "cutoff per l'ordine."
 
-#: inc/shopforge-admin-page.php:157
+#: inc/shopforge-admin-page.php:174
 msgid "Button that adds the product to the cart and goes straight to checkout."
 msgstr ""
 "Pulsante che aggiunge il prodotto al carrello e porta direttamente al "
 "checkout."
 
-#: inc/shopforge-admin-page.php:163
+#: inc/shopforge-admin-page.php:180
 msgid "Availability label (colored dot + \"In stock\"/\"Out of stock\" text)."
 msgstr ""
 "Etichetta di disponibilità (pallino colorato + testo \"Disponibile\"/\"Non "
 "disponibile\")."
 
-#: inc/shopforge-admin-page.php:165
+#: inc/shopforge-admin-page.php:182
 msgid "CSS font size (optional, e.g. \"16px\")"
 msgstr "Dimensione font CSS (opzionale, es. \"16px\")"
 
-#: inc/shopforge-admin-page.php:166
+#: inc/shopforge-admin-page.php:183
 msgid "CSS font-family (optional)"
 msgstr "Font-family CSS (opzionale)"
 
-#: inc/shopforge-admin-page.php:172
+#: inc/shopforge-admin-page.php:189
 msgid ""
 "Product FAQ, managed from the \"Product FAQ\" metabox on the product edit "
 "screen."
@@ -2249,11 +2267,11 @@ msgstr ""
 "Domande frequenti del prodotto, gestite dal metabox \"FAQ Prodotto\" nella "
 "scheda prodotto."
 
-#: inc/shopforge-admin-page.php:175
+#: inc/shopforge-admin-page.php:192
 msgid "\"accordion\" (default) or \"list\""
 msgstr "\"accordion\" (default) oppure \"list\""
 
-#: inc/shopforge-admin-page.php:181
+#: inc/shopforge-admin-page.php:198
 msgid ""
 "Product compatibility list, managed from the \"Compatibility\" metabox on "
 "the product edit screen."
@@ -2261,7 +2279,7 @@ msgstr ""
 "Lista di compatibilità del prodotto, gestita dal metabox \"Compatibilità\" "
 "nella scheda prodotto."
 
-#: inc/shopforge-admin-page.php:187
+#: inc/shopforge-admin-page.php:204
 msgid ""
 "Product PDF datasheets, managed from the \"Datasheets (PDF)\" metabox on the "
 "product edit screen."
@@ -2269,11 +2287,11 @@ msgstr ""
 "Schede tecniche PDF del prodotto, gestite dal metabox \"Schede Tecniche "
 "(PDF)\" nella scheda prodotto."
 
-#: inc/shopforge-admin-page.php:195
+#: inc/shopforge-admin-page.php:212
 msgid "Available shortcodes"
 msgstr "Shortcode disponibili"
 
-#: inc/shopforge-admin-page.php:197
+#: inc/shopforge-admin-page.php:214
 msgid ""
 "Use them in pages, posts, product descriptions or Elementor shortcode "
 "widgets."
@@ -2281,11 +2299,11 @@ msgstr ""
 "Usali in pagine, articoli, descrizioni prodotto o widget shortcode di "
 "Elementor."
 
-#: inc/shopforge-admin-page.php:222
+#: inc/shopforge-admin-page.php:239
 msgid "Copied!"
 msgstr "Copiato!"
 
-#: inc/shopforge-admin-page.php:223
+#: inc/shopforge-admin-page.php:240
 msgid "Copy"
 msgstr "Copia"
 
@@ -2775,7 +2793,10 @@ msgid ""
 "Adds Customer type (Private/Business), Tax code, VAT number, SDI code and "
 "PEC to checkout — native to the block checkout, with fields shown/required "
 "based on the selected customer type."
-msgstr "Aggiunge al checkout Tipo cliente (Privato/Azienda), Codice Fiscale, Partita IVA, Codice Destinatario e PEC — nativo per il checkout a blocchi, con campi mostrati/obbligatori in base al tipo cliente selezionato."
+msgstr ""
+"Aggiunge al checkout Tipo cliente (Privato/Azienda), Codice Fiscale, Partita "
+"IVA, Codice Destinatario e PEC — nativo per il checkout a blocchi, con campi "
+"mostrati/obbligatori in base al tipo cliente selezionato."
 
 #: inc/shopforge-order-alert.php:41
 #, php-format
@@ -3040,11 +3061,11 @@ msgstr "Acquista ora"
 msgid "In stock"
 msgstr "Disponibile"
 
-#: inc/shopforge-settings.php:139
+#: inc/shopforge-settings.php:166
 msgid "Clean"
 msgstr "Clean"
 
-#: inc/shopforge-settings.php:140
+#: inc/shopforge-settings.php:167
 msgid ""
 "Minimal on a white background: cards with a plain border, no shadows. "
 "Matches the WooCommerce block checkout."
@@ -3052,11 +3073,11 @@ msgstr ""
 "Minimale su fondo bianco: card con solo bordo, niente ombre. Allineato al "
 "checkout a blocchi WooCommerce."
 
-#: inc/shopforge-settings.php:143
+#: inc/shopforge-settings.php:170
 msgid "Boxed"
 msgstr "Boxed"
 
-#: inc/shopforge-settings.php:144
+#: inc/shopforge-settings.php:171
 msgid ""
 "Content wrapped in a soft gray panel, elevated cards with subtle shadows and "
 "a highlighted footer."
@@ -3064,11 +3085,11 @@ msgstr ""
 "Contenuto racchiuso in un pannello grigio, card in rilievo con ombre morbide "
 "e footer evidenziato."
 
-#: inc/shopforge-settings.php:147
+#: inc/shopforge-settings.php:174
 msgid "Cards"
 msgstr "Cards"
 
-#: inc/shopforge-settings.php:148
+#: inc/shopforge-settings.php:175
 msgid ""
 "Every product is a separate rounded card with a shadow: airy layout, "
 "detached elements."
@@ -3076,48 +3097,27 @@ msgstr ""
 "Ogni prodotto è una card separata e arrotondata con ombra: disposizione "
 "ariosa, elementi staccati."
 
-#: inc/shopforge-settings.php:164
+#: inc/shopforge-settings.php:191
 msgid "Cart"
 msgstr "Carrello"
 
-#: inc/shopforge-settings.php:165
+#: inc/shopforge-settings.php:192
 msgid "Checkout"
 msgstr "Checkout"
 
-#: inc/shopforge-settings.php:166
+#: inc/shopforge-settings.php:193
 msgid "Account area"
 msgstr "Area account"
 
-#: inc/shopforge-settings.php:167
+#: inc/shopforge-settings.php:194
 msgid "Shortcodes and other pages"
 msgstr "Shortcode e altre pagine"
 
-#: inc/shopforge-settings.php:239
+#: inc/shopforge-settings.php:256
 msgid "Settings saved."
 msgstr "Impostazioni salvate."
 
-#: inc/shopforge-settings.php:241
-msgid "Warning:"
-msgstr "Attenzione:"
-
-#: inc/shopforge-settings.php:241
-msgid "no module or feature is active."
-msgstr "nessun modulo o funzionalità attiva."
-
-#: inc/shopforge-settings.php:250
-msgid "License missing or invalid — modules cannot be enabled."
-msgstr ""
-"Licenza non valida o non configurata — i moduli non possono essere attivati."
-
-#: inc/shopforge-settings.php:251
-msgid "Configure license"
-msgstr "Configura licenza"
-
-#: inc/shopforge-settings.php:264
-msgid "Core features"
-msgstr "Funzionalità di base"
-
-#: inc/shopforge-settings.php:266
+#: inc/shopforge-settings.php:297
 msgid ""
 "They control cross-cutting plugin behavior: global CSS styles and the "
 "dashboard. Disable them for a \"zero visual impact\" integration."
@@ -3125,7 +3125,16 @@ msgstr ""
 "Controllano il comportamento trasversale del plugin: stili CSS globali e "
 "dashboard. Disattivale per un'integrazione a \"impatto visivo zero\"."
 
-#: inc/shopforge-settings.php:286
+#: inc/shopforge-settings.php:334
+msgid "License missing or invalid — modules cannot be enabled."
+msgstr ""
+"Licenza non valida o non configurata — i moduli non possono essere attivati."
+
+#: inc/shopforge-settings.php:335
+msgid "Configure license"
+msgstr "Configura licenza"
+
+#: inc/shopforge-settings.php:343
 msgid ""
 "Each module adds specific functionality: account area endpoints, "
 "integrations, automatic emails, admin management."
@@ -3133,19 +3142,15 @@ msgstr ""
 "Ogni modulo aggiunge funzionalità specifiche: endpoint nell'area account, "
 "integrazioni, email automatiche, gestione admin."
 
-#: inc/shopforge-settings.php:304
-msgid "Configuration"
-msgstr "Configurazione"
-
-#: inc/shopforge-settings.php:306
+#: inc/shopforge-settings.php:376
 msgid "Global parameters that affect module behavior."
 msgstr "Parametri globali che influenzano il comportamento dei moduli."
 
-#: inc/shopforge-settings.php:314
+#: inc/shopforge-settings.php:386
 msgid "Withdrawal window (days)"
 msgstr "Finestra di recesso (giorni)"
 
-#: inc/shopforge-settings.php:323
+#: inc/shopforge-settings.php:395
 msgid ""
 "Number of days after delivery during which the customer can exercise the "
 "right of withdrawal. Default: 14 days (minimum legal term for EU consumers)."
@@ -3154,11 +3159,11 @@ msgstr ""
 "diritto di recesso. Default: 14 giorni (termine legale minimo per il "
 "consumatore in UE)."
 
-#: inc/shopforge-settings.php:330
+#: inc/shopforge-settings.php:402
 msgid "Contact page URL (optional)"
 msgstr "URL pagina contatti (opzionale)"
 
-#: inc/shopforge-settings.php:339
+#: inc/shopforge-settings.php:411
 msgid ""
 "URL shown in the \"withdrawal window expired\" message. If left empty, only "
 "the text is shown without a link."
@@ -3166,11 +3171,11 @@ msgstr ""
 "URL mostrato nel messaggio \"recesso scaduto\". Se lasciato vuoto, viene "
 "mostrato solo il testo senza link."
 
-#: inc/shopforge-settings.php:346
+#: inc/shopforge-settings.php:418
 msgid "17track API key"
 msgstr "Chiave API 17track"
 
-#: inc/shopforge-settings.php:355
+#: inc/shopforge-settings.php:427
 msgid ""
 "Required by the Shipment tracking module. Get a free key at api.17track.net. "
 "Without a key the tracking widget is not shown."
@@ -3178,11 +3183,11 @@ msgstr ""
 "Richiesta dal modulo Tracking spedizioni. Ottieni una chiave gratuita su "
 "api.17track.net. Senza chiave il widget tracking non viene mostrato."
 
-#: inc/shopforge-settings.php:362
+#: inc/shopforge-settings.php:434
 msgid "Loyalty — points per currency unit spent"
 msgstr "Fedeltà — punti per unità di valuta spesa"
 
-#: inc/shopforge-settings.php:371
+#: inc/shopforge-settings.php:443
 msgid ""
 "Points awarded per currency unit spent, credited when an order is marked "
 "Completed and reversed if it is later refunded or cancelled."
@@ -3190,11 +3195,11 @@ msgstr ""
 "Punti assegnati per ogni unità di valuta spesa, accreditati quando l'ordine "
 "passa a Completato e stornati se in seguito viene rimborsato o annullato."
 
-#: inc/shopforge-settings.php:378
+#: inc/shopforge-settings.php:450
 msgid "Loyalty — value of 1 point (redemption)"
 msgstr "Fedeltà — valore di 1 punto (riscatto)"
 
-#: inc/shopforge-settings.php:387
+#: inc/shopforge-settings.php:459
 msgid ""
 "Currency value of a single point when redeemed for a discount coupon. "
 "Default: 0.05 (100 points = 5 in your currency)."
@@ -3202,22 +3207,18 @@ msgstr ""
 "Valore in valuta di un singolo punto al momento del riscatto in coupon. "
 "Default: 0,05 (100 punti = 5 nella tua valuta)."
 
-#: inc/shopforge-settings.php:394
+#: inc/shopforge-settings.php:466
 msgid "Loyalty — minimum points to redeem"
 msgstr "Fedeltà — punti minimi per il riscatto"
 
-#: inc/shopforge-settings.php:403
+#: inc/shopforge-settings.php:475
 msgid ""
 "Minimum point balance a customer must have before the redeem form appears."
 msgstr ""
 "Saldo punti minimo che il cliente deve avere perché compaia il modulo di "
 "riscatto."
 
-#: inc/shopforge-settings.php:414
-msgid "Theme"
-msgstr "Tema"
-
-#: inc/shopforge-settings.php:416
+#: inc/shopforge-settings.php:500
 msgid ""
 "Each theme changes the layout, elements and style of cart, checkout and "
 "shortcodes. Pick the global theme, then optionally a different theme per "
@@ -3227,23 +3228,99 @@ msgstr ""
 "shortcode. Scegli il tema globale, poi eventualmente un tema diverso per "
 "singola pagina."
 
-#: inc/shopforge-settings.php:445
+#: inc/shopforge-settings.php:529
 msgid "Theme per page"
 msgstr "Tema per pagina"
 
-#: inc/shopforge-settings.php:446
+#: inc/shopforge-settings.php:530
 msgid "Leave \"Global theme\" to apply the same theme everywhere."
 msgstr "Lascia \"Tema globale\" per applicare ovunque lo stesso tema."
 
-#: inc/shopforge-settings.php:454
+#: inc/shopforge-settings.php:538
 msgid "Global theme"
 msgstr "Tema globale"
 
-#: inc/shopforge-settings.php:471
-msgid "Colors"
-msgstr "Colori"
+#: inc/shopforge-settings.php:578
+msgid "Primary color"
+msgstr "Colore primario"
 
-#: inc/shopforge-settings.php:473
+#: inc/shopforge-settings.php:578
+msgid "Buttons, active links, highlighted elements"
+msgstr "Pulsanti, link attivi, elementi in evidenza"
+
+#: inc/shopforge-settings.php:579
+msgid "Primary — hover"
+msgstr "Primario — hover"
+
+#: inc/shopforge-settings.php:579
+msgid "Lighter shade for hover states"
+msgstr "Tonalità più chiara per gli stati hover"
+
+#: inc/shopforge-settings.php:580 inc/shopforge-settings.php:626
+msgid "Main text"
+msgstr "Testo principale"
+
+#: inc/shopforge-settings.php:580
+msgid "Headings and high-contrast text"
+msgstr "Titoli e testo ad alto contrasto"
+
+#: inc/shopforge-settings.php:581
+msgid "Muted text"
+msgstr "Testo secondario"
+
+#: inc/shopforge-settings.php:581
+msgid "Dates, labels, footnotes"
+msgstr "Date, etichette, note a piè di campo"
+
+#: inc/shopforge-settings.php:582
+msgid "Border"
+msgstr "Bordo"
+
+#: inc/shopforge-settings.php:582
+msgid "Borders of cards, tables and inputs"
+msgstr "Bordi di card, tabelle e input"
+
+#: inc/shopforge-settings.php:583
+msgid "Soft border"
+msgstr "Bordo morbido"
+
+#: inc/shopforge-settings.php:583
+msgid "Light internal separators"
+msgstr "Separatori interni leggeri"
+
+#: inc/shopforge-settings.php:584
+msgid "Neutral background"
+msgstr "Sfondo neutro"
+
+#: inc/shopforge-settings.php:584
+msgid "Background of cards and secondary sections"
+msgstr "Sfondo di card e sezioni secondarie"
+
+#: inc/shopforge-settings.php:585
+msgid "Success"
+msgstr "Successo"
+
+#: inc/shopforge-settings.php:585
+msgid "\"Completed\" badges, positive messages"
+msgstr "Badge \"Completato\", messaggi positivi"
+
+#: inc/shopforge-settings.php:586
+msgid "Warning"
+msgstr "Avviso"
+
+#: inc/shopforge-settings.php:586
+msgid "\"Pending\" badges, warning messages"
+msgstr "Badge \"In attesa\", messaggi di avviso"
+
+#: inc/shopforge-settings.php:587
+msgid "Error / Danger"
+msgstr "Errore / Pericolo"
+
+#: inc/shopforge-settings.php:587
+msgid "Error messages, irreversible actions"
+msgstr "Messaggi di errore, azioni irreversibili"
+
+#: inc/shopforge-settings.php:594
 msgid ""
 "Customize the ShopForge palette to match your site. Colors are injected as "
 "CSS variables and override the plugin defaults."
@@ -3251,135 +3328,55 @@ msgstr ""
 "Personalizza la palette ShopForge per adattarla al tuo sito. I colori "
 "vengono iniettati come variabili CSS e sovrascrivono i default del plugin."
 
-#: inc/shopforge-settings.php:481
-msgid "Primary color"
-msgstr "Colore primario"
-
-#: inc/shopforge-settings.php:481
-msgid "Buttons, active links, highlighted elements"
-msgstr "Pulsanti, link attivi, elementi in evidenza"
-
-#: inc/shopforge-settings.php:482
-msgid "Primary — hover"
-msgstr "Primario — hover"
-
-#: inc/shopforge-settings.php:482
-msgid "Lighter shade for hover states"
-msgstr "Tonalità più chiara per gli stati hover"
-
-#: inc/shopforge-settings.php:483 inc/shopforge-settings.php:521
-msgid "Main text"
-msgstr "Testo principale"
-
-#: inc/shopforge-settings.php:483
-msgid "Headings and high-contrast text"
-msgstr "Titoli e testo ad alto contrasto"
-
-#: inc/shopforge-settings.php:484
-msgid "Muted text"
-msgstr "Testo secondario"
-
-#: inc/shopforge-settings.php:484
-msgid "Dates, labels, footnotes"
-msgstr "Date, etichette, note a piè di campo"
-
-#: inc/shopforge-settings.php:485
-msgid "Border"
-msgstr "Bordo"
-
-#: inc/shopforge-settings.php:485
-msgid "Borders of cards, tables and inputs"
-msgstr "Bordi di card, tabelle e input"
-
-#: inc/shopforge-settings.php:486
-msgid "Soft border"
-msgstr "Bordo morbido"
-
-#: inc/shopforge-settings.php:486
-msgid "Light internal separators"
-msgstr "Separatori interni leggeri"
-
-#: inc/shopforge-settings.php:487
-msgid "Neutral background"
-msgstr "Sfondo neutro"
-
-#: inc/shopforge-settings.php:487
-msgid "Background of cards and secondary sections"
-msgstr "Sfondo di card e sezioni secondarie"
-
-#: inc/shopforge-settings.php:488
-msgid "Success"
-msgstr "Successo"
-
-#: inc/shopforge-settings.php:488
-msgid "\"Completed\" badges, positive messages"
-msgstr "Badge \"Completato\", messaggi positivi"
-
-#: inc/shopforge-settings.php:489
-msgid "Warning"
-msgstr "Avviso"
-
-#: inc/shopforge-settings.php:489
-msgid "\"Pending\" badges, warning messages"
-msgstr "Badge \"In attesa\", messaggi di avviso"
-
-#: inc/shopforge-settings.php:490
-msgid "Error / Danger"
-msgstr "Errore / Pericolo"
-
-#: inc/shopforge-settings.php:490
-msgid "Error messages, irreversible actions"
-msgstr "Messaggi di errore, azioni irreversibili"
-
-#: inc/shopforge-settings.php:517
+#: inc/shopforge-settings.php:622
 msgid "Preview"
 msgstr "Anteprima"
 
-#: inc/shopforge-settings.php:520
+#: inc/shopforge-settings.php:625
 msgid "Primary button"
 msgstr "Pulsante primario"
 
-#: inc/shopforge-settings.php:521
+#: inc/shopforge-settings.php:626
 msgid "muted text"
 msgstr "testo secondario"
 
-#: inc/shopforge-settings.php:522
+#: inc/shopforge-settings.php:627
 msgid "Card border"
 msgstr "Bordo card"
 
-#: inc/shopforge-settings.php:841
+#: inc/shopforge-settings.php:948
 msgid "core feature"
 msgstr "funzionalità base"
 
-#: inc/shopforge-settings.php:843
+#: inc/shopforge-settings.php:950
 msgid "endpoint:"
 msgstr "endpoint:"
 
-#: inc/shopforge-settings.php:845
+#: inc/shopforge-settings.php:952
 msgid "module (no endpoint)"
 msgstr "modulo (nessun endpoint)"
 
-#: inc/shopforge-settings.php:849
+#: inc/shopforge-settings.php:956
 msgid "Requires an active license"
 msgstr "Richiede licenza attiva"
 
-#: inc/shopforge-settings.php:849
+#: inc/shopforge-settings.php:956
 msgid "Disable"
 msgstr "Disattiva"
 
-#: inc/shopforge-settings.php:849
+#: inc/shopforge-settings.php:956
 msgid "Enable"
 msgstr "Attiva"
 
-#: inc/shopforge-settings.php:861
+#: inc/shopforge-settings.php:968
 msgid "Requires license"
 msgstr "Richiede licenza"
 
-#: inc/shopforge-settings.php:864
+#: inc/shopforge-settings.php:971
 msgid "Active"
 msgstr "Attivo"
 
-#: inc/shopforge-settings.php:864
+#: inc/shopforge-settings.php:971
 msgid "Inactive"
 msgstr "Inattivo"
 
@@ -3678,6 +3675,12 @@ msgstr ""
 #: woocommerce/myaccount/navigation.php:22
 msgid "Account pages"
 msgstr "Pagine account"
+
+#~ msgid "Warning:"
+#~ msgstr "Attenzione:"
+
+#~ msgid "no module or feature is active."
+#~ msgstr "nessun modulo o funzionalità attiva."
 
 #~ msgid "Redeem points"
 #~ msgstr "Riscatta punti"

@@ -38,18 +38,22 @@ add_action( 'admin_menu', function () {
 
 function shopforge_admin_page_render(): void {
 	$tabs = [
-		'modules'    => [ 'label' => __( 'Modules', 'shopforge' ),    'icon' => 'fa-solid fa-puzzle-piece' ],
-		'license'    => [ 'label' => __( 'License', 'shopforge' ),    'icon' => 'fa-solid fa-key' ],
-		'shortcodes' => [ 'label' => __( 'Shortcodes', 'shopforge' ), 'icon' => 'fa-solid fa-code' ],
+		'features'   => [ 'label' => __( 'Core features', 'shopforge' ), 'icon' => 'fa-solid fa-sliders' ],
+		'modules'    => [ 'label' => __( 'Modules', 'shopforge' ),       'icon' => 'fa-solid fa-puzzle-piece' ],
+		'config'     => [ 'label' => __( 'Configuration', 'shopforge' ), 'icon' => 'fa-solid fa-gear' ],
+		'theme'      => [ 'label' => __( 'Theme', 'shopforge' ),        'icon' => 'fa-solid fa-swatchbook' ],
+		'colors'     => [ 'label' => __( 'Colors', 'shopforge' ),       'icon' => 'fa-solid fa-palette' ],
+		'license'    => [ 'label' => __( 'License', 'shopforge' ),      'icon' => 'fa-solid fa-key' ],
+		'shortcodes' => [ 'label' => __( 'Shortcodes', 'shopforge' ),   'icon' => 'fa-solid fa-code' ],
 	];
 
 	if ( function_exists( 'shopforge_is_module_active' ) && shopforge_is_module_active( 'receipts' ) ) {
 		$tabs['receipts'] = [ 'label' => __( 'Receipts', 'shopforge' ), 'icon' => 'fa-solid fa-receipt' ];
 	}
 
-	$active_tab = sanitize_key( $_GET['tab'] ?? 'modules' );
+	$active_tab = sanitize_key( $_GET['tab'] ?? 'features' );
 	if ( ! isset( $tabs[ $active_tab ] ) ) {
-		$active_tab = 'modules';
+		$active_tab = 'features';
 	}
 
 	// FontAwesome per le icone (già usato dalla tab Moduli, qui garantito
@@ -82,24 +86,37 @@ function shopforge_admin_page_render(): void {
 
 		<div class="shopforge-tab-content">
 			<?php
-			switch ( $active_tab ) {
-				case 'license':
-					shopforge_admin_tab_license();
-					break;
-				case 'shortcodes':
-					shopforge_admin_tab_shortcodes();
-					break;
-				case 'receipts':
-					if ( function_exists( 'shopforge_admin_tab_receipts' ) ) {
-						shopforge_admin_tab_receipts();
-					}
-					break;
-				default:
-					if ( function_exists( 'shopforge_admin_tab_modules' ) ) {
+			$woocommerce_tabs = [ 'features', 'modules', 'config', 'theme', 'colors' ];
+			if ( in_array( $active_tab, $woocommerce_tabs, true ) && ! function_exists( 'shopforge_admin_tab_features' ) ) {
+				echo '<p>' . esc_html__( 'This section requires WooCommerce to be active.', 'shopforge' ) . '</p>';
+			} else {
+				switch ( $active_tab ) {
+					case 'license':
+						shopforge_admin_tab_license();
+						break;
+					case 'shortcodes':
+						shopforge_admin_tab_shortcodes();
+						break;
+					case 'receipts':
+						if ( function_exists( 'shopforge_admin_tab_receipts' ) ) {
+							shopforge_admin_tab_receipts();
+						}
+						break;
+					case 'modules':
 						shopforge_admin_tab_modules();
-					} else {
-						echo '<p>' . esc_html__( 'This section requires WooCommerce to be active.', 'shopforge' ) . '</p>';
-					}
+						break;
+					case 'config':
+						shopforge_admin_tab_config();
+						break;
+					case 'theme':
+						shopforge_admin_tab_theme();
+						break;
+					case 'colors':
+						shopforge_admin_tab_colors();
+						break;
+					default:
+						shopforge_admin_tab_features();
+				}
 			}
 			?>
 		</div>

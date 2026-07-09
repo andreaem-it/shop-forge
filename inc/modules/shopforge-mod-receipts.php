@@ -559,6 +559,88 @@ function shopforge_admin_tab_receipts(): void {
 	</script>
 
 	<style>
+	/* ---- Etichette sezione (stesso stile della tab Moduli) ---- */
+	.shopforge-section-label {
+		display: flex; align-items: baseline; gap: 8px;
+		font-size: 13px; font-weight: 700; color: #1d2327;
+		text-transform: uppercase; letter-spacing: .06em;
+		margin: 28px 0 10px;
+		padding-bottom: 8px;
+		border-bottom: 2px solid #dcdcde;
+	}
+	.shopforge-section-label i { color: #2271b1; }
+	.shopforge-section-hint {
+		font-size: 12px; font-weight: 400; color: #646970;
+		text-transform: none; letter-spacing: 0;
+	}
+
+	/* ---- Card template ---- */
+	.shopforge-theme-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+		gap: 14px;
+		margin-bottom: 24px;
+	}
+	.shopforge-theme-card {
+		display: block;
+		background: #fff;
+		border: 1px solid #dcdcde;
+		border-radius: 8px;
+		padding: 14px 16px;
+		cursor: pointer;
+		transition: border-color .2s, box-shadow .2s;
+	}
+	.shopforge-theme-card:hover { border-color: #2271b1; }
+	.shopforge-theme-card.is-selected {
+		border-color: #2271b1;
+		box-shadow: 0 0 0 1px #2271b1;
+		background: #f0f6fc;
+	}
+	.shopforge-theme-card input { position: absolute; opacity: 0; pointer-events: none; }
+	.shopforge-theme-card__name {
+		display: block; font-size: 13px; font-weight: 700; color: #1d2327;
+	}
+	.shopforge-theme-card__desc {
+		display: block; font-size: 12px; color: #646970; line-height: 1.4; margin: 3px 0 0;
+	}
+	.shopforge-theme-card__mock {
+		display: flex; flex-direction: column; gap: 4px;
+		height: 64px; margin-bottom: 10px; padding: 7px;
+		border: 1px solid #dcdcde; border-radius: 6px; background: #fff;
+	}
+	.shopforge-theme-card__mock .mock-line-a { background: #dcdcde; height: 6px; border-radius: 2px; }
+	.shopforge-theme-card__mock .mock-line-b { background: #f0f0f1; height: 5px; width: 70%; border-radius: 2px; }
+	.shopforge-theme-card__mock .mock-row { display: flex; gap: 4px; flex: 1; }
+	.shopforge-theme-card__mock .mock-row i { display: block; flex: 1; background: #f0f0f1; border-radius: 2px; }
+
+	/* ---- Griglia dati aziendali ---- */
+	.shopforge-config-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+		gap: 14px;
+		margin-bottom: 6px;
+	}
+	.shopforge-config-field {
+		background: #fff;
+		border: 1px solid #dcdcde;
+		border-radius: 8px;
+		padding: 16px 18px;
+	}
+	.shopforge-config-field label {
+		display: flex; align-items: center; gap: 8px;
+		font-size: 13px; font-weight: 700; color: #1d2327;
+		margin-bottom: 8px;
+	}
+	.shopforge-config-input {
+		width: 100%; box-sizing: border-box;
+		padding: 7px 10px; border: 1px solid #8c8f94;
+		border-radius: 4px; font-size: 13px;
+	}
+	.shopforge-config-desc {
+		margin: 8px 0 0; font-size: 12px; color: #646970; line-height: 1.5;
+	}
+
+	/* ---- Logo ---- */
 	.shopforge-receipt-logo-field { display: flex; align-items: center; gap: 14px; margin-bottom: 24px; }
 	.shopforge-receipt-logo-preview {
 		width: 120px; height: 80px; border: 1px dashed #dcdcde; border-radius: 6px;
@@ -566,10 +648,19 @@ function shopforge_admin_tab_receipts(): void {
 	}
 	.shopforge-receipt-logo-preview img { max-width: 100%; max-height: 100%; }
 
+	/* ---- Azioni ---- */
+	.shopforge-settings-actions { margin-top: 14px; }
+
+	/* ---- Anteprima template ricevuta ---- */
 	.shopforge-receipt-mock--modern { background: #eef1f5; }
 	.shopforge-receipt-mock--modern .mock-line-a { background: #006FEF; height: 14px; border-radius: 2px; margin-bottom: 6px; }
 	.shopforge-receipt-mock--classic .mock-line-a { background: #1d2327; height: 3px; width: 60%; margin: 0 auto 6px; border-radius: 1px; }
 	.shopforge-receipt-mock--minimal .mock-line-a { background: #1d2327; height: 2px; margin-bottom: 8px; }
+
+	@media (max-width: 600px) {
+		.shopforge-theme-grid,
+		.shopforge-config-grid { grid-template-columns: 1fr; }
+	}
 	</style>
 	<?php
 }

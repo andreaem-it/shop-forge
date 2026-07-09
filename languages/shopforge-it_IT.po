@@ -528,9 +528,9 @@ msgid "This order has no billing email."
 msgstr "Questo ordine non ha un'email di fatturazione."
 
 #: inc/modules/shopforge-mod-receipts.php:295
-#, fuzzy, php-format
+#, php-format
 msgid "[%1$s] Receipt for order #%2$s"
-msgstr "Nuova richiesta di %1$s ricevuta per l'ordine #%2$s."
+msgstr "[%1$s] Ricevuta per l'ordine #%2$s"
 
 #: inc/modules/shopforge-mod-receipts.php:298
 #, php-format
@@ -549,21 +549,18 @@ msgstr "Gentile %1$s,\n"
 "%3$s"
 
 #: inc/modules/shopforge-mod-receipts.php:307
-#, fuzzy
 msgid "Sending failed."
-msgstr "Pagamento fallito"
+msgstr "Invio non riuscito."
 
 #: inc/modules/shopforge-mod-receipts.php:321
 #: inc/receipt-templates/template-classic.php:62
 #: inc/receipt-templates/template-minimal.php:53
-#, fuzzy
 msgid "Receipt"
-msgstr "Ricevuto"
+msgstr "Ricevuta"
 
 #: inc/modules/shopforge-mod-receipts.php:338
-#, fuzzy
 msgid "Receipt number:"
-msgstr "Numero richiesta"
+msgstr "Numero ricevuta:"
 
 #: inc/modules/shopforge-mod-receipts.php:339
 msgid "Not issued yet — assigned on first download."
@@ -578,29 +575,25 @@ msgid "Download PDF"
 msgstr "Scarica PDF"
 
 #: inc/modules/shopforge-mod-receipts.php:354
-#, fuzzy
 msgid "Email to customer"
-msgstr "Risposta al cliente:"
+msgstr "Invia email al cliente"
 
 #: inc/modules/shopforge-mod-receipts.php:371
-#, fuzzy
 msgid "Sent."
-msgstr "Inviato"
+msgstr "Inviata."
 
 #: inc/modules/shopforge-mod-receipts.php:372
 #: inc/modules/shopforge-mod-receipts.php:375
-#, fuzzy
 msgid "Error."
-msgstr "Errore"
+msgstr "Errore."
 
 #: inc/modules/shopforge-mod-receipts.php:394
 msgid "Download Receipt (PDF)"
 msgstr "Scarica ricevuta (PDF)"
 
 #: inc/modules/shopforge-mod-receipts.php:440
-#, fuzzy
 msgid "Receipt settings saved."
-msgstr "Impostazioni salvate."
+msgstr "Impostazioni ricevute salvate."
 
 #: inc/modules/shopforge-mod-receipts.php:450
 msgid "Template"
@@ -629,14 +622,12 @@ msgid "VAT / Tax ID"
 msgstr "P.IVA / Codice fiscale"
 
 #: inc/modules/shopforge-mod-receipts.php:486
-#, fuzzy
 msgid "Contact email"
-msgstr "Recesso dal contratto"
+msgstr "Email di contatto"
 
 #: inc/modules/shopforge-mod-receipts.php:490
-#, fuzzy
 msgid "Receipt number prefix"
-msgstr "Numero richiesta"
+msgstr "Prefisso numero ricevuta"
 
 #: inc/modules/shopforge-mod-receipts.php:492
 msgid ""
@@ -645,9 +636,8 @@ msgid ""
 msgstr "Il numero progressivo viene aggiunto automaticamente (es. REC-2026-000123). La modifica del prefisso non incide sui numeri già emessi."
 
 #: inc/modules/shopforge-mod-receipts.php:495
-#, fuzzy
 msgid "Company address"
-msgstr "Gestisci indirizzi"
+msgstr "Indirizzo aziendale"
 
 #: inc/modules/shopforge-mod-receipts.php:499
 msgid "Footer note"
@@ -671,18 +661,16 @@ msgstr "Usa il logo del sito se impostato. Consigliato PNG o JPG."
 
 #: inc/modules/shopforge-mod-receipts.php:518
 #: inc/modules/shopforge-mod-receipts.php:539
-#, fuzzy
 msgid "Select logo"
-msgstr "Seleziona"
+msgstr "Seleziona logo"
 
 #: inc/modules/shopforge-mod-receipts.php:523 inc/shopforge-settings.php:527
 msgid "Save settings"
 msgstr "Salva impostazioni"
 
 #: inc/modules/shopforge-mod-receipts.php:540
-#, fuzzy
 msgid "Use this image"
-msgstr "Usa questo file"
+msgstr "Usa questa immagine"
 
 #: inc/modules/shopforge-mod-returns.php:134
 msgid "Refund to the original payment method"
@@ -1811,9 +1799,8 @@ msgid "In your wishlist"
 msgstr "Nella lista desideri"
 
 #: inc/receipt-templates/template-classic.php:66
-#, fuzzy
 msgid "Receipt number"
-msgstr "Numero richiesta"
+msgstr "Numero ricevuta"
 
 #: inc/receipt-templates/template-classic.php:82
 #: inc/receipt-templates/template-minimal.php:74
@@ -1852,9 +1839,8 @@ msgstr "Totale"
 #: inc/receipt-templates/template-minimal.php:102
 #: inc/receipt-templates/template-modern.php:110
 #: woocommerce/cart/cart-totals.php:41 woocommerce/cart/cart-totals.php:42
-#, fuzzy
 msgid "Subtotal"
-msgstr "Totale"
+msgstr "Subtotale"
 
 #: inc/receipt-templates/template-classic.php:116
 #: inc/receipt-templates/template-minimal.php:104
@@ -2151,9 +2137,8 @@ msgid "Shortcodes"
 msgstr "Shortcode"
 
 #: inc/shopforge-admin-page.php:47 inc/shopforge-modules.php:164
-#, fuzzy
 msgid "Receipts"
-msgstr "Ricevuto"
+msgstr "Ricevute"
 
 #: inc/shopforge-admin-page.php:69
 msgid "License, active modules and available shortcodes in a single panel."
@@ -3345,14 +3330,12 @@ msgid "Order summary"
 msgstr "Riepilogo ordine"
 
 #: woocommerce/cart/cart-totals.php:24
-#, fuzzy
 msgid "Coupon:"
-msgstr "Coupon %s"
+msgstr "Coupon:"
 
 #: woocommerce/cart/cart-totals.php:27
-#, fuzzy
 msgid "Coupon code"
-msgstr "Coupon %s"
+msgstr "Codice coupon"
 
 #: woocommerce/cart/cart-totals.php:28
 msgid "Apply coupon"
@@ -3367,19 +3350,17 @@ msgid "Your cart"
 msgstr "Il tuo carrello"
 
 #: woocommerce/cart/cart.php:63
-#, fuzzy
 msgid "Available on backorder"
-msgstr "Shortcode disponibili"
+msgstr "Disponibile su prenotazione"
 
 #: woocommerce/cart/cart.php:96
-#, fuzzy, php-format
+#, php-format
 msgid "Remove %s from cart"
-msgstr "Rimuovi dalla lista desideri"
+msgstr "Rimuovi %s dal carrello"
 
 #: woocommerce/cart/cart.php:114 woocommerce/cart/cart.php:116
-#, fuzzy
 msgid "Update cart"
-msgstr "Aggiornato"
+msgstr "Aggiorna carrello"
 
 #: woocommerce/emails/shopforge-quote-admin.php:14
 msgid "You received a new quote request."
@@ -3630,9 +3611,8 @@ msgid ""
 msgstr "Ciao %1$s, dalla dashboard del tuo account puoi visualizzare i tuoi ordini recenti, gestire gli indirizzi di spedizione e fatturazione e modificare la password e i dati dell'account."
 
 #: woocommerce/myaccount/navigation.php:22
-#, fuzzy
 msgid "Account pages"
-msgstr "Area account"
+msgstr "Pagine account"
 
 #~ msgid ""
 #~ "Dear %1$s,\n"

@@ -6,7 +6,7 @@ Tested up to: 6.7
 Requires PHP: 8.0
 WC requires at least: 7.0
 WC tested up to: 9.9
-Stable tag: 1.10.0
+Stable tag: 1.10.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -84,6 +84,10 @@ No, shipment tracking relies on 17track.net's public API. You need to register y
 Yes, all strings are wrapped for translation with the `shopforge` text domain. An Italian translation is bundled; a `.pot` file is included under `languages/` for adding more.
 
 == Changelog ==
+
+= 1.10.1 =
+* Fixed the Receipts settings tab rendering with no styling (borrowed CSS classes that only load on the Modules tab; the tab now ships its own scoped styles).
+* Fixed 22 strings incorrectly translated by the automated merge (e.g. "Contact email" showing an unrelated Italian string) across the Receipts module and a few pre-existing WooCommerce template overrides.
 
 = 1.10.0 =
 * New PDF Receipts module: real server-generated PDF (Dompdf), 3 visual templates (Modern/Classic/Minimal), configurable company details/logo/footer note, one-click download from the order page and customer account, one-click email delivery. This is a receipt, not a fiscal invoice — no electronic-invoicing (SDI) integration.

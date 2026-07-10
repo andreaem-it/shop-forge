@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.12.7
+* Actually fixed the "translation loaded too early" notice: 1.12.5's approach (loading the textdomain earlier) had it backwards — WordPress wants translations loaded at init or later, and shopforge_load_modules() was calling __() (via the module registry) on plugins_loaded regardless of when load_plugin_textdomain() itself ran. Split the module registry into an untranslated shopforge_modules_registry_raw() (used by the plugins_loaded-time module loader) and a translated shopforge_modules_registry() (used everywhere labels/descriptions are actually displayed, all safely after init). load_plugin_textdomain() is back on init, as WordPress recommends.
+
 ## 1.12.6
 * Found the real cause of the RMA "Invalid post type" error: the post type slug was `shopforge_rma_request`, 21 characters — one over WordPress's 20-character limit — so `register_post_type()` always failed silently (visible only with WP_DEBUG on). Renamed to `shopforge_rma` everywhere (admin screens, columns, bulk actions, metaboxes, exports, uninstall cleanup). Added a one-time migration that moves any existing RMA request posts from the old, never-actually-registered post type to the new one, so nothing already submitted by customers is lost.
 

@@ -3,7 +3,7 @@
  * Plugin Name:  ShopForge
  * Plugin URI:   https://www.andreaem.it
  * Description:  Modular WooCommerce plugin — account area, tracking, wishlist, returns, quotes, notifications and UX improvements.
- * Version:      1.12.6
+ * Version:      1.12.7
  * Author:       Andrea Emili
  * Author URI:   https://www.andreaem.it
  * Text Domain:  shopforge
@@ -28,15 +28,14 @@ define( 'SHOPFORGE_DIR',  plugin_dir_path( __FILE__ ) );
 define( 'SHOPFORGE_URL',  plugin_dir_url( __FILE__ ) );
 
 // Traduzioni: plugin non ospitato su WordPress.org, quindi il caricamento
-// automatico non si applica — va richiamato esplicitamente. Caricate su
-// 'plugins_loaded' (non 'init'): il registro moduli (shopforge_load_modules(),
-// più sotto in questo stesso hook) chiama __( ..., 'shopforge' ) per ogni
-// etichetta, quindi la textdomain deve essere già pronta a quel punto,
-// altrimenti WordPress la carica "al volo" e segnala
-// _load_textdomain_just_in_time() come chiamata troppo presto.
-add_action( 'plugins_loaded', function () {
+// automatico non si applica — va richiamato esplicitamente. Su 'init', come
+// da linee guida WordPress: nessuna chiamata __( ..., 'shopforge' ) avviene
+// più prima di questo punto (shopforge_load_modules() e
+// shopforge_get_enabled_modules(), che girano su 'plugins_loaded', usano
+// shopforge_modules_registry_raw() apposta per restare libere da __()).
+add_action( 'init', function () {
     load_plugin_textdomain( 'shopforge', false, dirname( plugin_basename( SHOPFORGE_FILE ) ) . '/languages' );
-}, 1 );
+} );
 
 // License server endpoint
 define( 'SHOPFORGE_LICENSE_SERVER', 'https://licenses.andreaem.it/api.php?action=validate' );
@@ -110,9 +109,10 @@ add_action( 'plugins_loaded', function () {
     // 'init' (es. register_post_type). Farlo da un add_action('init', ...)
     // annidato dentro un altro 'init' già in corso è inaffidabile — in
     // certi casi WordPress non riprende più quegli hook nella stessa
-    // passata, e il post type non viene mai registrato. La textdomain è
-    // già caricata sopra (priorità 1 su questo stesso hook), quindi le
-    // chiamate __() del registro moduli qui sotto sono sicure.
+    // passata, e il post type non viene mai registrato.
+    // shopforge_load_modules() usa shopforge_modules_registry_raw() (non
+    // quella tradotta), quindi non chiama mai __() qui — nessun conflitto
+    // con la textdomain caricata su 'init' più sotto.
     require_once SHOPFORGE_DIR . 'inc/shopforge-modules.php';
     shopforge_load_modules();
 

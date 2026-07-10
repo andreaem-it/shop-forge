@@ -20,7 +20,7 @@ defined( 'ABSPATH' ) || exit;
 // REGISTRO — funzionalità + moduli
 // =============================================================================
 
-function shopforge_modules_registry(): array {
+function shopforge_modules_registry_raw(): array {
 	return [
 
 		// ---- FUNZIONALITÀ BASE ------------------------------------------------
@@ -30,8 +30,8 @@ function shopforge_modules_registry(): array {
 		'styles-account' => [
 			'id'          => 'styles-account',
 			'type'        => 'feature',
-			'label'       => __( 'Account area styles', 'shopforge' ),
-			'description' => __( 'CSS for the dashboard, orders, addresses and modules (returns, support, notifications): card layout, status badges, typography. Disable to rely entirely on your theme in the account area too.', 'shopforge' ),
+			'label'       => 'Account area styles',
+			'description' => 'CSS for the dashboard, orders, addresses and modules (returns, support, notifications): card layout, status badges, typography. Disable to rely entirely on your theme in the account area too.',
 			'icon'        => 'fa-solid fa-user-gear',
 			'file'        => null,
 			'menu_item'   => false,
@@ -40,8 +40,8 @@ function shopforge_modules_registry(): array {
 		'styles-shop' => [
 			'id'          => 'styles-shop',
 			'type'        => 'feature',
-			'label'       => __( 'Shop/catalog styles', 'shopforge' ),
-			'description' => __( 'CSS for the product catalog and shop pages. Disable to rely entirely on your theme for the catalog.', 'shopforge' ),
+			'label'       => 'Shop/catalog styles',
+			'description' => 'CSS for the product catalog and shop pages. Disable to rely entirely on your theme for the catalog.',
 			'icon'        => 'fa-solid fa-shop',
 			'file'        => null,
 			'menu_item'   => false,
@@ -50,8 +50,8 @@ function shopforge_modules_registry(): array {
 		'styles-colors' => [
 			'id'          => 'styles-colors',
 			'type'        => 'feature',
-			'label'       => __( 'Custom colors', 'shopforge' ),
-			'description' => __( 'Color palette (buttons, badges, text) injected as CSS variables, including the configuration below. When disabled, the returns/support modals also fall back to the default theme style.', 'shopforge' ),
+			'label'       => 'Custom colors',
+			'description' => 'Color palette (buttons, badges, text) injected as CSS variables, including the configuration below. When disabled, the returns/support modals also fall back to the default theme style.',
 			'icon'        => 'fa-solid fa-palette',
 			'file'        => null,
 			'menu_item'   => false,
@@ -60,8 +60,8 @@ function shopforge_modules_registry(): array {
 		'dashboard' => [
 			'id'          => 'dashboard',
 			'type'        => 'feature',
-			'label'       => __( 'Custom dashboard', 'shopforge' ),
-			'description' => __( 'Replaces the WooCommerce dashboard with a custom one: order statistics, tracking widget, addresses. Disable to use the default WooCommerce dashboard.', 'shopforge' ),
+			'label'       => 'Custom dashboard',
+			'description' => 'Replaces the WooCommerce dashboard with a custom one: order statistics, tracking widget, addresses. Disable to use the default WooCommerce dashboard.',
 			'icon'        => 'fa-solid fa-gauge-high',
 			'file'        => null,
 			'menu_item'   => false,
@@ -73,8 +73,8 @@ function shopforge_modules_registry(): array {
 		'tracking' => [
 			'id'          => 'tracking',
 			'type'        => 'module',
-			'label'       => __( 'Shipment tracking', 'shopforge' ),
-			'description' => __( 'Tracking widget on the order detail page with 17track integration. The admin enters the tracking number from the order in the backend.', 'shopforge' ),
+			'label'       => 'Shipment tracking',
+			'description' => 'Tracking widget on the order detail page with 17track integration. The admin enters the tracking number from the order in the backend.',
 			'icon'        => 'fa-solid fa-truck-fast',
 			'file'        => 'shopforge-mod-tracking.php',
 			'menu_item'   => false,
@@ -83,80 +83,80 @@ function shopforge_modules_registry(): array {
 		'wishlist' => [
 			'id'          => 'wishlist',
 			'type'        => 'module',
-			'label'       => __( 'Wishlist', 'shopforge' ),
-			'description' => __( 'Lets customers save favorite products and access them from their account. Adds the heart button to the catalog and product page.', 'shopforge' ),
+			'label'       => 'Wishlist',
+			'description' => 'Lets customers save favorite products and access them from their account. Adds the heart button to the catalog and product page.',
 			'icon'        => 'fa-solid fa-heart',
 			'file'        => 'shopforge-mod-wishlist.php',
 			'menu_item'   => true,
 			'endpoint'    => 'shopforge-wishlist',
-			'menu_label'  => __( 'Wishlist', 'shopforge' ),
+			'menu_label'  => 'Wishlist',
 		],
 
 		'quotes' => [
 			'id'          => 'quotes',
 			'type'        => 'module',
-			'label'       => __( 'Quotes', 'shopforge' ),
-			'description' => __( 'Dedicated section for quote requests. Customers add products and quantities, the admin replies via email and manages everything from a dedicated page.', 'shopforge' ),
+			'label'       => 'Quotes',
+			'description' => 'Dedicated section for quote requests. Customers add products and quantities, the admin replies via email and manages everything from a dedicated page.',
 			'icon'        => 'fa-solid fa-file-invoice',
 			'file'        => 'shopforge-mod-quotes.php',
 			'menu_item'   => true,
 			'endpoint'    => 'shopforge-quotes',
-			'menu_label'  => __( 'Quotes', 'shopforge' ),
+			'menu_label'  => 'Quotes',
 		],
 
 		'returns' => [
 			'id'          => 'returns',
 			'type'        => 'module',
-			'label'       => __( 'Support & Returns', 'shopforge' ),
-			'description' => __( 'Digital withdrawal procedure compliant with EU consumer law. Button on the order page, 2-step modal, automatic email receipt.', 'shopforge' ),
+			'label'       => 'Support & Returns',
+			'description' => 'Digital withdrawal procedure compliant with EU consumer law. Button on the order page, 2-step modal, automatic email receipt.',
 			'icon'        => 'fa-solid fa-rotate-left',
 			'file'        => 'shopforge-mod-returns.php',
 			'menu_item'   => true,
 			'endpoint'    => 'shopforge-returns',
-			'menu_label'  => __( 'Support & Returns', 'shopforge' ),
+			'menu_label'  => 'Support & Returns',
 		],
 
 		'rma' => [
 			'id'          => 'rma',
 			'type'        => 'module',
-			'label'       => __( 'Product Support (RMA)', 'shopforge' ),
-			'description' => __( 'Structured repair, replacement or refund requests for defects/warranty: remedy selection, quantity tracking, automatic WooCommerce refund, message thread.', 'shopforge' ),
+			'label'       => 'Product Support (RMA)',
+			'description' => 'Structured repair, replacement or refund requests for defects/warranty: remedy selection, quantity tracking, automatic WooCommerce refund, message thread.',
 			'icon'        => 'fa-solid fa-screwdriver-wrench',
 			'file'        => 'shopforge-mod-rma.php',
 			'menu_item'   => true,
 			'endpoint'    => 'shopforge-rma',
-			'menu_label'  => __( 'Product Support', 'shopforge' ),
+			'menu_label'  => 'Product Support',
 		],
 
 		'notifications' => [
 			'id'          => 'notifications',
 			'type'        => 'module',
-			'label'       => __( 'Notifications', 'shopforge' ),
-			'description' => __( 'Notification center fed by real events: order status changes, support tickets, return updates, quote replies. Badge with unread count.', 'shopforge' ),
+			'label'       => 'Notifications',
+			'description' => 'Notification center fed by real events: order status changes, support tickets, return updates, quote replies. Badge with unread count.',
 			'icon'        => 'fa-solid fa-bell',
 			'file'        => 'shopforge-mod-notifications.php',
 			'menu_item'   => true,
 			'endpoint'    => 'shopforge-notices',
-			'menu_label'  => __( 'Notifications', 'shopforge' ),
+			'menu_label'  => 'Notifications',
 		],
 
 		'loyalty' => [
 			'id'          => 'loyalty',
 			'type'        => 'module',
-			'label'       => __( 'Loyalty Points', 'shopforge' ),
-			'description' => __( 'Customers earn points on completed orders and redeem them for a discount coupon. Earn rate, point value and minimum redemption are configurable.', 'shopforge' ),
+			'label'       => 'Loyalty Points',
+			'description' => 'Customers earn points on completed orders and redeem them for a discount coupon. Earn rate, point value and minimum redemption are configurable.',
 			'icon'        => 'fa-solid fa-star',
 			'file'        => 'shopforge-mod-loyalty.php',
 			'menu_item'   => true,
 			'endpoint'    => 'shopforge-loyalty',
-			'menu_label'  => __( 'Loyalty Points', 'shopforge' ),
+			'menu_label'  => 'Loyalty Points',
 		],
 
 		'receipts' => [
 			'id'          => 'receipts',
 			'type'        => 'module',
-			'label'       => __( 'PDF Receipts', 'shopforge' ),
-			'description' => __( 'Generates a real PDF receipt for each order, with a choice of visual templates, your logo, company details and footer notes. Downloadable from the order page and the customer account, with one-click email delivery.', 'shopforge' ),
+			'label'       => 'PDF Receipts',
+			'description' => 'Generates a real PDF receipt for each order, with a choice of visual templates, your logo, company details and footer notes. Downloadable from the order page and the customer account, with one-click email delivery.',
 			'icon'        => 'fa-solid fa-file-invoice-dollar',
 			'file'        => 'shopforge-mod-receipts.php',
 			'menu_item'   => false,
@@ -165,14 +165,46 @@ function shopforge_modules_registry(): array {
 		'checkout-fields' => [
 			'id'          => 'checkout-fields',
 			'type'        => 'module',
-			'label'       => __( 'Italian Fiscal Checkout Fields', 'shopforge' ),
-			'description' => __( 'Adds Customer type (Private/Business), Tax code, VAT number, SDI code and PEC to checkout — native to the block checkout, with fields shown/required based on the selected customer type.', 'shopforge' ),
+			'label'       => 'Italian Fiscal Checkout Fields',
+			'description' => 'Adds Customer type (Private/Business), Tax code, VAT number, SDI code and PEC to checkout — native to the block checkout, with fields shown/required based on the selected customer type.',
 			'icon'        => 'fa-solid fa-id-card',
 			'file'        => 'shopforge-mod-checkout-fields.php',
 			'menu_item'   => false,
 		],
 
 	];
+}
+
+
+/**
+ * Versione tradotta del registro, usata da tutto ciò che MOSTRA le
+ * etichette/descrizioni (tab Moduli, menu account, titoli endpoint...).
+ *
+ * shopforge_modules_registry_raw() resta senza __() apposta: viene letta
+ * anche da shopforge_load_modules() su 'plugins_loaded' (prima di 'init')
+ * per decidere quali file richiedere — se contenesse chiamate __(), WordPress
+ * segnalerebbe le traduzioni caricate "troppo presto" (_load_textdomain_just_in_time).
+ * Qui la traduzione viene applicata solo a runtime, quando serve davvero
+ * mostrare qualcosa (sempre dopo 'init').
+ *
+ * Nota per manutenzione: essendo __() qui chiamata con una stringa
+ * variabile (non un letterale), xgettext non riesce a estrarla in automatico.
+ * Le 32 stringhe restano comunque tradotte a runtime (il lookup nel .mo
+ * avviene per contenuto, non per posizione), ma se il testo inglese in
+ * shopforge_modules_registry_raw() cambia, va aggiornata a mano anche la
+ * relativa voce nel .po.
+ */
+function shopforge_modules_registry(): array {
+	$registry = shopforge_modules_registry_raw();
+	foreach ( $registry as &$module ) {
+		foreach ( [ 'label', 'description', 'menu_label' ] as $key ) {
+			if ( isset( $module[ $key ] ) ) {
+				$module[ $key ] = __( $module[ $key ], 'shopforge' );
+			}
+		}
+	}
+	unset( $module );
+	return $registry;
 }
 
 
@@ -192,7 +224,11 @@ function shopforge_modules_registry(): array {
  * a pagamento non compaiono mai (menu account, endpoint) senza licenza attiva.
  */
 function shopforge_get_enabled_modules(): array {
-	$registry   = shopforge_modules_registry();
+	// _raw(): questa funzione è nel percorso di shopforge_load_modules() su
+	// 'plugins_loaded' (via shopforge_is_module_active()) — deve restare
+	// libera da __() per non ripetere il problema delle traduzioni caricate
+	// troppo presto. Usa solo 'type', mai label/description/menu_label.
+	$registry   = shopforge_modules_registry_raw();
 	$module_ids = array_keys( array_filter( $registry, fn( $m ) => ( $m['type'] ?? 'module' ) === 'module' ) );
 
 	$saved = get_option( 'shopforge_modules_enabled', null );
@@ -236,7 +272,9 @@ function shopforge_load_modules(): void {
 		return;
 	}
 
-	foreach ( shopforge_modules_registry() as $id => $module ) {
+	// _raw() e non la versione tradotta: questa funzione viene chiamata su
+	// 'plugins_loaded' (prima di 'init'), quindi non deve mai innescare __().
+	foreach ( shopforge_modules_registry_raw() as $id => $module ) {
 		if ( ( $module['type'] ?? 'module' ) === 'feature' ) continue; // nessun file
 		if ( shopforge_is_module_active( $id ) ) {
 			$file = SHOPFORGE_DIR . 'inc/modules/' . $module['file'];

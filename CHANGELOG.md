@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.12.3
+* Fixed the "Open RMA" (and "Open withdrawals" / "Pending quotes") badge on the Dashboard requests widget: it always linked to those modules' pages even when disabled, causing an "Invalid post type" error for RMA. Each badge now only shows if its module is active.
+
 ## 1.12.2
 * Moved the version history out of `readme.txt` into this file, keeping only the latest entry there.
 

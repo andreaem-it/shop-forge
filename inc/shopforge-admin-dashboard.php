@@ -199,12 +199,23 @@ function shopforge_render_dashboard_sales_widget(): void {
 function shopforge_render_dashboard_requests_widget(): void {
 	$s = shopforge_get_dashboard_requests_summary();
 
+	// I ticket sono una funzionalità core (order-tracker), sempre disponibile;
+	// resi, RMA e preventivi sono moduli opzionali — mostra il relativo badge
+	// solo se il modulo è attivo, altrimenti il link porta a una pagina/CPT
+	// non registrato (es. edit.php?post_type=shopforge_rma_request va in
+	// errore se il modulo RMA è disattivato).
 	$badges = [
-		[ 'count' => $s['open_tickets'],   'label' => __( 'Open tickets', 'shopforge' ),   'url' => admin_url( 'admin.php?page=shopforge-support&tab=tickets' ) ],
-		[ 'count' => $s['open_returns'],   'label' => __( 'Open withdrawals', 'shopforge' ), 'url' => admin_url( 'admin.php?page=shopforge-support&tab=returns' ) ],
-		[ 'count' => $s['open_rma'],       'label' => __( 'Open RMA', 'shopforge' ),        'url' => admin_url( 'edit.php?post_type=shopforge_rma_request' ) ],
-		[ 'count' => $s['pending_quotes'], 'label' => __( 'Pending quotes', 'shopforge' ),  'url' => admin_url( 'admin.php?page=shopforge-quotes' ) ],
+		[ 'count' => $s['open_tickets'], 'label' => __( 'Open tickets', 'shopforge' ), 'url' => admin_url( 'admin.php?page=shopforge-support&tab=tickets' ) ],
 	];
+	if ( function_exists( 'shopforge_is_module_active' ) && shopforge_is_module_active( 'returns' ) ) {
+		$badges[] = [ 'count' => $s['open_returns'], 'label' => __( 'Open withdrawals', 'shopforge' ), 'url' => admin_url( 'admin.php?page=shopforge-support&tab=returns' ) ];
+	}
+	if ( function_exists( 'shopforge_is_module_active' ) && shopforge_is_module_active( 'rma' ) ) {
+		$badges[] = [ 'count' => $s['open_rma'], 'label' => __( 'Open RMA', 'shopforge' ), 'url' => admin_url( 'edit.php?post_type=shopforge_rma_request' ) ];
+	}
+	if ( function_exists( 'shopforge_is_module_active' ) && shopforge_is_module_active( 'quotes' ) ) {
+		$badges[] = [ 'count' => $s['pending_quotes'], 'label' => __( 'Pending quotes', 'shopforge' ), 'url' => admin_url( 'admin.php?page=shopforge-quotes' ) ];
+	}
 	$type_labels = [
 		'ticket' => __( 'Ticket', 'shopforge' ),
 		'return' => __( 'Withdrawal', 'shopforge' ),

@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.12.4
+* Fixed a WordPress 6.7+ "translation loaded too early" notice: shopforge_load_modules() ran directly on plugins_loaded and immediately built the module registry (which calls __() for every label/description), before init. Deferred to init (priority 5).
+
 ## 1.12.3
 * Fixed the "Open RMA" (and "Open withdrawals" / "Pending quotes") badge on the Dashboard requests widget: it always linked to those modules' pages even when disabled, causing an "Invalid post type" error for RMA. Each badge now only shows if its module is active.
 

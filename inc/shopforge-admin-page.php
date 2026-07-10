@@ -123,7 +123,6 @@ function shopforge_admin_page_render(): void {
 	</div>
 
 	<style>
-	.shopforge-settings-wrap { max-width: 960px; }
 	.shopforge-settings-head { margin: 20px 0 20px; }
 	.shopforge-settings-head h1 {
 		display: flex; align-items: center; gap: 12px;

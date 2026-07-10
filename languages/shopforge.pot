@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: ShopForge 1.11.1\n"
+"Project-Id-Version: ShopForge 1.12.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-09 17:22+0200\n"
+"POT-Creation-Date: 2026-07-10 11:24+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2147,7 +2147,7 @@ msgstr ""
 msgid "Shortcodes"
 msgstr ""
 
-#: inc/shopforge-admin-page.php:51 inc/shopforge-modules.php:164
+#: inc/shopforge-admin-page.php:51
 msgid "Receipts"
 msgstr ""
 
@@ -2159,80 +2159,80 @@ msgstr ""
 msgid "This section requires WooCommerce to be active."
 msgstr ""
 
-#: inc/shopforge-admin-page.php:156
+#: inc/shopforge-admin-page.php:155
 msgid ""
 "Shows the description of the selected variation on the product page (updates "
 "when the variation changes)."
 msgstr ""
 
-#: inc/shopforge-admin-page.php:162
+#: inc/shopforge-admin-page.php:161
 msgid "Price box with two amounts, VAT included and excluded."
 msgstr ""
 
-#: inc/shopforge-admin-page.php:163 inc/shopforge-admin-page.php:191
-#: inc/shopforge-admin-page.php:199 inc/shopforge-admin-page.php:205
+#: inc/shopforge-admin-page.php:162 inc/shopforge-admin-page.php:190
+#: inc/shopforge-admin-page.php:198 inc/shopforge-admin-page.php:204
 msgid "Product ID (optional, default: current product)"
 msgstr ""
 
-#: inc/shopforge-admin-page.php:168
+#: inc/shopforge-admin-page.php:167
 msgid ""
 "Estimates the delivery date based on business days, public holidays and the "
 "order cutoff time."
 msgstr ""
 
-#: inc/shopforge-admin-page.php:174
+#: inc/shopforge-admin-page.php:173
 msgid "Button that adds the product to the cart and goes straight to checkout."
 msgstr ""
 
-#: inc/shopforge-admin-page.php:180
+#: inc/shopforge-admin-page.php:179
 msgid "Availability label (colored dot + \"In stock\"/\"Out of stock\" text)."
 msgstr ""
 
-#: inc/shopforge-admin-page.php:182
+#: inc/shopforge-admin-page.php:181
 msgid "CSS font size (optional, e.g. \"16px\")"
 msgstr ""
 
-#: inc/shopforge-admin-page.php:183
+#: inc/shopforge-admin-page.php:182
 msgid "CSS font-family (optional)"
 msgstr ""
 
-#: inc/shopforge-admin-page.php:189
+#: inc/shopforge-admin-page.php:188
 msgid ""
 "Product FAQ, managed from the \"Product FAQ\" metabox on the product edit "
 "screen."
 msgstr ""
 
-#: inc/shopforge-admin-page.php:192
+#: inc/shopforge-admin-page.php:191
 msgid "\"accordion\" (default) or \"list\""
 msgstr ""
 
-#: inc/shopforge-admin-page.php:198
+#: inc/shopforge-admin-page.php:197
 msgid ""
 "Product compatibility list, managed from the \"Compatibility\" metabox on "
 "the product edit screen."
 msgstr ""
 
-#: inc/shopforge-admin-page.php:204
+#: inc/shopforge-admin-page.php:203
 msgid ""
 "Product PDF datasheets, managed from the \"Datasheets (PDF)\" metabox on the "
 "product edit screen."
 msgstr ""
 
-#: inc/shopforge-admin-page.php:212
+#: inc/shopforge-admin-page.php:211
 msgid "Available shortcodes"
 msgstr ""
 
-#: inc/shopforge-admin-page.php:214
+#: inc/shopforge-admin-page.php:213
 msgid ""
 "Use them in pages, posts, product descriptions or Elementor shortcode "
 "widgets."
 msgstr ""
 
-#: inc/shopforge-admin-page.php:239
+#: inc/shopforge-admin-page.php:238
 msgid "Copied!"
 msgstr ""
 
-#: inc/shopforge-admin-page.php:240
+#: inc/shopforge-admin-page.php:239
 msgid "Copy"
 msgstr ""
 
@@ -2664,11 +2664,11 @@ msgid ""
 "the order page and the customer account, with one-click email delivery."
 msgstr ""
 
-#: inc/shopforge-modules.php:170
+#: inc/shopforge-modules.php:168
 msgid "Italian Fiscal Checkout Fields"
 msgstr ""
 
-#: inc/shopforge-modules.php:171
+#: inc/shopforge-modules.php:169
 msgid ""
 "Adds Customer type (Private/Business), Tax code, VAT number, SDI code and "
 "PEC to checkout — native to the block checkout, with fields shown/required "

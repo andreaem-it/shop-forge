@@ -159,9 +159,7 @@ function shopforge_modules_registry(): array {
 			'description' => __( 'Generates a real PDF receipt for each order, with a choice of visual templates, your logo, company details and footer notes. Downloadable from the order page and the customer account, with one-click email delivery.', 'shopforge' ),
 			'icon'        => 'fa-solid fa-file-invoice-dollar',
 			'file'        => 'shopforge-mod-receipts.php',
-			'menu_item'   => true,
-			'endpoint'    => 'shopforge-receipts',
-			'menu_label'  => __( 'Receipts', 'shopforge' ),
+			'menu_item'   => false,
 		],
 
 		'checkout-fields' => [
@@ -325,6 +323,18 @@ add_filter( 'woocommerce_account_menu_items', function ( $items ) {
 		if ( ! empty( $module['menu_item'] ) && shopforge_is_module_active( $id ) ) {
 			$items[ $module['endpoint'] ] = $module['menu_label'];
 		}
+	}
+
+	// "Notifiche" sempre come seconda voce, subito dopo "Bacheca".
+	if ( isset( $items['shopforge-notices'] ) ) {
+		$notifications = [ 'shopforge-notices' => $items['shopforge-notices'] ];
+		unset( $items['shopforge-notices'] );
+		$dashboard = [];
+		if ( isset( $items['dashboard'] ) ) {
+			$dashboard['dashboard'] = $items['dashboard'];
+			unset( $items['dashboard'] );
+		}
+		$items = array_merge( $dashboard, $notifications, $items );
 	}
 
 	return array_merge( $items, $logout );

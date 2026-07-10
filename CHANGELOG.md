@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.12.5
+* Fixed a regression from 1.12.4: deferring shopforge_load_modules() to init made module files register their own init hooks (e.g. the RMA post type) from inside an already-running init pass, which WordPress doesn't reliably re-run — the shopforge_rma_request post type silently never registered, breaking edit.php?post_type=shopforge_rma_request even with the module active and licensed. Reverted to loading modules synchronously on plugins_loaded, and instead moved load_plugin_textdomain() earlier (plugins_loaded priority 1) to fix the "translation loaded too early" notice without the nested-hook risk.
+
 ## 1.12.4
 * Fixed a WordPress 6.7+ "translation loaded too early" notice: shopforge_load_modules() ran directly on plugins_loaded and immediately built the module registry (which calls __() for every label/description), before init. Deferred to init (priority 5).
 

@@ -3,7 +3,7 @@
  * Plugin Name:  ShopForge
  * Plugin URI:   https://www.andreaem.it
  * Description:  Modular WooCommerce plugin — account area, tracking, wishlist, returns, quotes, notifications and UX improvements.
- * Version:      1.12.4
+ * Version:      1.12.5
  * Author:       Andrea Emili
  * Author URI:   https://www.andreaem.it
  * Text Domain:  shopforge
@@ -28,10 +28,15 @@ define( 'SHOPFORGE_DIR',  plugin_dir_path( __FILE__ ) );
 define( 'SHOPFORGE_URL',  plugin_dir_url( __FILE__ ) );
 
 // Traduzioni: plugin non ospitato su WordPress.org, quindi il caricamento
-// automatico non si applica — va richiamato esplicitamente.
-add_action( 'init', function () {
+// automatico non si applica — va richiamato esplicitamente. Caricate su
+// 'plugins_loaded' (non 'init'): il registro moduli (shopforge_load_modules(),
+// più sotto in questo stesso hook) chiama __( ..., 'shopforge' ) per ogni
+// etichetta, quindi la textdomain deve essere già pronta a quel punto,
+// altrimenti WordPress la carica "al volo" e segnala
+// _load_textdomain_just_in_time() come chiamata troppo presto.
+add_action( 'plugins_loaded', function () {
     load_plugin_textdomain( 'shopforge', false, dirname( plugin_basename( SHOPFORGE_FILE ) ) . '/languages' );
-} );
+}, 1 );
 
 // License server endpoint
 define( 'SHOPFORGE_LICENSE_SERVER', 'https://licenses.andreaem.it/api.php?action=validate' );
@@ -100,14 +105,16 @@ add_action( 'plugins_loaded', function () {
     require_once SHOPFORGE_DIR . 'inc/shopforge-emails.php';
 
     // Sistema moduli: registro, loader, menu dinamico.
-    // shopforge_load_modules() legge shopforge_modules_registry(), che usa
-    // __( ..., 'shopforge' ) per etichette/descrizioni — va quindi rimandata
-    // a 'init' (priorità 5, prima del loop add_rewrite_endpoint già su
-    // 'init' dentro shopforge-modules.php), altrimenti WordPress carica le
-    // traduzioni "troppo presto" (siamo ancora su 'plugins_loaded') e lancia
-    // il doing_it_wrong di _load_textdomain_just_in_time().
+    // Chiamata qui, sincrona, e non rimandata su 'init': i file dei moduli
+    // (es. shopforge-mod-rma.php) registrano a loro volta propri hook
+    // 'init' (es. register_post_type). Farlo da un add_action('init', ...)
+    // annidato dentro un altro 'init' già in corso è inaffidabile — in
+    // certi casi WordPress non riprende più quegli hook nella stessa
+    // passata, e il post type non viene mai registrato. La textdomain è
+    // già caricata sopra (priorità 1 su questo stesso hook), quindi le
+    // chiamate __() del registro moduli qui sotto sono sicure.
     require_once SHOPFORGE_DIR . 'inc/shopforge-modules.php';
-    add_action( 'init', 'shopforge_load_modules', 5 );
+    shopforge_load_modules();
 
     // Settings page admin (tab Moduli, usata dal router in shopforge-admin-page.php)
     require_once SHOPFORGE_DIR . 'inc/shopforge-settings.php';

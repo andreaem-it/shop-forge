@@ -289,6 +289,7 @@ add_action( 'wp_head', function () {
 	/* ---- Badge menu ---- */
 	.shopforge-notif-badge {
 		display: inline-flex; align-items: center; justify-content: center;
+		flex-shrink: 0;
 		min-width: 18px; height: 18px; padding: 0 5px;
 		background: #E11D48; color: #fff;
 		font-size: 10px; font-weight: 800; border-radius: 999px;

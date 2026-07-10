@@ -6,7 +6,7 @@ Tested up to: 6.7
 Requires PHP: 8.0
 WC requires at least: 7.0
 WC tested up to: 9.9
-Stable tag: 1.12.8
+Stable tag: 1.12.9
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -85,6 +85,10 @@ No, shipment tracking relies on 17track.net's public API. You need to register y
 Yes, all strings are wrapped for translation with the `shopforge` text domain. An Italian translation is bundled; a `.pot` file is included under `languages/` for adding more.
 
 == Changelog ==
+
+= 1.12.9 =
+* Actually fixed "Errore di rete" on RMA submission (1.12.8's fix wasn't enough): the script's data (ajaxUrl, nonce) was never printed at all on the reporting site, because it relied on wp_footer() firing — which some page templates (builders, custom canvas templates) never call, silently dropping any script queued with in_footer. The RMA request/message form scripts, the withdrawal (recesso) modal script, and the support-ticket script are now all printed inline at the point they're needed, independent of wp_head()/wp_footer().
+* Fixed the Notifications menu item text wrapping onto two lines when the unread badge is shown.
 
 = 1.12.8 =
 * Fixed the notifications badge showing as literal `<span class="shopforge-notif-badge">1</span>` text in the account menu — the badge HTML was concatenated into the menu label, which the navigation template correctly escapes with esc_html(). The badge is now rendered as real markup by the template itself, only for the Notifications item.

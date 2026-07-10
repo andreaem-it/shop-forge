@@ -122,23 +122,11 @@ add_action( 'woocommerce_order_details_before_order_table', function ( WC_Order 
 
 add_action( 'wp_enqueue_scripts', function () {
 	if ( ! function_exists( 'shopforge_is_module_active' ) ) return;
-
-	// Registrazione sempre eseguita (costo nullo finché non messa in coda):
-	// il vero wp_enqueue_script()+wp_localize_script() avviene più avanti,
-	// nel rendering della card/modal ticket — se l'handle non fosse ancora
-	// registrato a quel punto (es. is_account_page() qui sotto non
-	// riconosce la pagina per qualche motivo di configurazione), quelle
-	// chiamate fallirebbero in silenzio.
-	wp_register_script(
-		'shopforge-tracker',
-		SHOPFORGE_URL . 'assets/js/shopforge-tracker.js',
-		[],
-		SHOPFORGE_VERSION,
-		true
-	);
-
 	if ( ! is_account_page() ) return;
 	if ( ! shopforge_is_module_active( 'styles-account' ) ) return;
+
+	// Lo script vero e proprio è stampato in linea, nel rendering della
+	// card/modal ticket — non tramite la coda WP.
 	wp_enqueue_style(
 		'shopforge-tracker',
 		SHOPFORGE_URL . 'assets/css/shopforge-tracker.css',
@@ -288,13 +276,20 @@ add_action( 'woocommerce_order_details_after_order_table', function ( WC_Order $
 	</div>
 
 	<?php
-	wp_enqueue_script( 'shopforge-tracker' );
-	wp_localize_script( 'shopforge-tracker', 'shopforgeTicket', [
+	// Stampato in linea, non tramite la coda wp_enqueue_script()/wp_footer():
+	// alcuni template di pagina (builder, canvas personalizzati) non
+	// richiamano wp_footer(), quindi uno script "in_footer" accodato con le
+	// API standard non verrebbe mai stampato — vedi il commento gemello su
+	// shopforge_rma_print_inline_script() in shopforge-mod-rma.php.
+	?>
+	<script>
+	window.shopforgeTicket = <?php echo wp_json_encode( [
 		'ajaxUrl' => admin_url( 'admin-ajax.php' ),
 		'orderId' => $order_id,
 		'nonce'   => $nonce,
-	] );
-	?>
+	] ); ?>;
+	</script>
+	<script src="<?php echo esc_url( SHOPFORGE_URL . 'assets/js/shopforge-tracker.js' ); ?>?ver=<?php echo esc_attr( SHOPFORGE_VERSION ); ?>" defer></script>
 	<?php
 }, 20 );
 

@@ -795,6 +795,26 @@ function shopforge_rma_render_my_requests(): void {
 }
 
 /**
+ * Stampa lo script shopforge-rma.js e i suoi dati localizzati direttamente
+ * in linea, nel punto in cui viene chiamata — non tramite la coda
+ * wp_enqueue_script()/wp_footer(). Alcuni template di pagina (builder,
+ * canvas personalizzati) non richiamano wp_footer(), quindi qualunque
+ * script "in_footer" accodato con le API standard non viene mai stampato:
+ * il form risultava così privo di JS, con shopforgeRma.ajaxUrl undefined
+ * e il submit che finiva su un URL invalido (".../undefined", 404).
+ */
+function shopforge_rma_print_inline_script( array $data ): void {
+	static $printed = false;
+	?>
+	<script>
+	window.shopforgeRma = <?php echo wp_json_encode( $data ); ?>;
+	</script>
+	<?php if ( ! $printed ) : $printed = true; ?>
+	<script src="<?php echo esc_url( SHOPFORGE_URL . 'assets/js/shopforge-rma.js' ); ?>?ver=<?php echo esc_attr( SHOPFORGE_VERSION ); ?>" defer></script>
+	<?php endif;
+}
+
+/**
  * Form di creazione richiesta per un prodotto/ordine specifico.
  */
 function shopforge_rma_render_request_form(): void {
@@ -831,8 +851,7 @@ function shopforge_rma_render_request_form(): void {
 	$nonce            = wp_create_nonce( 'shopforge_rma_submit_request' );
 	$store_name       = get_bloginfo( 'name' );
 
-	wp_enqueue_script( 'shopforge-rma' );
-	wp_localize_script( 'shopforge-rma', 'shopforgeRma', [
+	shopforge_rma_print_inline_script( [
 		'ajaxUrl' => admin_url( 'admin-ajax.php' ),
 		'nonce'   => $nonce,
 	] );
@@ -931,8 +950,7 @@ function shopforge_rma_render_request_detail( int $request_id ): void {
 	/* translators: %d: request ID */
 	shopforge_account_section_header( sprintf( __( 'Request #%d', 'shopforge' ), $request_id ), 'fa-solid fa-screwdriver-wrench' );
 
-	wp_enqueue_script( 'shopforge-rma' );
-	wp_localize_script( 'shopforge-rma', 'shopforgeRma', [
+	shopforge_rma_print_inline_script( [
 		'ajaxUrl'      => admin_url( 'admin-ajax.php' ),
 		'nonceMessage' => wp_create_nonce( 'shopforge_rma_add_message' ),
 		'nonceCancel'  => wp_create_nonce( 'shopforge_rma_cancel_request' ),
@@ -1078,18 +1096,11 @@ add_action( 'wp_ajax_shopforge_rma_cancel_request', function () {
 
 add_action( 'wp_enqueue_scripts', function () {
 	if ( ! function_exists( 'shopforge_is_module_active' ) ) return;
-
-	// Registrazione sempre eseguita (costo nullo finché non viene messa in
-	// coda): shopforge_rma_render_request_form()/_message_form() chiamano
-	// wp_enqueue_script()+wp_localize_script() più avanti, durante il
-	// rendering del contenuto della pagina account — se l'handle non è
-	// ancora registrato a quel punto (es. is_account_page() qui sopra non
-	// riconosce la pagina per qualche motivo di configurazione permalink),
-	// quelle chiamate falliscono in silenzio e lo script non viene mai
-	// stampato, lasciando `shopforgeRma`/ajaxUrl undefined lato JS.
-	wp_register_script( 'shopforge-rma', SHOPFORGE_URL . 'assets/js/shopforge-rma.js', [], SHOPFORGE_VERSION, true );
-
 	if ( ! is_account_page() ) return;
+
+	// Lo script vero e proprio è stampato in linea da
+	// shopforge_rma_print_inline_script(), non tramite la coda WP —
+	// vedi il commento su quella funzione per il perché.
 
 	// ponytail: is_wc_endpoint_url() non riconosce gli endpoint custom del plugin
 	// (mai registrati nel registro interno di WC via woocommerce_get_query_vars).

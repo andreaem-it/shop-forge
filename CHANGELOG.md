@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.12.9
+* Actually fixed "Errore di rete" on RMA submission (1.12.8's fix wasn't enough): the script's data (ajaxUrl, nonce) was never printed at all on the reporting site, because it relied on wp_footer() firing — which some page templates (builders, custom canvas templates) never call, silently dropping any script queued with in_footer. The RMA request/message form scripts, the withdrawal (recesso) modal script, and the support-ticket script are now all printed inline at the point they're needed, independent of wp_head()/wp_footer().
+* Fixed the Notifications menu item text wrapping onto two lines when the unread badge is shown.
+
 ## 1.12.8
 * Fixed the notifications badge showing as literal `<span class="shopforge-notif-badge">1</span>` text in the account menu — the badge HTML was concatenated into the menu label, which the navigation template correctly escapes with esc_html(). The badge is now rendered as real markup by the template itself, only for the Notifications item.
 * Renamed the unclear "Product Support" account menu entry to "Repairs & Warranty" (and the matching admin menu/page titles), to distinguish it from "Support & Returns" (the legal withdrawal module) and make clear what it's for.

@@ -218,22 +218,10 @@ function shopforge_has_active_return( WC_Order $order ): bool {
 
 add_action( 'wp_enqueue_scripts', function () {
 	if ( ! function_exists( 'shopforge_is_module_active' ) ) return;
-
-	// Registrazione sempre eseguita (costo nullo finché non messa in coda):
-	// il vero wp_enqueue_script()+wp_localize_script() avviene più avanti,
-	// dentro woocommerce_order_details_before_order_table — se l'handle non
-	// fosse ancora registrato a quel punto (es. is_account_page()/
-	// is_wc_endpoint_url() qui sotto non riconoscono la pagina per qualche
-	// motivo di configurazione), quelle chiamate fallirebbero in silenzio.
-	wp_register_script(
-		'shopforge-returns',
-		SHOPFORGE_URL . 'assets/js/shopforge-returns.js',
-		[],
-		SHOPFORGE_VERSION,
-		true
-	);
-
 	if ( ! is_account_page() ) return;
+
+	// Lo script vero e proprio è stampato in linea, dentro
+	// woocommerce_order_details_before_order_table — non tramite la coda WP.
 	// CSS caricato su view-order (card + modal) e sull'endpoint lista resi.
 	// ponytail: 'shopforge-returns' è un endpoint custom del plugin, mai nel
 	// registro interno di WC — is_wc_endpoint_url() non lo vede, get_query_var() sì.
@@ -556,8 +544,14 @@ add_action( 'woocommerce_order_details_before_order_table', function ( WC_Order 
 	</div><!-- /.shopforge-modal-backdrop -->
 
 	<?php
-	wp_enqueue_script( 'shopforge-returns' );
-	wp_localize_script( 'shopforge-returns', 'shopforgeRecesso', [
+	// Stampato in linea, non tramite la coda wp_enqueue_script()/wp_footer():
+	// alcuni template di pagina (builder, canvas personalizzati) non
+	// richiamano wp_footer(), quindi uno script "in_footer" accodato con le
+	// API standard non verrebbe mai stampato — vedi il commento gemello su
+	// shopforge_rma_print_inline_script() in shopforge-mod-rma.php.
+	?>
+	<script>
+	window.shopforgeRecesso = <?php echo wp_json_encode( [
 		'ajaxUrl'   => admin_url( 'admin-ajax.php' ),
 		'orderId'   => $order_id,
 		'nonce'     => $nonce,
@@ -565,8 +559,9 @@ add_action( 'woocommerce_order_details_before_order_table', function ( WC_Order 
 		'orderNum'  => '#' . $order_number,
 		'orderDate' => $order->get_date_created() ? $order->get_date_created()->date_i18n( get_option( 'date_format' ) ) : '',
 		'storeName' => get_bloginfo( 'name' ),
-	] );
-	?>
+	] ); ?>;
+	</script>
+	<script src="<?php echo esc_url( SHOPFORGE_URL . 'assets/js/shopforge-returns.js' ); ?>?ver=<?php echo esc_attr( SHOPFORGE_VERSION ); ?>" defer></script>
 
 	<?php endif; // has_return ?>
 	<?php

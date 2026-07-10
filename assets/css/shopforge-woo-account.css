@@ -153,6 +153,9 @@ body.shopforge-account-page .entry-content {
   flex: 1;
   min-width: 0;
   line-height: 1.3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .woocommerce-account .woocommerce-MyAccount-navigation a:hover {

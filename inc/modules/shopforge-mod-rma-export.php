@@ -8,13 +8,13 @@
 defined( 'ABSPATH' ) || exit;
 
 add_action( 'admin_init', function () {
-	if ( empty( $_GET['shopforge_rma_export_csv'] ) || empty( $_GET['post_type'] ) || 'shopforge_rma_request' !== $_GET['post_type'] ) return;
+	if ( empty( $_GET['shopforge_rma_export_csv'] ) || empty( $_GET['post_type'] ) || 'shopforge_rma' !== $_GET['post_type'] ) return;
 
 	if ( ! current_user_can( 'manage_woocommerce' ) ) {
 		wp_die( esc_html__( 'Insufficient permissions.', 'shopforge' ) );
 	}
 
-	$args = [ 'post_type' => 'shopforge_rma_request', 'posts_per_page' => -1, 'post_status' => 'publish' ];
+	$args = [ 'post_type' => 'shopforge_rma', 'posts_per_page' => -1, 'post_status' => 'publish' ];
 
 	$meta_query = [];
 	if ( ! empty( $_GET['shopforge_rma_stato'] ) )     $meta_query[] = [ 'key' => '_shopforge_rma_stato', 'value' => sanitize_text_field( $_GET['shopforge_rma_stato'] ) ];

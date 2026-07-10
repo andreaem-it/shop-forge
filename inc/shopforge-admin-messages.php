@@ -80,7 +80,7 @@ function shopforge_get_all_customer_requests(): array {
 
 	if ( $has_module && shopforge_is_module_active( 'rma' ) && function_exists( 'shopforge_rma_get_open_statuses' ) ) {
 		$requests = get_posts( [
-			'post_type'      => 'shopforge_rma_request',
+			'post_type'      => 'shopforge_rma',
 			'post_status'    => 'publish',
 			'posts_per_page' => -1,
 		] );

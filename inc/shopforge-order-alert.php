@@ -57,7 +57,7 @@ function shopforge_get_order_open_requests_summary( WC_Order $order ): array {
 
 		if ( shopforge_is_module_active( 'rma' ) && function_exists( 'shopforge_rma_get_open_statuses' ) ) {
 			$open_rma = get_posts( [
-				'post_type'      => 'shopforge_rma_request',
+				'post_type'      => 'shopforge_rma',
 				'posts_per_page' => -1,
 				'post_status'    => 'publish',
 				'fields'         => 'ids',
@@ -72,7 +72,7 @@ function shopforge_get_order_open_requests_summary( WC_Order $order ): array {
 				$summary['rma'] = [
 					/* translators: %d: number of open RMA requests */
 					'label' => sprintf( _n( '%d open product support request', '%d open product support requests', count( $open_rma ), 'shopforge' ), count( $open_rma ) ),
-					'url'   => admin_url( 'edit.php?post_type=shopforge_rma_request&shopforge_rma_order=' . $order->get_id() ),
+					'url'   => admin_url( 'edit.php?post_type=shopforge_rma&shopforge_rma_order=' . $order->get_id() ),
 				];
 			}
 		}

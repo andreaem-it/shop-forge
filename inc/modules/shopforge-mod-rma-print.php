@@ -19,7 +19,7 @@ add_action( 'admin_init', function () {
 
 	$request_id = absint( $_GET['request_id'] ?? 0 );
 	$request    = get_post( $request_id );
-	if ( ! $request || 'shopforge_rma_request' !== $request->post_type ) {
+	if ( ! $request || 'shopforge_rma' !== $request->post_type ) {
 		wp_die( esc_html__( 'Request not found.', 'shopforge' ) );
 	}
 

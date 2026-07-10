@@ -21,14 +21,14 @@ add_action( 'admin_menu', function () {
 		'manage_woocommerce',
 		'shopforge-rma',
 		function () {
-			wp_safe_redirect( admin_url( 'edit.php?post_type=shopforge_rma_request' ) );
+			wp_safe_redirect( admin_url( 'edit.php?post_type=shopforge_rma' ) );
 			exit;
 		},
 		'dashicons-admin-tools',
 		57
 	);
 
-	add_submenu_page( 'shopforge-rma', __( 'All Requests', 'shopforge' ), __( 'All Requests', 'shopforge' ), 'manage_woocommerce', 'edit.php?post_type=shopforge_rma_request' );
+	add_submenu_page( 'shopforge-rma', __( 'All Requests', 'shopforge' ), __( 'All Requests', 'shopforge' ), 'manage_woocommerce', 'edit.php?post_type=shopforge_rma' );
 } );
 
 
@@ -38,7 +38,7 @@ add_action( 'admin_menu', function () {
 
 add_action( 'admin_enqueue_scripts', function ( $hook ) {
 	global $post_type;
-	if ( 'shopforge_rma_request' !== $post_type && 'post.php' !== $hook && 'post-new.php' !== $hook && 'edit.php' !== $hook ) {
+	if ( 'shopforge_rma' !== $post_type && 'post.php' !== $hook && 'post-new.php' !== $hook && 'edit.php' !== $hook ) {
 		return;
 	}
 
@@ -55,7 +55,7 @@ add_action( 'admin_enqueue_scripts', function ( $hook ) {
 // LISTA — colonne, filtri, ricerca, azioni bulk
 // =============================================================================
 
-add_filter( 'manage_shopforge_rma_request_posts_columns', function ( $columns ) {
+add_filter( 'manage_shopforge_rma_posts_columns', function ( $columns ) {
 	$new = [ 'cb' => $columns['cb'], 'title' => __( 'Request', 'shopforge' ) ];
 	$new['shopforge_rma_tipo']      = __( 'Type', 'shopforge' );
 	$new['shopforge_rma_cliente']   = __( 'Customer', 'shopforge' );
@@ -67,7 +67,7 @@ add_filter( 'manage_shopforge_rma_request_posts_columns', function ( $columns ) 
 	return $new;
 } );
 
-add_action( 'manage_shopforge_rma_request_posts_custom_column', function ( $column, $post_id ) {
+add_action( 'manage_shopforge_rma_posts_custom_column', function ( $column, $post_id ) {
 	switch ( $column ) {
 		case 'shopforge_rma_tipo':
 			$tipo = get_post_meta( $post_id, '_shopforge_rma_tipo_richiesta', true );
@@ -109,7 +109,7 @@ add_action( 'manage_shopforge_rma_request_posts_custom_column', function ( $colu
 }, 10, 2 );
 
 add_action( 'restrict_manage_posts', function ( $post_type ) {
-	if ( 'shopforge_rma_request' !== $post_type ) return;
+	if ( 'shopforge_rma' !== $post_type ) return;
 
 	$current_status = sanitize_text_field( $_GET['shopforge_rma_stato'] ?? '' );
 	?>
@@ -142,7 +142,7 @@ add_action( 'restrict_manage_posts', function ( $post_type ) {
 
 add_filter( 'parse_query', function ( $query ) {
 	global $pagenow, $post_type;
-	if ( 'edit.php' !== $pagenow || 'shopforge_rma_request' !== $post_type ) return;
+	if ( 'edit.php' !== $pagenow || 'shopforge_rma' !== $post_type ) return;
 
 	$meta_query = [];
 	if ( '' !== ( $_GET['shopforge_rma_stato'] ?? '' ) )     $meta_query[] = [ 'key' => '_shopforge_rma_stato', 'value' => sanitize_text_field( $_GET['shopforge_rma_stato'] ) ];
@@ -156,7 +156,7 @@ add_filter( 'parse_query', function ( $query ) {
 add_filter( 'posts_search', function ( $search, $wp_query ) {
 	global $wpdb;
 	if ( ! is_admin() || empty( $search ) || empty( $wp_query->query_vars['s'] ) ) return $search;
-	if ( 'shopforge_rma_request' !== $wp_query->get( 'post_type' ) ) return $search;
+	if ( 'shopforge_rma' !== $wp_query->get( 'post_type' ) ) return $search;
 
 	$term = '%' . $wpdb->esc_like( $wp_query->query_vars['s'] ) . '%';
 	$meta_search = $wpdb->prepare(
@@ -167,7 +167,7 @@ add_filter( 'posts_search', function ( $search, $wp_query ) {
 	return $extended ?: $search;
 }, 10, 2 );
 
-add_filter( 'bulk_actions-edit-shopforge_rma_request', function ( $actions ) {
+add_filter( 'bulk_actions-edit-shopforge_rma', function ( $actions ) {
 	foreach ( shopforge_rma_get_statuses() as $key => $label ) {
 		/* translators: %s: status label */
 		$actions[ 'shopforge_rma_set_status_' . $key ] = sprintf( __( 'Change status: %s', 'shopforge' ), $label );
@@ -180,7 +180,7 @@ add_filter( 'bulk_actions-edit-shopforge_rma_request', function ( $actions ) {
 	return $actions;
 } );
 
-add_filter( 'handle_bulk_actions-edit-shopforge_rma_request', function ( $redirect_to, $action, $post_ids ) {
+add_filter( 'handle_bulk_actions-edit-shopforge_rma', function ( $redirect_to, $action, $post_ids ) {
 	if ( ! current_user_can( 'manage_woocommerce' ) ) return $redirect_to;
 
 	if ( str_starts_with( $action, 'shopforge_rma_set_status_' ) ) {
@@ -188,7 +188,7 @@ add_filter( 'handle_bulk_actions-edit-shopforge_rma_request', function ( $redire
 		if ( array_key_exists( $status, shopforge_rma_get_statuses() ) ) {
 			$changed = 0;
 			foreach ( $post_ids as $post_id ) {
-				if ( 'shopforge_rma_request' === get_post_type( $post_id ) && shopforge_rma_update_status( $post_id, $status, get_current_user_id() ) ) {
+				if ( 'shopforge_rma' === get_post_type( $post_id ) && shopforge_rma_update_status( $post_id, $status, get_current_user_id() ) ) {
 					$changed++;
 				}
 			}
@@ -200,7 +200,7 @@ add_filter( 'handle_bulk_actions-edit-shopforge_rma_request', function ( $redire
 		$assigned_to = absint( substr( $action, strlen( 'shopforge_rma_assign_' ) ) );
 		$count = 0;
 		foreach ( $post_ids as $post_id ) {
-			if ( 'shopforge_rma_request' === get_post_type( $post_id ) ) {
+			if ( 'shopforge_rma' === get_post_type( $post_id ) ) {
 				update_post_meta( $post_id, '_shopforge_rma_assigned_to', $assigned_to );
 				$count++;
 			}
@@ -228,8 +228,8 @@ add_action( 'admin_notices', function () {
 // =============================================================================
 
 add_action( 'add_meta_boxes', function () {
-	add_meta_box( 'shopforge_rma_details', __( 'Request Details', 'shopforge' ), 'shopforge_rma_details_metabox_render', 'shopforge_rma_request', 'normal', 'high' );
-	add_meta_box( 'shopforge_rma_messages', __( 'Conversation', 'shopforge' ), 'shopforge_rma_messages_metabox_render', 'shopforge_rma_request', 'normal', 'high' );
+	add_meta_box( 'shopforge_rma_details', __( 'Request Details', 'shopforge' ), 'shopforge_rma_details_metabox_render', 'shopforge_rma', 'normal', 'high' );
+	add_meta_box( 'shopforge_rma_messages', __( 'Conversation', 'shopforge' ), 'shopforge_rma_messages_metabox_render', 'shopforge_rma', 'normal', 'high' );
 } );
 
 function shopforge_rma_details_metabox_render( WP_Post $post ): void {
@@ -420,7 +420,7 @@ function shopforge_rma_messages_metabox_render( WP_Post $post ): void {
 			<h4><?php esc_html_e( 'Add Message', 'shopforge' ); ?></h4>
 			<form method="post" enctype="multipart/form-data">
 				<?php wp_nonce_field( 'shopforge_rma_add_admin_message', 'shopforge_rma_admin_message_nonce' ); ?>
-				<input type="hidden" name="shopforge_rma_request_id" value="<?php echo esc_attr( $post->ID ); ?>">
+				<input type="hidden" name="shopforge_rma_id" value="<?php echo esc_attr( $post->ID ); ?>">
 				<p><label for="shopforge_rma_admin_message_text"><?php esc_html_e( 'Message', 'shopforge' ); ?></label><br>
 					<textarea name="shopforge_rma_admin_message_text" id="shopforge_rma_admin_message_text" rows="4" class="large-text"></textarea>
 				</p>
@@ -435,7 +435,7 @@ function shopforge_rma_messages_metabox_render( WP_Post $post ): void {
 }
 
 // Salvataggio campi metabox "Dettagli Richiesta" (stato/assegnazione/tracking).
-add_action( 'save_post_shopforge_rma_request', function ( int $post_id ): void {
+add_action( 'save_post_shopforge_rma', function ( int $post_id ): void {
 	if ( ! isset( $_POST['shopforge_rma_meta_nonce'] ) || ! wp_verify_nonce( $_POST['shopforge_rma_meta_nonce'], 'shopforge_rma_save_meta' ) ) return;
 	if ( ! current_user_can( 'edit_post', $post_id ) ) return;
 
@@ -454,14 +454,14 @@ add_action( 'save_post_shopforge_rma_request', function ( int $post_id ): void {
 } );
 
 // Invio messaggio admin (submit form classico dentro il metabox "Conversazione").
-add_action( 'save_post_shopforge_rma_request', function (): void {
+add_action( 'save_post_shopforge_rma', function (): void {
 	if ( empty( $_POST['shopforge_rma_send_admin_message'] ) || empty( $_POST['shopforge_rma_admin_message_nonce'] ) ) return;
 	if ( ! wp_verify_nonce( $_POST['shopforge_rma_admin_message_nonce'], 'shopforge_rma_add_admin_message' ) ) return;
 	if ( ! current_user_can( 'manage_woocommerce' ) ) return;
 
-	$post_id = absint( $_POST['shopforge_rma_request_id'] ?? 0 );
+	$post_id = absint( $_POST['shopforge_rma_id'] ?? 0 );
 	$text    = sanitize_textarea_field( $_POST['shopforge_rma_admin_message_text'] ?? '' );
-	if ( ! $post_id || ! $text || 'shopforge_rma_request' !== get_post_type( $post_id ) ) return;
+	if ( ! $post_id || ! $text || 'shopforge_rma' !== get_post_type( $post_id ) ) return;
 
 	$attachment_ids = [];
 	if ( ! empty( $_FILES['shopforge_rma_admin_message_allegati'] ) ) {
@@ -500,7 +500,7 @@ add_action( 'wp_ajax_shopforge_rma_update_status', function () {
 	$post_id = absint( $_POST['post_id'] ?? 0 );
 	$stato   = sanitize_text_field( $_POST['stato'] ?? '' );
 
-	if ( ! $post_id || 'shopforge_rma_request' !== get_post_type( $post_id ) ) {
+	if ( ! $post_id || 'shopforge_rma' !== get_post_type( $post_id ) ) {
 		wp_send_json_error( [ 'message' => __( 'Invalid request.', 'shopforge' ) ] );
 	}
 	if ( ! array_key_exists( $stato, shopforge_rma_get_statuses() ) ) {
@@ -521,7 +521,7 @@ add_action( 'wp_ajax_shopforge_rma_create_refund', function () {
 	}
 
 	$post_id = absint( $_POST['post_id'] ?? 0 );
-	if ( ! $post_id || 'shopforge_rma_request' !== get_post_type( $post_id ) ) {
+	if ( ! $post_id || 'shopforge_rma' !== get_post_type( $post_id ) ) {
 		wp_send_json_error( [ 'message' => __( 'Invalid request.', 'shopforge' ) ] );
 	}
 	if ( get_post_meta( $post_id, '_shopforge_rma_refund_id', true ) ) {

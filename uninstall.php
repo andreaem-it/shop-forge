@@ -30,6 +30,7 @@ $shopforge_options = [
 	'shopforge_rma_max_requests_per_day',
 	'shopforge_rma_notification_email',
 	'shopforge_rma_return_period_days',
+	'shopforge_rma_slug_migrated',
 	'shopforge_rma_warranty_months',
 	'shopforge_theme',
 	'shopforge_theme_overrides',
@@ -42,15 +43,20 @@ foreach ( $shopforge_options as $shopforge_option ) {
 delete_transient( 'shopforge_dash_sales' );
 delete_transient( 'shopforge_dash_requests' );
 
-// RMA requests custom post type content.
-$shopforge_rma_ids = get_posts( [
-	'post_type'      => 'shopforge_rma_request',
-	'post_status'    => 'any',
-	'numberposts'    => -1,
-	'fields'         => 'ids',
-	'no_found_rows'  => true,
-] );
+// RMA requests custom post type content. Cleans up both the current slug
+// and the pre-1.12.6 one, in case a site is uninstalled before the
+// one-time migration in shopforge-mod-rma.php ever got to run (e.g. the
+// module was disabled or the license was invalid).
+foreach ( [ 'shopforge_rma', 'shopforge_rma_request' ] as $shopforge_rma_post_type ) {
+	$shopforge_rma_ids = get_posts( [
+		'post_type'      => $shopforge_rma_post_type,
+		'post_status'    => 'any',
+		'numberposts'    => -1,
+		'fields'         => 'ids',
+		'no_found_rows'  => true,
+	] );
 
-foreach ( $shopforge_rma_ids as $shopforge_rma_id ) {
-	wp_delete_post( $shopforge_rma_id, true );
+	foreach ( $shopforge_rma_ids as $shopforge_rma_id ) {
+		wp_delete_post( $shopforge_rma_id, true );
+	}
 }

@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.12.6
+* Found the real cause of the RMA "Invalid post type" error: the post type slug was `shopforge_rma_request`, 21 characters — one over WordPress's 20-character limit — so `register_post_type()` always failed silently (visible only with WP_DEBUG on). Renamed to `shopforge_rma` everywhere (admin screens, columns, bulk actions, metaboxes, exports, uninstall cleanup). Added a one-time migration that moves any existing RMA request posts from the old, never-actually-registered post type to the new one, so nothing already submitted by customers is lost.
+
 ## 1.12.5
 * Fixed a regression from 1.12.4: deferring shopforge_load_modules() to init made module files register their own init hooks (e.g. the RMA post type) from inside an already-running init pass, which WordPress doesn't reliably re-run — the shopforge_rma_request post type silently never registered, breaking edit.php?post_type=shopforge_rma_request even with the module active and licensed. Reverted to loading modules synchronously on plugins_loaded, and instead moved load_plugin_textdomain() earlier (plugins_loaded priority 1) to fix the "translation loaded too early" notice without the nested-hook risk.
 

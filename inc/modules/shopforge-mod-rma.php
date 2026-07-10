@@ -7,7 +7,7 @@
  * recesso legale (modulo 'returns') e dai ticket generici
  * (inc/shopforge-order-tracker.php).
  *
- * Modello dati: CPT `shopforge_rma_request` (non order-meta come il resto
+ * Modello dati: CPT `shopforge_rma` (non order-meta come il resto
  * del plugin) — deviazione motivata: qui servono liste filtrabili/ordinabili
  * in admin, ricerca full-text, export CSV, statistiche, "le mie richieste"
  * cross-ordine e conteggio giornaliero anti-abuso, cose che l'order-meta non
@@ -38,11 +38,34 @@ if ( is_admin() ) {
 
 
 // =============================================================================
+// MIGRAZIONE UNA TANTUM — rinomina post type
+// =============================================================================
+
+/**
+ * Fino alla 1.12.5 il post type era 'shopforge_rma_request' (21 caratteri):
+ * WordPress limita i nomi dei post type a 20, quindi register_post_type()
+ * falliva silenziosamente (visibile solo con WP_DEBUG) e il CPT non è mai
+ * stato realmente registrato. Le richieste create nel frattempo esistono
+ * comunque come righe in wp_posts con quel post_type (wp_insert_post()
+ * non richiede che il tipo sia registrato) — vanno migrate al nuovo slug
+ * 'shopforge_rma', altrimenti restano orfane e invisibili nell'admin.
+ */
+add_action( 'init', function () {
+	if ( get_option( 'shopforge_rma_slug_migrated' ) ) {
+		return;
+	}
+	global $wpdb;
+	$wpdb->update( $wpdb->posts, [ 'post_type' => 'shopforge_rma' ], [ 'post_type' => 'shopforge_rma_request' ] );
+	update_option( 'shopforge_rma_slug_migrated', 1 );
+}, 1 );
+
+
+// =============================================================================
 // CPT
 // =============================================================================
 
 add_action( 'init', function () {
-	register_post_type( 'shopforge_rma_request', [
+	register_post_type( 'shopforge_rma', [
 		'label'               => __( 'RMA Request', 'shopforge' ),
 		'labels'              => [
 			'name'          => __( 'RMA Requests', 'shopforge' ),
@@ -249,7 +272,7 @@ function shopforge_rma_get_product_brand( WC_Product $product ): string {
 
 function shopforge_rma_has_open_request( int $user_id, int $order_id, int $product_id ) {
 	$requests = get_posts( [
-		'post_type'      => 'shopforge_rma_request',
+		'post_type'      => 'shopforge_rma',
 		'posts_per_page' => 1,
 		'post_status'    => 'publish',
 		'fields'         => 'ids',
@@ -266,7 +289,7 @@ function shopforge_rma_has_open_request( int $user_id, int $order_id, int $produ
 
 function shopforge_rma_get_open_requests_map( int $user_id ): array {
 	$requests = get_posts( [
-		'post_type'      => 'shopforge_rma_request',
+		'post_type'      => 'shopforge_rma',
 		'posts_per_page' => -1,
 		'post_status'    => 'publish',
 		'meta_query'     => [
@@ -287,7 +310,7 @@ function shopforge_rma_get_open_requests_map( int $user_id ): array {
 
 function shopforge_rma_get_requested_quantities_map( int $user_id ): array {
 	$requests = get_posts( [
-		'post_type'      => 'shopforge_rma_request',
+		'post_type'      => 'shopforge_rma',
 		'posts_per_page' => -1,
 		'post_status'    => 'publish',
 		'meta_query'     => [
@@ -314,7 +337,7 @@ function shopforge_rma_get_remaining_quantity( int $order_id, int $product_id ):
 	$total_qty = shopforge_rma_get_product_quantity_in_order( $order_id, $product_id );
 
 	$requests = get_posts( [
-		'post_type'      => 'shopforge_rma_request',
+		'post_type'      => 'shopforge_rma',
 		'posts_per_page' => -1,
 		'post_status'    => 'publish',
 		'meta_query'     => [
@@ -337,7 +360,7 @@ function shopforge_rma_has_reached_daily_limit( int $user_id ): bool {
 	if ( $max <= 0 ) return false;
 
 	$count = count( get_posts( [
-		'post_type'      => 'shopforge_rma_request',
+		'post_type'      => 'shopforge_rma',
 		'posts_per_page' => -1,
 		'post_status'    => 'publish',
 		'fields'         => 'ids',
@@ -350,7 +373,7 @@ function shopforge_rma_has_reached_daily_limit( int $user_id ): bool {
 
 function shopforge_rma_get_unread_messages_count( int $user_id ): int {
 	$requests = get_posts( [
-		'post_type'      => 'shopforge_rma_request',
+		'post_type'      => 'shopforge_rma',
 		'posts_per_page' => -1,
 		'post_status'    => 'publish',
 		'meta_query'     => [ [ 'key' => '_shopforge_rma_user_id', 'value' => $user_id ] ],
@@ -577,7 +600,7 @@ function shopforge_rma_create_request( array $data, array $uploaded_files = [] )
 		'post_title'   => sprintf( __( '%1$s request - Order #%2$s - %3$s', 'shopforge' ), $tipo_label, $order->get_order_number(), $product->get_name() ),
 		'post_content' => '',
 		'post_status'  => 'publish',
-		'post_type'    => 'shopforge_rma_request',
+		'post_type'    => 'shopforge_rma',
 	] );
 	if ( is_wp_error( $post_id ) ) return $post_id;
 
@@ -611,7 +634,7 @@ function shopforge_rma_create_request( array $data, array $uploaded_files = [] )
 		}
 	}
 
-	do_action( 'shopforge_rma_request_created', $post_id, $s );
+	do_action( 'shopforge_rma_created', $post_id, $s );
 	do_action( 'shopforge_rma_submitted', $s['user_id'], $s['order_id'], $post_id );
 
 	$rma_data = [
@@ -735,7 +758,7 @@ function shopforge_rma_render_my_requests(): void {
 
 	$user_id  = get_current_user_id();
 	$requests = get_posts( [
-		'post_type'      => 'shopforge_rma_request',
+		'post_type'      => 'shopforge_rma',
 		'posts_per_page' => 20,
 		'post_status'    => 'publish',
 		'orderby'        => 'date',
@@ -889,7 +912,7 @@ function shopforge_rma_render_request_detail( int $request_id ): void {
 	$user_id = get_current_user_id();
 	$request = get_post( $request_id );
 
-	if ( ! $request || 'shopforge_rma_request' !== $request->post_type
+	if ( ! $request || 'shopforge_rma' !== $request->post_type
 	     || (int) get_post_meta( $request_id, '_shopforge_rma_user_id', true ) !== $user_id ) {
 		wp_safe_redirect( wc_get_account_endpoint_url( 'shopforge-rma' ) );
 		exit;
@@ -1033,7 +1056,7 @@ add_action( 'wp_ajax_shopforge_rma_cancel_request', function () {
 	$user_id    = get_current_user_id();
 	$request_id = absint( $_POST['request_id'] ?? 0 );
 
-	if ( ! $request_id || 'shopforge_rma_request' !== get_post_type( $request_id ) ) {
+	if ( ! $request_id || 'shopforge_rma' !== get_post_type( $request_id ) ) {
 		wp_send_json_error( [ 'message' => __( 'Invalid request.', 'shopforge' ) ] );
 	}
 	if ( (int) get_post_meta( $request_id, '_shopforge_rma_user_id', true ) !== $user_id ) {

@@ -126,19 +126,13 @@ function shopforge_unread_count( int $user_id ): int {
 
 // =============================================================================
 // BADGE nel menu account
+//
+// Il badge NON viene più concatenato all'etichetta del menu: il template
+// di navigazione (woocommerce/myaccount/navigation.php) passa ogni label
+// attraverso esc_html(), quindi qualunque <span> incluso qui finiva
+// mostrato come testo letterale invece che come HTML. shopforge_unread_count()
+// viene invece richiamata direttamente dal template per quella voce.
 // =============================================================================
-
-add_filter( 'woocommerce_account_menu_items', function ( $items ) {
-	$user_id = get_current_user_id();
-	if ( ! $user_id ) return $items;
-
-	$unread = shopforge_unread_count( $user_id );
-	if ( $unread > 0 && isset( $items['shopforge-notices'] ) ) {
-		$items['shopforge-notices'] = __( 'Notifications', 'shopforge' ) . ' <span class="shopforge-notif-badge">' . $unread . '</span>';
-	}
-
-	return $items;
-}, 30 );
 
 
 // =============================================================================

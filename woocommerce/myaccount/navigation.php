@@ -28,6 +28,11 @@ do_action( 'woocommerce_before_account_navigation' );
                 <a href="<?php echo esc_url( wc_get_account_endpoint_url( $endpoint ) ); ?>">
                     <i class="<?php echo esc_attr( $icon ); ?>" aria-hidden="true"></i>
                     <span><?php echo esc_html( $label ); ?></span>
+                    <?php if ( 'shopforge-notices' === $endpoint && function_exists( 'shopforge_unread_count' ) && is_user_logged_in() ) :
+                        $unread = shopforge_unread_count( get_current_user_id() );
+                        if ( $unread > 0 ) : ?>
+                        <span class="shopforge-notif-badge"><?php echo esc_html( $unread ); ?></span>
+                    <?php endif; endif; ?>
                 </a>
             </li>
         <?php endforeach; ?>

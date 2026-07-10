@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: ShopForge 1.12.6\n"
+"Project-Id-Version: ShopForge 1.12.8\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-10 12:12+0200\n"
+"POT-Creation-Date: 2026-07-10 12:42+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -94,8 +94,8 @@ msgstr ""
 #: inc/modules/shopforge-mod-quotes.php:228
 #: inc/modules/shopforge-mod-receipts.php:247
 #: inc/modules/shopforge-mod-receipts.php:408
-#: inc/modules/shopforge-mod-returns.php:594
-#: inc/shopforge-order-tracker.php:318 inc/shopforge-settings.php:60
+#: inc/modules/shopforge-mod-returns.php:599
+#: inc/shopforge-order-tracker.php:326 inc/shopforge-settings.php:60
 msgid "Unauthorized access."
 msgstr ""
 
@@ -122,8 +122,7 @@ msgstr ""
 msgid "Your loyalty coupon %s is ready to use"
 msgstr ""
 
-#: inc/modules/shopforge-mod-loyalty.php:224 inc/shopforge-modules.php:146
-#: inc/shopforge-modules.php:152
+#: inc/modules/shopforge-mod-loyalty.php:224
 msgid "Loyalty Points"
 msgstr ""
 
@@ -208,11 +207,11 @@ msgid "Cancelled"
 msgstr ""
 
 #: inc/modules/shopforge-mod-notifications.php:87
-#: inc/modules/shopforge-mod-returns.php:296
-#: inc/modules/shopforge-mod-returns.php:727
-#: inc/modules/shopforge-mod-returns.php:941
+#: inc/modules/shopforge-mod-returns.php:301
+#: inc/modules/shopforge-mod-returns.php:732
+#: inc/modules/shopforge-mod-returns.php:946
 #: inc/modules/shopforge-mod-rma.php:107 inc/shopforge-admin-messages.php:147
-#: inc/shopforge-order-tracker.php:653
+#: inc/shopforge-order-tracker.php:661
 #: woocommerce/emails/shopforge-return-status-update-plain.php:7
 #: woocommerce/emails/shopforge-return-status-update.php:15
 msgid "Refunded"
@@ -233,40 +232,37 @@ msgstr ""
 msgid "Support request %1$s sent for order #%2$d"
 msgstr ""
 
-#: inc/modules/shopforge-mod-notifications.php:137
-#: inc/modules/shopforge-mod-notifications.php:156
-#: inc/shopforge-modules.php:134 inc/shopforge-modules.php:140
+#: inc/modules/shopforge-mod-notifications.php:150
 msgid "Notifications"
 msgstr ""
 
-#: inc/modules/shopforge-mod-notifications.php:160
+#: inc/modules/shopforge-mod-notifications.php:154
 #, php-format
 msgid "%d unread"
 msgid_plural "%d unread"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/modules/shopforge-mod-notifications.php:161
+#: inc/modules/shopforge-mod-notifications.php:155
 msgid "All read"
 msgstr ""
 
-#: inc/modules/shopforge-mod-notifications.php:167
+#: inc/modules/shopforge-mod-notifications.php:161
 msgid "No notifications"
 msgstr ""
 
-#: inc/modules/shopforge-mod-notifications.php:168
+#: inc/modules/shopforge-mod-notifications.php:162
 msgid ""
 "You will receive updates about orders, shipments, support tickets and quotes."
 msgstr ""
 
-#: inc/modules/shopforge-mod-notifications.php:179
+#: inc/modules/shopforge-mod-notifications.php:173
 msgid "Mark all as read"
 msgstr ""
 
 #: inc/modules/shopforge-mod-quotes.php:27
 #: inc/modules/shopforge-mod-quotes.php:286 inc/shopforge-account.php:465
-#: inc/shopforge-admin-messages.php:218 inc/shopforge-modules.php:98
-#: inc/shopforge-modules.php:104
+#: inc/shopforge-admin-messages.php:218
 msgid "Quotes"
 msgstr ""
 
@@ -347,7 +343,7 @@ msgid "Notes / special requests"
 msgstr ""
 
 #: inc/modules/shopforge-mod-quotes.php:69
-#: inc/modules/shopforge-mod-returns.php:492
+#: inc/modules/shopforge-mod-returns.php:497
 #: inc/modules/shopforge-mod-rma.php:888
 msgid "optional"
 msgstr ""
@@ -358,7 +354,7 @@ msgstr ""
 
 #: inc/modules/shopforge-mod-quotes.php:76
 #: inc/modules/shopforge-mod-quotes.php:142
-#: inc/modules/shopforge-mod-rma.php:903 inc/shopforge-order-tracker.php:260
+#: inc/modules/shopforge-mod-rma.php:903 inc/shopforge-order-tracker.php:268
 msgid "Send request"
 msgstr ""
 
@@ -417,7 +413,7 @@ msgid "No requests received."
 msgstr ""
 
 #: inc/modules/shopforge-mod-quotes.php:314
-#: inc/shopforge-admin-messages.php:264 inc/shopforge-order-tracker.php:773
+#: inc/shopforge-admin-messages.php:264 inc/shopforge-order-tracker.php:781
 #: woocommerce/emails/shopforge-quote-admin.php:18
 #: woocommerce/emails/shopforge-quote-customer.php:19
 #: woocommerce/emails/shopforge-return-admin.php:29
@@ -430,7 +426,7 @@ msgstr ""
 #: inc/modules/shopforge-mod-rma-admin.php:283
 #: inc/modules/shopforge-mod-rma-export.php:34
 #: inc/modules/shopforge-mod-rma.php:399 inc/shopforge-admin-messages.php:263
-#: inc/shopforge-order-tracker.php:712 inc/shopforge-order-tracker.php:774
+#: inc/shopforge-order-tracker.php:720 inc/shopforge-order-tracker.php:782
 #: woocommerce/emails/shopforge-quote-admin.php:27
 #: woocommerce/emails/shopforge-return-admin.php:37
 #: woocommerce/emails/shopforge-rma-admin.php:26
@@ -447,43 +443,43 @@ msgstr ""
 #: inc/modules/shopforge-mod-quotes.php:317
 #: inc/receipt-templates/template-classic.php:70 inc/shopforge-account.php:308
 #: inc/shopforge-account.php:546 inc/shopforge-admin-messages.php:267
-#: inc/shopforge-order-tracker.php:518 inc/shopforge-order-tracker.php:714
-#: inc/shopforge-order-tracker.php:777
+#: inc/shopforge-order-tracker.php:526 inc/shopforge-order-tracker.php:722
+#: inc/shopforge-order-tracker.php:785
 #: woocommerce/emails/shopforge-quote-admin.php:22
 #: woocommerce/emails/shopforge-quote-customer.php:23
 msgid "Date"
 msgstr ""
 
 #: inc/modules/shopforge-mod-quotes.php:318
-#: inc/modules/shopforge-mod-returns.php:738
+#: inc/modules/shopforge-mod-returns.php:743
 #: inc/modules/shopforge-mod-rma-admin.php:64
 #: inc/modules/shopforge-mod-rma-export.php:34 inc/shopforge-account.php:309
 #: inc/shopforge-account.php:547 inc/shopforge-admin-messages.php:266
-#: inc/shopforge-order-tracker.php:520 inc/shopforge-order-tracker.php:715
-#: inc/shopforge-order-tracker.php:778
+#: inc/shopforge-order-tracker.php:528 inc/shopforge-order-tracker.php:723
+#: inc/shopforge-order-tracker.php:786
 msgid "Status"
 msgstr ""
 
 #: inc/modules/shopforge-mod-quotes.php:319 inc/shopforge-account.php:311
-#: inc/shopforge-account.php:549 inc/shopforge-order-tracker.php:716
-#: inc/shopforge-order-tracker.php:779
+#: inc/shopforge-account.php:549 inc/shopforge-order-tracker.php:724
+#: inc/shopforge-order-tracker.php:787
 msgid "Actions"
 msgstr ""
 
 #: inc/modules/shopforge-mod-quotes.php:335
-#: inc/modules/shopforge-mod-quotes.php:371 inc/shopforge-order-tracker.php:729
-#: inc/shopforge-order-tracker.php:793 inc/shopforge-order-tracker.php:829
+#: inc/modules/shopforge-mod-quotes.php:371 inc/shopforge-order-tracker.php:737
+#: inc/shopforge-order-tracker.php:801 inc/shopforge-order-tracker.php:837
 msgid "Manage"
 msgstr ""
 
 #: inc/modules/shopforge-mod-quotes.php:339
-#: inc/modules/shopforge-mod-returns.php:310
-#: inc/shopforge-order-tracker.php:745 inc/shopforge-order-tracker.php:800
+#: inc/modules/shopforge-mod-returns.php:315
+#: inc/shopforge-order-tracker.php:753 inc/shopforge-order-tracker.php:808
 msgid "Status:"
 msgstr ""
 
-#: inc/modules/shopforge-mod-quotes.php:346 inc/shopforge-order-tracker.php:752
-#: inc/shopforge-order-tracker.php:807
+#: inc/modules/shopforge-mod-quotes.php:346 inc/shopforge-order-tracker.php:760
+#: inc/shopforge-order-tracker.php:815
 msgid "Reply to customer:"
 msgstr ""
 
@@ -491,26 +487,26 @@ msgstr ""
 msgid "Send reply by email"
 msgstr ""
 
-#: inc/modules/shopforge-mod-quotes.php:357 inc/shopforge-order-tracker.php:758
-#: inc/shopforge-order-tracker.php:813 inc/shopforge-order-tracker.php:850
+#: inc/modules/shopforge-mod-quotes.php:357 inc/shopforge-order-tracker.php:766
+#: inc/shopforge-order-tracker.php:821 inc/shopforge-order-tracker.php:858
 msgid "Save"
 msgstr ""
 
 #: inc/modules/shopforge-mod-quotes.php:371
-#: inc/modules/shopforge-mod-returns.php:406
-#: inc/modules/shopforge-mod-returns.php:545
-#: inc/shopforge-order-tracker.php:185 inc/shopforge-order-tracker.php:273
-#: inc/shopforge-order-tracker.php:830
+#: inc/modules/shopforge-mod-returns.php:411
+#: inc/modules/shopforge-mod-returns.php:550
+#: inc/shopforge-order-tracker.php:193 inc/shopforge-order-tracker.php:281
+#: inc/shopforge-order-tracker.php:838
 msgid "Close"
 msgstr ""
 
-#: inc/modules/shopforge-mod-quotes.php:386 inc/shopforge-order-tracker.php:849
+#: inc/modules/shopforge-mod-quotes.php:386 inc/shopforge-order-tracker.php:857
 msgid "Saved"
 msgstr ""
 
 #: inc/modules/shopforge-mod-quotes.php:386
 #: inc/modules/shopforge-mod-tracking.php:108
-#: inc/shopforge-order-tracker.php:849 inc/shopforge-order-tracker.php:852
+#: inc/shopforge-order-tracker.php:857 inc/shopforge-order-tracker.php:860
 msgid "Error"
 msgstr ""
 
@@ -729,354 +725,354 @@ msgstr ""
 msgid "Store credit for withdrawal %1$s — Order #%2$s"
 msgstr ""
 
-#: inc/modules/shopforge-mod-returns.php:293
-#: inc/modules/shopforge-mod-returns.php:724
-#: inc/modules/shopforge-mod-returns.php:938
+#: inc/modules/shopforge-mod-returns.php:298
+#: inc/modules/shopforge-mod-returns.php:729
+#: inc/modules/shopforge-mod-returns.php:943
 #: inc/shopforge-admin-messages.php:144 inc/shopforge-order-tracker.php:56
-#: inc/shopforge-order-tracker.php:650
+#: inc/shopforge-order-tracker.php:658
 #: woocommerce/emails/shopforge-return-status-update-plain.php:4
 #: woocommerce/emails/shopforge-return-status-update.php:12
 msgid "Received"
 msgstr ""
 
-#: inc/modules/shopforge-mod-returns.php:294
-#: inc/modules/shopforge-mod-returns.php:725
-#: inc/modules/shopforge-mod-returns.php:939
+#: inc/modules/shopforge-mod-returns.php:299
+#: inc/modules/shopforge-mod-returns.php:730
+#: inc/modules/shopforge-mod-returns.php:944
 #: inc/modules/shopforge-mod-rma.php:103 inc/shopforge-account.php:446
-#: inc/shopforge-admin-messages.php:145 inc/shopforge-order-tracker.php:651
+#: inc/shopforge-admin-messages.php:145 inc/shopforge-order-tracker.php:659
 #: woocommerce/emails/shopforge-return-status-update-plain.php:5
 #: woocommerce/emails/shopforge-return-status-update.php:13
 msgid "Processing"
 msgstr ""
 
-#: inc/modules/shopforge-mod-returns.php:295
-#: inc/modules/shopforge-mod-returns.php:726
-#: inc/modules/shopforge-mod-returns.php:940
+#: inc/modules/shopforge-mod-returns.php:300
+#: inc/modules/shopforge-mod-returns.php:731
+#: inc/modules/shopforge-mod-returns.php:945
 #: inc/modules/shopforge-mod-rma.php:104 inc/shopforge-admin-messages.php:146
-#: inc/shopforge-order-tracker.php:652
+#: inc/shopforge-order-tracker.php:660
 #: woocommerce/emails/shopforge-return-status-update-plain.php:6
 #: woocommerce/emails/shopforge-return-status-update.php:14
 msgid "Approved"
 msgstr ""
 
-#: inc/modules/shopforge-mod-returns.php:306
+#: inc/modules/shopforge-mod-returns.php:311
 msgid "Withdrawal request sent"
 msgstr ""
 
-#: inc/modules/shopforge-mod-returns.php:309
+#: inc/modules/shopforge-mod-returns.php:314
 msgid "Ref."
 msgstr ""
 
-#: inc/modules/shopforge-mod-returns.php:315
+#: inc/modules/shopforge-mod-returns.php:320
 #: woocommerce/emails/shopforge-return-status-update-plain.php:20
 msgid "Message from the store:"
 msgstr ""
 
-#: inc/modules/shopforge-mod-returns.php:323
-#: inc/modules/shopforge-mod-returns.php:1038
+#: inc/modules/shopforge-mod-returns.php:328
+#: inc/modules/shopforge-mod-returns.php:1043
 #, php-format
 msgid "Your store credit coupon: %s"
 msgstr ""
 
-#: inc/modules/shopforge-mod-returns.php:332
+#: inc/modules/shopforge-mod-returns.php:337
 msgid "All my returns"
 msgstr ""
 
-#: inc/modules/shopforge-mod-returns.php:345
+#: inc/modules/shopforge-mod-returns.php:350
 msgid "Withdrawal window expired"
 msgstr ""
 
-#: inc/modules/shopforge-mod-returns.php:349
+#: inc/modules/shopforge-mod-returns.php:354
 #, php-format
 msgid ""
 "The %d-day period to exercise the right of withdrawal has expired. For any "
 "need, contact our store."
 msgstr ""
 
-#: inc/modules/shopforge-mod-returns.php:356
+#: inc/modules/shopforge-mod-returns.php:361
 msgid "Contact the store"
 msgstr ""
 
-#: inc/modules/shopforge-mod-returns.php:361
+#: inc/modules/shopforge-mod-returns.php:366
 msgid "Contact the store for assistance"
 msgstr ""
 
-#: inc/modules/shopforge-mod-returns.php:374
+#: inc/modules/shopforge-mod-returns.php:379
 msgid "Right of withdrawal"
 msgstr ""
 
-#: inc/modules/shopforge-mod-returns.php:378
+#: inc/modules/shopforge-mod-returns.php:383
 #, php-format
 msgid ""
 "You have the right to withdraw from the contract within %d days of receiving "
 "the goods, without giving any reason."
 msgstr ""
 
-#: inc/modules/shopforge-mod-returns.php:383
+#: inc/modules/shopforge-mod-returns.php:388
 #, php-format
 msgid "You still have %d day."
 msgid_plural "You still have %d days."
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/modules/shopforge-mod-returns.php:392
+#: inc/modules/shopforge-mod-returns.php:397
 msgid "Withdraw from the contract"
 msgstr ""
 
-#: inc/modules/shopforge-mod-returns.php:404
+#: inc/modules/shopforge-mod-returns.php:409
 msgid "Contract withdrawal"
 msgstr ""
 
-#: inc/modules/shopforge-mod-returns.php:415
+#: inc/modules/shopforge-mod-returns.php:420
 msgid "Details"
 msgstr ""
 
-#: inc/modules/shopforge-mod-returns.php:420
+#: inc/modules/shopforge-mod-returns.php:425
 msgid "Confirm"
 msgstr ""
 
-#: inc/modules/shopforge-mod-returns.php:431
+#: inc/modules/shopforge-mod-returns.php:436
 #, php-format
 msgid "Order <strong>#%1$s</strong> of %2$s"
 msgstr ""
 
-#: inc/modules/shopforge-mod-returns.php:436
+#: inc/modules/shopforge-mod-returns.php:441
 msgid "Products to return"
 msgstr ""
 
-#: inc/modules/shopforge-mod-returns.php:464
+#: inc/modules/shopforge-mod-returns.php:469
 msgid "Reason for withdrawal"
 msgstr ""
 
-#: inc/modules/shopforge-mod-returns.php:466
-#: inc/modules/shopforge-mod-rma.php:858 inc/shopforge-order-tracker.php:196
+#: inc/modules/shopforge-mod-returns.php:471
+#: inc/modules/shopforge-mod-rma.php:858 inc/shopforge-order-tracker.php:204
 msgid "Select"
 msgstr ""
 
-#: inc/modules/shopforge-mod-returns.php:467
+#: inc/modules/shopforge-mod-returns.php:472
 msgid "Changed my mind"
 msgstr ""
 
-#: inc/modules/shopforge-mod-returns.php:467
+#: inc/modules/shopforge-mod-returns.php:472
 msgid "Changed my mind (no longer interested)"
 msgstr ""
 
-#: inc/modules/shopforge-mod-returns.php:468
+#: inc/modules/shopforge-mod-returns.php:473
 msgid "Product not as described"
 msgstr ""
 
-#: inc/modules/shopforge-mod-returns.php:469
+#: inc/modules/shopforge-mod-returns.php:474
 msgid "Defective or damaged product"
 msgstr ""
 
-#: inc/modules/shopforge-mod-returns.php:470
+#: inc/modules/shopforge-mod-returns.php:475
 msgid "Wrong product received"
 msgstr ""
 
-#: inc/modules/shopforge-mod-returns.php:471
+#: inc/modules/shopforge-mod-returns.php:476
 msgid "Delivery delay"
 msgstr ""
 
-#: inc/modules/shopforge-mod-returns.php:472
-#: inc/modules/shopforge-mod-rma.php:138 inc/shopforge-order-tracker.php:199
+#: inc/modules/shopforge-mod-returns.php:477
+#: inc/modules/shopforge-mod-rma.php:138 inc/shopforge-order-tracker.php:207
 msgid "Other"
 msgstr ""
 
-#: inc/modules/shopforge-mod-returns.php:477
+#: inc/modules/shopforge-mod-returns.php:482
 msgid "Preferred refund method"
 msgstr ""
 
-#: inc/modules/shopforge-mod-returns.php:492
+#: inc/modules/shopforge-mod-returns.php:497
 msgid "Additional notes"
 msgstr ""
 
-#: inc/modules/shopforge-mod-returns.php:493
+#: inc/modules/shopforge-mod-returns.php:498
 msgid "Enter further details…"
 msgstr ""
 
-#: inc/modules/shopforge-mod-returns.php:497
+#: inc/modules/shopforge-mod-returns.php:502
 #: inc/modules/shopforge-mod-rma.php:888
 msgid "Photos or documents"
 msgstr ""
 
-#: inc/modules/shopforge-mod-returns.php:497
+#: inc/modules/shopforge-mod-returns.php:502
 msgid "optional — max 5 MB per file"
 msgstr ""
 
-#: inc/modules/shopforge-mod-returns.php:504
+#: inc/modules/shopforge-mod-returns.php:509
 msgid ""
 "On the next screen you can read the full text of your withdrawal declaration "
 "before confirming."
 msgstr ""
 
-#: inc/modules/shopforge-mod-returns.php:510
+#: inc/modules/shopforge-mod-returns.php:515
 msgid "Next — Review and confirm"
 msgstr ""
 
-#: inc/modules/shopforge-mod-returns.php:523
+#: inc/modules/shopforge-mod-returns.php:528
 msgid ""
 "By confirming, we will send this declaration to the seller and you will "
 "receive an automatic email receipt with the date and time of transmission."
 msgstr ""
 
-#: inc/modules/shopforge-mod-returns.php:530
+#: inc/modules/shopforge-mod-returns.php:535
 msgid "Back"
 msgstr ""
 
-#: inc/modules/shopforge-mod-returns.php:533
+#: inc/modules/shopforge-mod-returns.php:538
 msgid "I confirm the withdrawal"
 msgstr ""
 
-#: inc/modules/shopforge-mod-returns.php:542
+#: inc/modules/shopforge-mod-returns.php:547
 msgid "Withdrawal recorded"
 msgstr ""
 
-#: inc/modules/shopforge-mod-returns.php:581
-#: inc/modules/shopforge-mod-rma.php:985 inc/shopforge-order-tracker.php:302
+#: inc/modules/shopforge-mod-returns.php:586
+#: inc/modules/shopforge-mod-rma.php:985 inc/shopforge-order-tracker.php:310
 msgid "Session expired. Reload the page and try again."
 msgstr ""
 
-#: inc/modules/shopforge-mod-returns.php:586
+#: inc/modules/shopforge-mod-returns.php:591
 msgid ""
 "You already sent a withdrawal request recently. Wait a few minutes and try "
 "again."
 msgstr ""
 
-#: inc/modules/shopforge-mod-returns.php:590
-#: inc/shopforge-order-tracker.php:312
+#: inc/modules/shopforge-mod-returns.php:595
+#: inc/shopforge-order-tracker.php:320
 msgid "Order not found."
 msgstr ""
 
-#: inc/modules/shopforge-mod-returns.php:599
+#: inc/modules/shopforge-mod-returns.php:604
 #, php-format
 msgid "The %d-day withdrawal period has expired."
 msgstr ""
 
-#: inc/modules/shopforge-mod-returns.php:603
+#: inc/modules/shopforge-mod-returns.php:608
 msgid "A withdrawal request already exists for this order."
 msgstr ""
 
-#: inc/modules/shopforge-mod-returns.php:615
-#: inc/shopforge-order-tracker.php:327
+#: inc/modules/shopforge-mod-returns.php:620
+#: inc/shopforge-order-tracker.php:335
 msgid "Missing or invalid data."
 msgstr ""
 
-#: inc/modules/shopforge-mod-returns.php:703
-#: inc/modules/shopforge-mod-returns.php:996
-#: inc/shopforge-order-tracker.php:700
+#: inc/modules/shopforge-mod-returns.php:708
+#: inc/modules/shopforge-mod-returns.php:1001
+#: inc/shopforge-order-tracker.php:708
 msgid "Withdrawal requests"
 msgstr ""
 
-#: inc/modules/shopforge-mod-returns.php:719
+#: inc/modules/shopforge-mod-returns.php:724
 msgid "No withdrawal requests for this order."
 msgstr ""
 
-#: inc/modules/shopforge-mod-returns.php:728
-#: inc/modules/shopforge-mod-returns.php:942
+#: inc/modules/shopforge-mod-returns.php:733
+#: inc/modules/shopforge-mod-returns.php:947
 #: inc/modules/shopforge-mod-rma.php:109 inc/shopforge-admin-messages.php:148
-#: inc/shopforge-order-tracker.php:654
+#: inc/shopforge-order-tracker.php:662
 #: woocommerce/emails/shopforge-return-status-update-plain.php:8
 #: woocommerce/emails/shopforge-return-status-update.php:16
 msgid "Rejected"
 msgstr ""
 
-#: inc/modules/shopforge-mod-returns.php:735
+#: inc/modules/shopforge-mod-returns.php:740
 msgid "Ref. / Date"
 msgstr ""
 
-#: inc/modules/shopforge-mod-returns.php:736
+#: inc/modules/shopforge-mod-returns.php:741
 msgid "Products / Reason"
 msgstr ""
 
-#: inc/modules/shopforge-mod-returns.php:737
+#: inc/modules/shopforge-mod-returns.php:742
 msgid "Declaration"
 msgstr ""
 
-#: inc/modules/shopforge-mod-returns.php:760
+#: inc/modules/shopforge-mod-returns.php:765
 msgid "Refund:"
 msgstr ""
 
-#: inc/modules/shopforge-mod-returns.php:765
+#: inc/modules/shopforge-mod-returns.php:770
 #, php-format
 msgid "Coupon issued: %s"
 msgstr ""
 
-#: inc/modules/shopforge-mod-returns.php:770
+#: inc/modules/shopforge-mod-returns.php:775
 msgid "Notes:"
 msgstr ""
 
-#: inc/modules/shopforge-mod-returns.php:783
-#: inc/modules/shopforge-mod-returns.php:982
-#: inc/modules/shopforge-mod-returns.php:1031
-#: inc/shopforge-order-tracker.php:441 inc/shopforge-order-tracker.php:550
+#: inc/modules/shopforge-mod-returns.php:788
+#: inc/modules/shopforge-mod-returns.php:987
+#: inc/modules/shopforge-mod-returns.php:1036
+#: inc/shopforge-order-tracker.php:449 inc/shopforge-order-tracker.php:558
 msgid "Store reply:"
 msgstr ""
 
-#: inc/modules/shopforge-mod-returns.php:786
+#: inc/modules/shopforge-mod-returns.php:791
 msgid "Message to customer (optional)…"
 msgstr ""
 
-#: inc/modules/shopforge-mod-returns.php:801
-#: inc/shopforge-order-tracker.php:564
+#: inc/modules/shopforge-mod-returns.php:806
+#: inc/shopforge-order-tracker.php:572
 msgid "Save &amp; Notify"
 msgstr ""
 
-#: inc/modules/shopforge-mod-returns.php:847
+#: inc/modules/shopforge-mod-returns.php:852
 msgid "Order marked as refunded following an approved withdrawal request."
 msgstr ""
 
-#: inc/modules/shopforge-mod-returns.php:875
+#: inc/modules/shopforge-mod-returns.php:880
 #, php-format
 msgid "Update on your withdrawal request %s"
 msgstr ""
 
-#: inc/modules/shopforge-mod-returns.php:894 inc/shopforge-modules.php:110
-#: inc/shopforge-modules.php:116 inc/shopforge-order-tracker.php:636
-#: inc/shopforge-order-tracker.php:637 inc/shopforge-order-tracker.php:691
+#: inc/modules/shopforge-mod-returns.php:899
+#: inc/shopforge-order-tracker.php:644 inc/shopforge-order-tracker.php:645
+#: inc/shopforge-order-tracker.php:699
 msgid "Support & Returns"
 msgstr ""
 
-#: inc/modules/shopforge-mod-returns.php:922
+#: inc/modules/shopforge-mod-returns.php:927
 #: inc/modules/shopforge-mod-rma.php:770
 msgid "No requests"
 msgstr ""
 
-#: inc/modules/shopforge-mod-returns.php:924
+#: inc/modules/shopforge-mod-returns.php:929
 #, php-format
 msgid ""
 "From the orders area you can open a support ticket or request a withdrawal "
 "(within %d days of delivery)."
 msgstr ""
 
-#: inc/modules/shopforge-mod-returns.php:934
+#: inc/modules/shopforge-mod-returns.php:939
 #: inc/modules/shopforge-mod-rma.php:102 inc/shopforge-admin-messages.php:47
-#: inc/shopforge-order-tracker.php:416 inc/shopforge-order-tracker.php:511
-#: inc/shopforge-order-tracker.php:527 inc/shopforge-order-tracker.php:557
-#: inc/shopforge-order-tracker.php:646
+#: inc/shopforge-order-tracker.php:424 inc/shopforge-order-tracker.php:519
+#: inc/shopforge-order-tracker.php:535 inc/shopforge-order-tracker.php:565
+#: inc/shopforge-order-tracker.php:654
 msgid "Open"
 msgstr ""
 
-#: inc/modules/shopforge-mod-returns.php:935
+#: inc/modules/shopforge-mod-returns.php:940
 #: inc/modules/shopforge-mod-rma.php:111 inc/shopforge-admin-messages.php:47
-#: inc/shopforge-order-tracker.php:417 inc/shopforge-order-tracker.php:511
-#: inc/shopforge-order-tracker.php:558 inc/shopforge-order-tracker.php:647
+#: inc/shopforge-order-tracker.php:425 inc/shopforge-order-tracker.php:519
+#: inc/shopforge-order-tracker.php:566 inc/shopforge-order-tracker.php:655
 msgid "Closed"
 msgstr ""
 
-#: inc/modules/shopforge-mod-returns.php:950
-#: inc/shopforge-order-tracker.php:469 inc/shopforge-order-tracker.php:696
+#: inc/modules/shopforge-mod-returns.php:955
+#: inc/shopforge-order-tracker.php:477 inc/shopforge-order-tracker.php:704
 msgid "Support requests"
 msgstr ""
 
-#: inc/modules/shopforge-mod-returns.php:966
-#: inc/modules/shopforge-mod-returns.php:1012
+#: inc/modules/shopforge-mod-returns.php:971
+#: inc/modules/shopforge-mod-returns.php:1017
 #: inc/modules/shopforge-mod-rma-admin.php:62
 #: inc/modules/shopforge-mod-rma-admin.php:293
 #: inc/modules/shopforge-mod-rma-export.php:34
 #: inc/modules/shopforge-mod-rma.php:787 inc/modules/shopforge-mod-rma.php:945
 #: inc/receipt-templates/template-classic.php:74 inc/shopforge-account.php:307
-#: inc/shopforge-account.php:545 inc/shopforge-order-tracker.php:713
-#: inc/shopforge-order-tracker.php:775
+#: inc/shopforge-account.php:545 inc/shopforge-order-tracker.php:721
+#: inc/shopforge-order-tracker.php:783
 #: woocommerce/emails/shopforge-return-admin.php:44
 #: woocommerce/emails/shopforge-return-customer.php:42
 #: woocommerce/emails/shopforge-return-status-update.php:27
@@ -1089,20 +1085,19 @@ msgstr ""
 msgid "Order"
 msgstr ""
 
-#: inc/modules/shopforge-mod-returns.php:972
-#: inc/modules/shopforge-mod-returns.php:1021
-#: inc/shopforge-order-tracker.php:739
+#: inc/modules/shopforge-mod-returns.php:977
+#: inc/modules/shopforge-mod-returns.php:1026
+#: inc/shopforge-order-tracker.php:747
 msgid "Attachments:"
 msgstr ""
 
-#: inc/modules/shopforge-mod-rma-admin.php:19 inc/shopforge-modules.php:122
+#: inc/modules/shopforge-mod-rma-admin.php:19
 msgid "Product Support (RMA)"
 msgstr ""
 
 #: inc/modules/shopforge-mod-rma-admin.php:20
 #: inc/modules/shopforge-mod-rma.php:73 inc/modules/shopforge-mod-rma.php:695
-#: inc/shopforge-modules.php:128
-msgid "Product Support"
+msgid "Repairs & Warranty"
 msgstr ""
 
 #: inc/modules/shopforge-mod-rma-admin.php:31
@@ -1270,7 +1265,7 @@ msgstr ""
 
 #: inc/modules/shopforge-mod-rma-admin.php:341
 #: inc/modules/shopforge-mod-rma-export.php:34
-#: inc/modules/shopforge-mod-rma.php:856 inc/shopforge-order-tracker.php:776
+#: inc/modules/shopforge-mod-rma.php:856 inc/shopforge-order-tracker.php:784
 #: woocommerce/emails/shopforge-return-admin.php:56
 #: woocommerce/emails/shopforge-return-customer.php:54
 #: woocommerce/emails/shopforge-ticket-admin.php:30
@@ -1307,7 +1302,7 @@ msgid "Return procedure and conditions"
 msgstr ""
 
 #: inc/modules/shopforge-mod-rma-admin.php:354
-#: inc/modules/shopforge-mod-tracking.php:382 inc/shopforge-modules.php:76
+#: inc/modules/shopforge-mod-tracking.php:382
 msgid "Shipment tracking"
 msgstr ""
 
@@ -1670,7 +1665,7 @@ msgid ""
 "your own."
 msgstr ""
 
-#: inc/modules/shopforge-mod-rma.php:1102
+#: inc/modules/shopforge-mod-rma.php:1112
 msgid "Support & Returns (RMA)"
 msgstr ""
 
@@ -1754,8 +1749,7 @@ msgstr ""
 msgid "%s is back in stock"
 msgstr ""
 
-#: inc/modules/shopforge-mod-wishlist.php:61 inc/shopforge-modules.php:86
-#: inc/shopforge-modules.php:92
+#: inc/modules/shopforge-mod-wishlist.php:61
 msgid "Wishlist"
 msgstr ""
 
@@ -2285,7 +2279,7 @@ msgstr ""
 #: inc/shopforge-email-classes.php:379 inc/shopforge-email-classes.php:450
 #: inc/shopforge-email-classes.php:521 inc/shopforge-email-classes.php:592
 #: inc/shopforge-email-classes.php:664 inc/shopforge-email-classes.php:736
-#: inc/shopforge-email-classes.php:807 inc/shopforge-order-tracker.php:711
+#: inc/shopforge-email-classes.php:807 inc/shopforge-order-tracker.php:719
 msgid "Subject"
 msgstr ""
 
@@ -2568,113 +2562,6 @@ msgstr ""
 msgid "Error:"
 msgstr ""
 
-#: inc/shopforge-modules.php:33
-msgid "Account area styles"
-msgstr ""
-
-#: inc/shopforge-modules.php:34
-msgid ""
-"CSS for the dashboard, orders, addresses and modules (returns, support, "
-"notifications): card layout, status badges, typography. Disable to rely "
-"entirely on your theme in the account area too."
-msgstr ""
-
-#: inc/shopforge-modules.php:43
-msgid "Shop/catalog styles"
-msgstr ""
-
-#: inc/shopforge-modules.php:44
-msgid ""
-"CSS for the product catalog and shop pages. Disable to rely entirely on your "
-"theme for the catalog."
-msgstr ""
-
-#: inc/shopforge-modules.php:53
-msgid "Custom colors"
-msgstr ""
-
-#: inc/shopforge-modules.php:54
-msgid ""
-"Color palette (buttons, badges, text) injected as CSS variables, including "
-"the configuration below. When disabled, the returns/support modals also fall "
-"back to the default theme style."
-msgstr ""
-
-#: inc/shopforge-modules.php:63
-msgid "Custom dashboard"
-msgstr ""
-
-#: inc/shopforge-modules.php:64
-msgid ""
-"Replaces the WooCommerce dashboard with a custom one: order statistics, "
-"tracking widget, addresses. Disable to use the default WooCommerce dashboard."
-msgstr ""
-
-#: inc/shopforge-modules.php:77
-msgid ""
-"Tracking widget on the order detail page with 17track integration. The admin "
-"enters the tracking number from the order in the backend."
-msgstr ""
-
-#: inc/shopforge-modules.php:87
-msgid ""
-"Lets customers save favorite products and access them from their account. "
-"Adds the heart button to the catalog and product page."
-msgstr ""
-
-#: inc/shopforge-modules.php:99
-msgid ""
-"Dedicated section for quote requests. Customers add products and quantities, "
-"the admin replies via email and manages everything from a dedicated page."
-msgstr ""
-
-#: inc/shopforge-modules.php:111
-msgid ""
-"Digital withdrawal procedure compliant with EU consumer law. Button on the "
-"order page, 2-step modal, automatic email receipt."
-msgstr ""
-
-#: inc/shopforge-modules.php:123
-msgid ""
-"Structured repair, replacement or refund requests for defects/warranty: "
-"remedy selection, quantity tracking, automatic WooCommerce refund, message "
-"thread."
-msgstr ""
-
-#: inc/shopforge-modules.php:135
-msgid ""
-"Notification center fed by real events: order status changes, support "
-"tickets, return updates, quote replies. Badge with unread count."
-msgstr ""
-
-#: inc/shopforge-modules.php:147
-msgid ""
-"Customers earn points on completed orders and redeem them for a discount "
-"coupon. Earn rate, point value and minimum redemption are configurable."
-msgstr ""
-
-#: inc/shopforge-modules.php:158
-msgid "PDF Receipts"
-msgstr ""
-
-#: inc/shopforge-modules.php:159
-msgid ""
-"Generates a real PDF receipt for each order, with a choice of visual "
-"templates, your logo, company details and footer notes. Downloadable from "
-"the order page and the customer account, with one-click email delivery."
-msgstr ""
-
-#: inc/shopforge-modules.php:168
-msgid "Italian Fiscal Checkout Fields"
-msgstr ""
-
-#: inc/shopforge-modules.php:169
-msgid ""
-"Adds Customer type (Private/Business), Tax code, VAT number, SDI code and "
-"PEC to checkout — native to the block checkout, with fields shown/required "
-"based on the selected customer type."
-msgstr ""
-
 #: inc/shopforge-order-alert.php:41
 #, php-format
 msgid "%d open support ticket"
@@ -2733,104 +2620,104 @@ msgstr ""
 msgid "In progress"
 msgstr ""
 
-#: inc/shopforge-order-tracker.php:159
+#: inc/shopforge-order-tracker.php:167
 msgid "Need help with this order?"
 msgstr ""
 
-#: inc/shopforge-order-tracker.php:161
+#: inc/shopforge-order-tracker.php:169
 msgid ""
 "Our team is available for any question about products, shipping, or to "
 "handle returns and replacements."
 msgstr ""
 
-#: inc/shopforge-order-tracker.php:170
+#: inc/shopforge-order-tracker.php:178
 msgid "Open a Request"
 msgstr ""
 
-#: inc/shopforge-order-tracker.php:182
+#: inc/shopforge-order-tracker.php:190
 #, php-format
 msgid "Support request — Order <strong>#%s</strong>"
 msgstr ""
 
-#: inc/shopforge-order-tracker.php:194
+#: inc/shopforge-order-tracker.php:202
 msgid "Reason for the request"
 msgstr ""
 
-#: inc/shopforge-order-tracker.php:197
+#: inc/shopforge-order-tracker.php:205
 msgid "Product issue"
 msgstr ""
 
-#: inc/shopforge-order-tracker.php:198
+#: inc/shopforge-order-tracker.php:206
 msgid "Shipping or tracking"
 msgstr ""
 
-#: inc/shopforge-order-tracker.php:204
+#: inc/shopforge-order-tracker.php:212
 msgid "Products involved"
 msgstr ""
 
-#: inc/shopforge-order-tracker.php:246
+#: inc/shopforge-order-tracker.php:254
 msgid "Describe the problem"
 msgstr ""
 
-#: inc/shopforge-order-tracker.php:248
+#: inc/shopforge-order-tracker.php:256
 msgid "Describe your request in detail…"
 msgstr ""
 
-#: inc/shopforge-order-tracker.php:251
+#: inc/shopforge-order-tracker.php:259
 msgid "Attach photos or documents (optional)"
 msgstr ""
 
-#: inc/shopforge-order-tracker.php:257
+#: inc/shopforge-order-tracker.php:265
 msgid ""
 "You will receive a reply at the email address associated with your account."
 msgstr ""
 
-#: inc/shopforge-order-tracker.php:268
+#: inc/shopforge-order-tracker.php:276
 msgid "Request sent!"
 msgstr ""
 
-#: inc/shopforge-order-tracker.php:270
+#: inc/shopforge-order-tracker.php:278
 msgid "We received your report. We will reply by email as soon as possible."
 msgstr ""
 
-#: inc/shopforge-order-tracker.php:307
+#: inc/shopforge-order-tracker.php:315
 msgid "You already opened a request recently. Wait a minute and try again."
 msgstr ""
 
-#: inc/shopforge-order-tracker.php:423
+#: inc/shopforge-order-tracker.php:431
 msgid "Your support requests"
 msgstr ""
 
-#: inc/shopforge-order-tracker.php:505
+#: inc/shopforge-order-tracker.php:513
 msgid "No support requests for this order."
 msgstr ""
 
-#: inc/shopforge-order-tracker.php:519
+#: inc/shopforge-order-tracker.php:527
 msgid "Reason / Products / Message"
 msgstr ""
 
-#: inc/shopforge-order-tracker.php:553
+#: inc/shopforge-order-tracker.php:561
 msgid "Reply to customer (optional)…"
 msgstr ""
 
-#: inc/shopforge-order-tracker.php:615
+#: inc/shopforge-order-tracker.php:623
 #, php-format
 msgid "Update on your support request — Order #%s"
 msgstr ""
 
-#: inc/shopforge-order-tracker.php:707
+#: inc/shopforge-order-tracker.php:715
 msgid "No open tickets."
 msgstr ""
 
-#: inc/shopforge-order-tracker.php:734
+#: inc/shopforge-order-tracker.php:742
 msgid "Customer message:"
 msgstr ""
 
-#: inc/shopforge-order-tracker.php:769
+#: inc/shopforge-order-tracker.php:777
 msgid "No withdrawal requests received."
 msgstr ""
 
-#: inc/shopforge-order-tracker.php:798
+#: inc/shopforge-order-tracker.php:806
 msgid "Products:"
 msgstr ""
 

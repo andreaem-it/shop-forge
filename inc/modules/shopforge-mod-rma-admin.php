@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
 add_action( 'admin_menu', function () {
 	add_menu_page(
 		__( 'Product Support (RMA)', 'shopforge' ),
-		__( 'Product Support', 'shopforge' ),
+		__( 'Repairs & Warranty', 'shopforge' ),
 		'manage_woocommerce',
 		'shopforge-rma',
 		function () {

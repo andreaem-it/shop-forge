@@ -70,7 +70,7 @@ add_action( 'init', function () {
 		'labels'              => [
 			'name'          => __( 'RMA Requests', 'shopforge' ),
 			'singular_name' => __( 'RMA Request', 'shopforge' ),
-			'menu_name'     => __( 'Product Support', 'shopforge' ),
+			'menu_name'     => __( 'Repairs & Warranty', 'shopforge' ),
 			'all_items'     => __( 'All Requests', 'shopforge' ),
 			'search_items'  => __( 'Search Requests', 'shopforge' ),
 			'not_found'     => __( 'Not found', 'shopforge' ),
@@ -692,7 +692,7 @@ add_action( 'woocommerce_account_shopforge-rma_endpoint', function () {
  * Vista predefinita: ordini idonei con pulsanti "Richiedi assistenza/reso" per prodotto.
  */
 function shopforge_rma_render_orders_list(): void {
-	shopforge_account_section_header( __( 'Product Support', 'shopforge' ), 'fa-solid fa-screwdriver-wrench' );
+	shopforge_account_section_header( __( 'Repairs & Warranty', 'shopforge' ), 'fa-solid fa-screwdriver-wrench' );
 
 	$user_id = get_current_user_id();
 	$orders  = wc_get_orders( [
@@ -1077,8 +1077,19 @@ add_action( 'wp_ajax_shopforge_rma_cancel_request', function () {
 // =============================================================================
 
 add_action( 'wp_enqueue_scripts', function () {
-	if ( ! is_account_page() ) return;
 	if ( ! function_exists( 'shopforge_is_module_active' ) ) return;
+
+	// Registrazione sempre eseguita (costo nullo finché non viene messa in
+	// coda): shopforge_rma_render_request_form()/_message_form() chiamano
+	// wp_enqueue_script()+wp_localize_script() più avanti, durante il
+	// rendering del contenuto della pagina account — se l'handle non è
+	// ancora registrato a quel punto (es. is_account_page() qui sopra non
+	// riconosce la pagina per qualche motivo di configurazione permalink),
+	// quelle chiamate falliscono in silenzio e lo script non viene mai
+	// stampato, lasciando `shopforgeRma`/ajaxUrl undefined lato JS.
+	wp_register_script( 'shopforge-rma', SHOPFORGE_URL . 'assets/js/shopforge-rma.js', [], SHOPFORGE_VERSION, true );
+
+	if ( ! is_account_page() ) return;
 
 	// ponytail: is_wc_endpoint_url() non riconosce gli endpoint custom del plugin
 	// (mai registrati nel registro interno di WC via woocommerce_get_query_vars).
@@ -1090,7 +1101,6 @@ add_action( 'wp_enqueue_scripts', function () {
 		// l'enqueue di questo file quando quell'handle non esiste.
 		wp_enqueue_style( 'shopforge-rma', SHOPFORGE_URL . 'assets/css/shopforge-rma.css', [], SHOPFORGE_VERSION );
 	}
-	wp_register_script( 'shopforge-rma', SHOPFORGE_URL . 'assets/js/shopforge-rma.js', [], SHOPFORGE_VERSION, true );
 } );
 
 

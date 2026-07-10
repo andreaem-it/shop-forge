@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.12.8
+* Fixed the notifications badge showing as literal `<span class="shopforge-notif-badge">1</span>` text in the account menu — the badge HTML was concatenated into the menu label, which the navigation template correctly escapes with esc_html(). The badge is now rendered as real markup by the template itself, only for the Notifications item.
+* Renamed the unclear "Product Support" account menu entry to "Repairs & Warranty" (and the matching admin menu/page titles), to distinguish it from "Support & Returns" (the legal withdrawal module) and make clear what it's for.
+* Fixed "Errore di rete" when submitting an RMA/repair request: the request's JS was never registered if is_account_page() didn't recognize the page at the early wp_enqueue_scripts point, silently breaking the later wp_enqueue_script()/wp_localize_script() calls made when the form actually renders — ajaxUrl ended up undefined client-side, and the POST went to a nonsense URL. Script registration is now unconditional; the same latent issue was also fixed for the returns (withdrawal) and shipment-tracking ticket scripts.
+
 ## 1.12.7
 * Actually fixed the "translation loaded too early" notice: 1.12.5's approach (loading the textdomain earlier) had it backwards — WordPress wants translations loaded at init or later, and shopforge_load_modules() was calling __() (via the module registry) on plugins_loaded regardless of when load_plugin_textdomain() itself ran. Split the module registry into an untranslated shopforge_modules_registry_raw() (used by the plugins_loaded-time module loader) and a translated shopforge_modules_registry() (used everywhere labels/descriptions are actually displayed, all safely after init). load_plugin_textdomain() is back on init, as WordPress recommends.
 

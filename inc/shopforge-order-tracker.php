@@ -121,21 +121,29 @@ add_action( 'woocommerce_order_details_before_order_table', function ( WC_Order 
 // -------------------------------------------------------------------------
 
 add_action( 'wp_enqueue_scripts', function () {
-	if ( ! is_account_page() ) return;
 	if ( ! function_exists( 'shopforge_is_module_active' ) ) return;
-	if ( ! shopforge_is_module_active( 'styles-account' ) ) return;
-	wp_enqueue_style(
-		'shopforge-tracker',
-		SHOPFORGE_URL . 'assets/css/shopforge-tracker.css',
-		[],
-		SHOPFORGE_VERSION
-	);
+
+	// Registrazione sempre eseguita (costo nullo finché non messa in coda):
+	// il vero wp_enqueue_script()+wp_localize_script() avviene più avanti,
+	// nel rendering della card/modal ticket — se l'handle non fosse ancora
+	// registrato a quel punto (es. is_account_page() qui sotto non
+	// riconosce la pagina per qualche motivo di configurazione), quelle
+	// chiamate fallirebbero in silenzio.
 	wp_register_script(
 		'shopforge-tracker',
 		SHOPFORGE_URL . 'assets/js/shopforge-tracker.js',
 		[],
 		SHOPFORGE_VERSION,
 		true
+	);
+
+	if ( ! is_account_page() ) return;
+	if ( ! shopforge_is_module_active( 'styles-account' ) ) return;
+	wp_enqueue_style(
+		'shopforge-tracker',
+		SHOPFORGE_URL . 'assets/css/shopforge-tracker.css',
+		[],
+		SHOPFORGE_VERSION
 	);
 } );
 

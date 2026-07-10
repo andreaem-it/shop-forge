@@ -217,8 +217,23 @@ function shopforge_has_active_return( WC_Order $order ): bool {
 // =============================================================================
 
 add_action( 'wp_enqueue_scripts', function () {
-	if ( ! is_account_page() ) return;
 	if ( ! function_exists( 'shopforge_is_module_active' ) ) return;
+
+	// Registrazione sempre eseguita (costo nullo finché non messa in coda):
+	// il vero wp_enqueue_script()+wp_localize_script() avviene più avanti,
+	// dentro woocommerce_order_details_before_order_table — se l'handle non
+	// fosse ancora registrato a quel punto (es. is_account_page()/
+	// is_wc_endpoint_url() qui sotto non riconoscono la pagina per qualche
+	// motivo di configurazione), quelle chiamate fallirebbero in silenzio.
+	wp_register_script(
+		'shopforge-returns',
+		SHOPFORGE_URL . 'assets/js/shopforge-returns.js',
+		[],
+		SHOPFORGE_VERSION,
+		true
+	);
+
+	if ( ! is_account_page() ) return;
 	// CSS caricato su view-order (card + modal) e sull'endpoint lista resi.
 	// ponytail: 'shopforge-returns' è un endpoint custom del plugin, mai nel
 	// registro interno di WC — is_wc_endpoint_url() non lo vede, get_query_var() sì.
@@ -228,16 +243,6 @@ add_action( 'wp_enqueue_scripts', function () {
 			SHOPFORGE_URL . 'assets/css/shopforge-returns.css',
 			[],
 			SHOPFORGE_VERSION
-		);
-	}
-	// JS solo su view-order (modal recesso)
-	if ( is_wc_endpoint_url( 'view-order' ) ) {
-		wp_register_script(
-			'shopforge-returns',
-			SHOPFORGE_URL . 'assets/js/shopforge-returns.js',
-			[],
-			SHOPFORGE_VERSION,
-			true
 		);
 	}
 } );

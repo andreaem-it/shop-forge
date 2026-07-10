@@ -125,7 +125,7 @@ function shopforge_modules_registry_raw(): array {
 			'file'        => 'shopforge-mod-rma.php',
 			'menu_item'   => true,
 			'endpoint'    => 'shopforge-rma',
-			'menu_label'  => 'Product Support',
+			'menu_label'  => 'Repairs & Warranty',
 		],
 
 		'notifications' => [

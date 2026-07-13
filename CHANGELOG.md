@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.13.1
+* Widened the account sidebar (260px → 280px): with longer labels like "Repairs & Warranty" ("Riparazioni e Garanzia" in Italian), the previous width truncated the text with an ellipsis instead of showing it in full.
+
 ## 1.13.0
 * Unified the Dashboard's "recent orders" mini-table with the real Orders page: uppercase spaced column headers and a pill-style "View" button, instead of a plain text link.
 * Renamed the "Support & Returns" account menu entry to "Requests" — next to "Repairs & Warranty" (RMA) the old name was a confusing near-duplicate. The section page title was renamed to match.

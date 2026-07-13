@@ -100,8 +100,10 @@ body.shopforge-account-page .entry-content {
   /* flex-basis (non width) governa la larghezza nel layout a due colonne:
      se il widget nav viene usato da solo, fuori da .woocommerce-account
      .woocommerce, resta un elemento di blocco normale e si allarga al
-     100% del contenitore invece di restare bloccato a 260px. */
-  flex: 0 0 260px;
+     100% del contenitore invece di restare bloccato a una larghezza fissa.
+     280px (non 260px): con voci come "Repairs & Warranty" tradotte in
+     "Riparazioni e Garanzia", 260px troncava il testo con l'ellissi. */
+  flex: 0 0 280px;
   min-width: 0;
   background: #fff;
   border: 1px solid var(--shopforge-border);

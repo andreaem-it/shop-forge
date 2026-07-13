@@ -113,7 +113,7 @@ function shopforge_modules_registry_raw(): array {
 			'file'        => 'shopforge-mod-returns.php',
 			'menu_item'   => true,
 			'endpoint'    => 'shopforge-returns',
-			'menu_label'  => 'Support & Returns',
+			'menu_label'  => 'Requests',
 		],
 
 		'rma' => [

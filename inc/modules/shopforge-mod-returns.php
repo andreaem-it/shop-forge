@@ -891,7 +891,7 @@ add_action( 'wp_ajax_shopforge_update_return_status', function () {
 // =============================================================================
 
 add_action( 'woocommerce_account_shopforge-returns_endpoint', function () {
-	shopforge_account_section_header( __( 'Support & Returns', 'shopforge' ), 'fa-solid fa-headset' );
+	shopforge_account_section_header( __( 'Requests', 'shopforge' ), 'fa-solid fa-headset' );
 
 	$user_id = get_current_user_id();
 	$orders  = wc_get_orders( [

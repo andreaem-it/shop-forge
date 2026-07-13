@@ -477,8 +477,10 @@ body.shopforge-account-page .entry-content {
 
 .shopforge-orders-table th {
   color: var(--shopforge-text-muted);
-  font-weight: 700;
-  font-size: 13px;
+  font-weight: 800;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: .06em;
   text-align: left;
   padding: 10px 10px;
   border-bottom: 1px solid var(--shopforge-border);
@@ -493,6 +495,15 @@ body.shopforge-account-page .entry-content {
 
 .shopforge-orders-table tr:last-child td {
   border-bottom: 0;
+}
+
+/* Stesso stile pillola del pulsante "Visualizza" nella pagina Ordini
+   (.woocommerce-orders-table .button.view), qui in versione compatta
+   per la riga più bassa della mini-tabella in dashboard. */
+.shopforge-orders-table__view-btn {
+  min-height: 34px;
+  padding: 0 14px;
+  font-size: 12px;
 }
 
 /* Badge stati ordine */

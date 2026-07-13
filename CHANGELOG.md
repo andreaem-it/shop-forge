@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.13.0
+* Unified the Dashboard's "recent orders" mini-table with the real Orders page: uppercase spaced column headers and a pill-style "View" button, instead of a plain text link.
+* Renamed the "Support & Returns" account menu entry to "Requests" — next to "Repairs & Warranty" (RMA) the old name was a confusing near-duplicate. The section page title was renamed to match.
+
 ## 1.12.10
 * Fixed the active account-menu item's blue highlight not filling the full width of the row — it inherited its background from a theme/WooCommerce default with a different box model than our full-width flex link, leaving a visible gap on the right. Now set explicitly.
 

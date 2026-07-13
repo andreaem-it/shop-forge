@@ -564,7 +564,7 @@ function shopforge_render_account_dashboard(): void {
                                         </td>
                                         <td><?php echo wp_kses_post( $order->get_formatted_order_total() ); ?></td>
                                         <td>
-                                            <a class="shopforge-small-link" href="<?php echo esc_url( $order->get_view_order_url() ); ?>">
+                                            <a class="button view shopforge-orders-table__view-btn" href="<?php echo esc_url( $order->get_view_order_url() ); ?>">
                                                 <?php esc_html_e( 'View', 'shopforge' ); ?>
                                             </a>
                                         </td>

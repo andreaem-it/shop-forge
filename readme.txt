@@ -6,7 +6,7 @@ Tested up to: 6.7
 Requires PHP: 8.0
 WC requires at least: 7.0
 WC tested up to: 9.9
-Stable tag: 1.12.10
+Stable tag: 1.13.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -85,6 +85,10 @@ No, shipment tracking relies on 17track.net's public API. You need to register y
 Yes, all strings are wrapped for translation with the `shopforge` text domain. An Italian translation is bundled; a `.pot` file is included under `languages/` for adding more.
 
 == Changelog ==
+
+= 1.13.0 =
+* Unified the Dashboard's "recent orders" mini-table with the real Orders page: uppercase spaced column headers and a pill-style "View" button, instead of a plain text link.
+* Renamed the "Support & Returns" account menu entry to "Requests" — next to "Repairs & Warranty" (RMA) the old name was a confusing near-duplicate. The section page title was renamed to match.
 
 = 1.12.10 =
 * Fixed the active account-menu item's blue highlight not filling the full width of the row — it inherited its background from a theme/WooCommerce default with a different box model than our full-width flex link, leaving a visible gap on the right. Now set explicitly.

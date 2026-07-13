@@ -97,13 +97,26 @@ body.shopforge-account-page .entry-content {
    -------------------------------------------------------------------------- */
 
 .woocommerce-account .woocommerce-MyAccount-navigation {
+  /* Il tema/WooCommerce ha un default float:left; width:300px per questo
+     stesso selettore (layout a due colonne "classico"). "float" non ha
+     effetto sui flex item per spec CSS — ma se per qualche motivo il
+     genitore .woocommerce-account .woocommerce qui sopra non risultasse
+     flex su questo sito/tema, quel float riemerge e il resto delle nostre
+     regole (flex-basis, larghezza, ecc.) viene ignorato perché non si
+     applica fuori da un contesto flex. Neutralizzato esplicitamente. */
+  float: none !important;
+
   /* flex-basis (non width) governa la larghezza nel layout a due colonne:
      se il widget nav viene usato da solo, fuori da .woocommerce-account
      .woocommerce, resta un elemento di blocco normale e si allarga al
      100% del contenitore invece di restare bloccato a una larghezza fissa.
      280px (non 260px): con voci come "Repairs & Warranty" tradotte in
-     "Riparazioni e Garanzia", 260px troncava il testo con l'ellissi. */
+     "Riparazioni e Garanzia", 260px troncava il testo con l'ellissi.
+     "width" ripetuto (non solo flex-basis) e con !important: se il
+     genitore non è flex, questo assicura comunque la larghezza corretta
+     invece del default 300px del tema. */
   flex: 0 0 280px;
+  width: 280px !important;
   min-width: 0;
   background: #fff;
   border: 1px solid var(--shopforge-border);
@@ -797,7 +810,7 @@ body.shopforge-account-page .entry-content {
 
   .woocommerce-account .woocommerce-MyAccount-navigation {
     flex: 0 0 100%;
-    width: 100%;
+    width: 100% !important;
     position: static;
   }
 

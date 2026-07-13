@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.13.2
+* Fixed the account sidebar width for real this time: the theme/WooCommerce ships a default `float: left; width: 300px` for the same selector, which wins over our layout when the flex parent context doesn't apply on a given theme, ignoring our flex-basis entirely. Neutralized the float and made our width authoritative with `!important`, on both the desktop and mobile rule.
+
 ## 1.13.1
 * Widened the account sidebar (260px → 280px): with longer labels like "Repairs & Warranty" ("Riparazioni e Garanzia" in Italian), the previous width truncated the text with an ellipsis instead of showing it in full.
 

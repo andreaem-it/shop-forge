@@ -6,7 +6,7 @@ Tested up to: 6.7
 Requires PHP: 8.0
 WC requires at least: 7.0
 WC tested up to: 9.9
-Stable tag: 1.13.1
+Stable tag: 1.13.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -85,6 +85,9 @@ No, shipment tracking relies on 17track.net's public API. You need to register y
 Yes, all strings are wrapped for translation with the `shopforge` text domain. An Italian translation is bundled; a `.pot` file is included under `languages/` for adding more.
 
 == Changelog ==
+
+= 1.13.2 =
+* Fixed the account sidebar width for real this time: the theme/WooCommerce ships a default `float: left; width: 300px` for the same selector, which wins over our layout when the flex parent context doesn't apply on a given theme, ignoring our flex-basis entirely. Neutralized the float and made our width authoritative with `!important`, on both the desktop and mobile rule.
 
 = 1.13.1 =
 * Widened the account sidebar (260px → 280px): with longer labels like "Repairs & Warranty" ("Riparazioni e Garanzia" in Italian), the previous width truncated the text with an ellipsis instead of showing it in full.

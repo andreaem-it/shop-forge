@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.12.10
+* Fixed the active account-menu item's blue highlight not filling the full width of the row — it inherited its background from a theme/WooCommerce default with a different box model than our full-width flex link, leaving a visible gap on the right. Now set explicitly.
+
 ## 1.12.9
 * Actually fixed "Errore di rete" on RMA submission (1.12.8's fix wasn't enough): the script's data (ajaxUrl, nonce) was never printed at all on the reporting site, because it relied on wp_footer() firing — which some page templates (builders, custom canvas templates) never call, silently dropping any script queued with in_footer. The RMA request/message form scripts, the withdrawal (recesso) modal script, and the support-ticket script are now all printed inline at the point they're needed, independent of wp_head()/wp_footer().
 * Fixed the Notifications menu item text wrapping onto two lines when the unread badge is shown.

@@ -6,7 +6,7 @@ Tested up to: 6.7
 Requires PHP: 8.0
 WC requires at least: 7.0
 WC tested up to: 9.9
-Stable tag: 1.12.9
+Stable tag: 1.12.10
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -85,6 +85,9 @@ No, shipment tracking relies on 17track.net's public API. You need to register y
 Yes, all strings are wrapped for translation with the `shopforge` text domain. An Italian translation is bundled; a `.pot` file is included under `languages/` for adding more.
 
 == Changelog ==
+
+= 1.12.10 =
+* Fixed the active account-menu item's blue highlight not filling the full width of the row — it inherited its background from a theme/WooCommerce default with a different box model than our full-width flex link, leaving a visible gap on the right. Now set explicitly.
 
 = 1.12.9 =
 * Actually fixed "Errore di rete" on RMA submission (1.12.8's fix wasn't enough): the script's data (ajaxUrl, nonce) was never printed at all on the reporting site, because it relied on wp_footer() firing — which some page templates (builders, custom canvas templates) never call, silently dropping any script queued with in_footer. The RMA request/message form scripts, the withdrawal (recesso) modal script, and the support-ticket script are now all printed inline at the point they're needed, independent of wp_head()/wp_footer().

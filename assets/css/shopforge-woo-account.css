@@ -172,8 +172,20 @@ body.shopforge-account-page .entry-content {
     background-color: #FFF!important;
 }
 
+/* Sfondo attivo esplicito: senza questa regola l'evidenziazione blu arriva
+   da uno stile di default (tema/WooCommerce) con un box model diverso dal
+   nostro <a> flex a piena larghezza, lasciando un margine visibile a
+   destra invece di riempire tutta la riga. */
+.woocommerce-account .woocommerce-MyAccount-navigation li.is-active > a {
+  background: var(--shopforge-primary) !important;
+  color: #fff !important;
+  width: 100%;
+  box-sizing: border-box;
+}
+
 .woocommerce-account .woocommerce-MyAccount-navigation .is-active a i {
   opacity: 1;
+  color: #fff;
 }
 
 /* --------------------------------------------------------------------------

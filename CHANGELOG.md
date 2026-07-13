@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.13.3
+* Zeroed out the theme's default `padding-right: 60px` on the account sidebar, which left an empty 60px gap inside the box before its right edge.
+
 ## 1.13.2
 * Fixed the account sidebar width for real this time: the theme/WooCommerce ships a default `float: left; width: 300px` for the same selector, which wins over our layout when the flex parent context doesn't apply on a given theme, ignoring our flex-basis entirely. Neutralized the float and made our width authoritative with `!important`, on both the desktop and mobile rule.
 

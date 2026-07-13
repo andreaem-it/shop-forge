@@ -118,6 +118,9 @@ body.shopforge-account-page .entry-content {
   flex: 0 0 280px;
   width: 280px !important;
   min-width: 0;
+  /* Il tema applica anche padding-right: 60px sullo stesso selettore,
+     lasciando 60px di spazio vuoto dentro il box prima del bordo destro. */
+  padding-right: 0 !important;
   background: #fff;
   border: 1px solid var(--shopforge-border);
   border-radius: var(--shopforge-radius);

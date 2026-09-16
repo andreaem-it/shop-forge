@@ -72,6 +72,16 @@ add_action( 'admin_post_shopforge_save_settings', function () {
 			shopforge_save_enabled_subset( 'module' );
 			break;
 
+		case 'integrations':
+			$new = [];
+			foreach ( array_keys( shopforge_integrations_registry() ) as $id ) {
+				if ( ! empty( $_POST[ 'module_' . $id ] ) ) {
+					$new[] = $id;
+				}
+			}
+			update_option( 'shopforge_integrations_enabled', $new );
+			break;
+
 		case 'config':
 			$return_days = max( 1, (int) ( $_POST['shopforge_return_window_days'] ?? 14 ) );
 			update_option( 'shopforge_return_window_days', $return_days );
@@ -119,7 +129,7 @@ add_action( 'admin_post_shopforge_save_settings', function () {
 			break;
 	}
 
-	$redirect_tab = in_array( $section, [ 'features', 'modules', 'config', 'theme', 'colors' ], true ) ? $section : 'features';
+	$redirect_tab = in_array( $section, [ 'features', 'modules', 'config', 'theme', 'colors', 'integrations' ], true ) ? $section : 'features';
 	wp_redirect( admin_url( 'admin.php?page=shopforge&tab=' . $redirect_tab . '&updated=1' ) );
 	exit;
 } );
@@ -318,6 +328,67 @@ function shopforge_admin_tab_features(): void {
 // =============================================================================
 // TAB: MODULI
 // =============================================================================
+
+// =============================================================================
+// INTEGRAZIONI — compatibilità con temi/plugin di terze parti (The7, Elementor)
+// =============================================================================
+
+function shopforge_integrations_registry(): array {
+	return [
+		'the7' => [
+			'label'       => __( 'The7 (tema)', 'shopforge' ),
+			'icon'        => 'fa-solid fa-swatchbook',
+			'description' => __( 'Workaround specifici per il tema The7: sidebar full-width nell\'area account, forwarding dei pulsanti quantità duplicati nei widget Add to Cart di Elementor. Disattiva se non usi The7 o se causano conflitti.', 'shopforge' ),
+		],
+		'elementor' => [
+			'label'       => __( 'Elementor', 'shopforge' ),
+			'icon'        => 'fa-solid fa-pen-ruler',
+			'description' => __( 'Compatibilità con Elementor: nasconde i widget/card rimasti vuoti sulla scheda prodotto (es. shortcode senza output).', 'shopforge' ),
+		],
+	];
+}
+
+function shopforge_get_enabled_integrations(): array {
+	$saved = get_option( 'shopforge_integrations_enabled', null );
+	return $saved === null ? array_keys( shopforge_integrations_registry() ) : (array) $saved;
+}
+
+function shopforge_is_integration_enabled( string $id ): bool {
+	return in_array( $id, shopforge_get_enabled_integrations(), true );
+}
+
+function shopforge_admin_tab_integrations(): void {
+	$registry = shopforge_integrations_registry();
+	$enabled  = shopforge_get_enabled_integrations();
+
+	shopforge_enqueue_fontawesome();
+	shopforge_admin_settings_notice();
+
+	?>
+	<div class="shopforge-section-label">
+		<i class="fa-solid fa-plug" aria-hidden="true"></i>
+		<?php esc_html_e( 'Integrations', 'shopforge' ); ?>
+		<span class="shopforge-section-hint">
+			<?php esc_html_e( 'Disable a section if the plugin depends on a theme or page builder you don\'t use, or if it conflicts with your setup — the plugin falls back to standard/legacy behavior.', 'shopforge' ); ?>
+		</span>
+	</div>
+
+	<?php shopforge_admin_settings_form_open( 'integrations' ); ?>
+	<div class="shopforge-modules-grid">
+		<?php foreach ( $registry as $id => $integration ) :
+			$is_active = in_array( $id, $enabled, true );
+		?>
+		<div class="shopforge-module-card <?php echo $is_active ? 'is-active' : 'is-inactive'; ?>">
+			<?php shopforge_settings_card_inner( $id, $integration + [ 'type' => 'integration' ], $is_active ); ?>
+		</div>
+		<?php endforeach; ?>
+	</div>
+	<?php shopforge_admin_settings_form_close(); ?>
+
+	<?php shopforge_admin_settings_styles(); ?>
+	<?php
+}
+
 
 function shopforge_admin_tab_modules(): void {
 	$registry    = shopforge_modules_registry();
@@ -946,6 +1017,8 @@ function shopforge_settings_card_inner( string $id, array $module, bool $is_acti
 			<span class="shopforge-module-card__meta">
 			<?php if ( ( $module['type'] ?? 'module' ) === 'feature' ) : ?>
 				<?php esc_html_e( 'core feature', 'shopforge' ); ?>
+			<?php elseif ( ( $module['type'] ?? 'module' ) === 'integration' ) : ?>
+				<?php esc_html_e( 'integration', 'shopforge' ); ?>
 			<?php elseif ( ! empty( $module['endpoint'] ) ) : ?>
 				<?php esc_html_e( 'endpoint:', 'shopforge' ); ?> <code><?php echo esc_html( $module['endpoint'] ); ?></code>
 			<?php else : ?>

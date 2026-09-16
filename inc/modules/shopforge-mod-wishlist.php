@@ -10,6 +10,12 @@
 
 defined( 'ABSPATH' ) || exit;
 
+// ponytail: shopforge_get_wishlist_layout() vive in inc/shopforge-product.php
+// (sempre caricato) e non qui, perché questo file viene incluso solo se il
+// modulo Wishlist è attivo — il Customizer (sempre disponibile in admin) la
+// chiama a prescindere dallo stato del modulo/licenza, e qui sarebbe stata
+// undefined in quei casi.
+
 // ---- Notifica "di nuovo disponibile" a chi ha il prodotto in wishlist ----
 
 /**
@@ -352,8 +358,49 @@ add_action( 'wp_head', function () {
 		margin-top: 10px; width: 100%; justify-content: center;
 	}
 	.shopforge-wl-btn__label { font-size: 14px; font-weight: 600; }
+	<?php
+	$shopforge_wl_layout = shopforge_get_wishlist_layout();
+	$shopforge_wl_wide   = in_array( $shopforge_wl_layout['width'], [ 'full', 'stacked' ], true );
+	?>
+	.shopforge-wl-btn--single {
+		width: <?php echo $shopforge_wl_wide ? '100%' : 'auto'; ?> !important;
+		flex: <?php echo $shopforge_wl_wide ? '1 1 100%' : '0 0 auto'; ?> !important;
+		align-self: center !important;
+		<?php if ( $shopforge_wl_layout['width'] === 'stacked' ) : ?>order: 5 !important;<?php endif; ?>
+		margin-<?php echo is_rtl() ? 'right' : 'left'; ?>: <?php echo (int) $shopforge_wl_layout['gap']; ?>px !important;
+		<?php if ( $shopforge_wl_layout['margin_top'] ) : ?>margin-top: <?php echo (int) $shopforge_wl_layout['margin_top']; ?>px !important;<?php endif; ?>
+		<?php if ( $shopforge_wl_layout['margin_right'] ) : ?>margin-<?php echo is_rtl() ? 'left' : 'right'; ?>: <?php echo (int) $shopforge_wl_layout['margin_right']; ?>px !important;<?php endif; ?>
+		<?php if ( $shopforge_wl_layout['margin_bottom'] ) : ?>margin-bottom: <?php echo (int) $shopforge_wl_layout['margin_bottom']; ?>px !important;<?php endif; ?>
+	}
+	<?php if ( ! $shopforge_wl_layout['show_label'] ) : ?>
+	.shopforge-wl-btn--single .shopforge-wl-btn__label { display: none; }
+	<?php endif; ?>
+	<?php if ( $shopforge_wl_layout['colors_enabled'] ) : ?>
+	.shopforge-wl-btn--single {
+		background: <?php echo esc_html( $shopforge_wl_layout['bg'] ); ?> !important;
+		border-color: <?php echo esc_html( $shopforge_wl_layout['bg'] ); ?> !important;
+	}
+	.shopforge-wl-btn--single i { color: <?php echo esc_html( $shopforge_wl_layout['icon_color'] ); ?> !important; }
+	.shopforge-wl-btn--single .shopforge-wl-btn__label { color: <?php echo esc_html( $shopforge_wl_layout['text_color'] ); ?> !important; }
+	<?php endif; ?>
+	<?php if ( $shopforge_wl_layout['height'] || $shopforge_wl_layout['min_width'] || $shopforge_wl_layout['font_size'] ) : ?>
+	.shopforge-wl-btn--single {
+		<?php if ( $shopforge_wl_layout['height'] ) : ?>height: <?php echo (int) $shopforge_wl_layout['height']; ?>px !important;<?php endif; ?>
+		<?php if ( $shopforge_wl_layout['min_width'] ) : ?>min-width: <?php echo (int) $shopforge_wl_layout['min_width']; ?>px !important;<?php endif; ?>
+		<?php if ( $shopforge_wl_layout['font_size'] ) : ?>font-size: <?php echo (int) $shopforge_wl_layout['font_size']; ?>px !important;<?php endif; ?>
+	}
+	<?php endif; ?>
 	</style>
+	<?php
+	if ( $shopforge_wl_layout['width'] === 'stacked' ) : ?>
+	<script>
+	document.addEventListener( 'DOMContentLoaded', function () {
+		var btn = document.querySelector( '.shopforge-wl-btn--single' );
+		if ( btn && btn.parentElement ) btn.parentElement.style.flexWrap = 'wrap';
+	} );
+	</script>
 	<?php endif;
+	endif;
 
 	if ( ! $shopforge_on_wishlist ) return;
 	?>

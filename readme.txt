@@ -86,6 +86,45 @@ Yes, all strings are wrapped for translation with the `shopforge` text domain. A
 
 == Changelog ==
 
+= 1.18.1 =
+* Customizer: added top/right/bottom(/left) margin controls for the wishlist button, add-to-cart button and quantity selector (can be negative, useful to nudge vertical alignment).
+* Fixed the wishlist button's `margin-top: 10px` being hard-coded with no override, and added `align-self: center` to the three controlled buttons so they line up on the same row even when heights differ (e.g. "Auto" width mode).
+
+= 1.18.0 =
+* Customizer: added height, min-width and font-size controls for the wishlist button and the "Add to cart" button, and height/width/font-size for the quantity selector's +/- buttons (0 = no override, theme default kept).
+
+= 1.17.1 =
+* Customizer: the three control groups are now collapsible sections (closed by default) instead of one long stacked list — clicking an element in the live preview (wishlist button, add-to-cart button, quantity selector) opens and scrolls to its matching section instead of the click triggering the real action (add to cart / toggle wishlist).
+
+= 1.17.0 =
+* Customizer: added color overrides (background/icon/text) and a real "stacked" width mode (forces its own row via JS, not just a wider box) for the wishlist button, plus the same width modes and colors/corner-radius controls for the "Add to cart" button and the quantity selector.
+* Customizer UI translated to Italian.
+
+= 1.16.0 =
+* New "Customizer" settings tab: live preview of the actual product page (real iframe, not a mock) with hover-highlighted containers (quantity selector, wishlist button, add-to-cart button/form) and live controls for the wishlist button's width/gap/label.
+* Fixed the wishlist button on the product page forcing `width: 100%`, which broke layout in flex rows (e.g. The7's quantity + wishlist + add-to-cart row) — now configurable from the Customizer, default "auto".
+
+= 1.15.1 =
+* `[wc_price_iva_box]` AJAX endpoint now returns an error instead of a silent empty box when the product/variation id is invalid.
+* Clamped `_shopforge_delivery_days` to a non-negative value on save (a manually forged negative value could have pushed delivery estimates into the past).
+
+= 1.15.0 =
+* New "Integrations" settings tab: toggle The7 and Elementor-specific compatibility workarounds on/off (account sidebar full-width, quantity-button forwarding, empty-widget hiding). Both enabled by default.
+
+= 1.14.3 =
+* Fixed the "-" quantity button not working: it was the visually-hidden duplicate button that had the actual decrement logic, so native `.minus`/`.plus` clicks are now forwarded to it instead of hiding it outright.
+
+= 1.14.2 =
+* `[wc_price_iva_box]` now also recalculates on quantity change (unit price × qty), not just on variation change.
+* Hid duplicate `.qty-minus`/`.qty-plus` buttons inside `.quantity.buttons_added`, keeping only WooCommerce's native `.minus`/`.plus`.
+
+= 1.14.1 =
+* Version bump to force cache/asset refresh (no functional change).
+
+= 1.14.0 =
+* Fixed `[wc_price_iva_box]` not updating when a product variation is selected: it now refreshes via AJAX on variation change.
+* Hid the redundant `.woocommerce-variation-price` next to the `[wc_price_iva_box]` box.
+
 = 1.13.3 =
 * Zeroed out the theme's default `padding-right: 60px` on the account sidebar, which left an empty 60px gap inside the box before its right edge.
 

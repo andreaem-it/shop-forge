@@ -1,4 +1,11 @@
-/* [wc_price_iva_box] */
+/* [wc_price_iva_box] — nascosto solo sulla pagina prodotto singola: questo
+   foglio è caricato ovunque (il box può comparire via shortcode con id
+   esplicito anche altrove), quindi uno scoping generico nasconderebbe il
+   prezzo variante nativo anche in contesti estranei (es. quick-view su
+   shop/categoria) dove il box IVA non sostituisce nulla. */
+.single-product .woocommerce-variation-price {
+	display: none;
+}
 .wc-iva-price-box {
 	display: inline-flex;
 	flex-direction: column;

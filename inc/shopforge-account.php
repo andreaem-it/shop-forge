@@ -77,6 +77,9 @@ add_action( 'wp', function () {
     if ( ! function_exists( 'is_account_page' ) || ! is_account_page() ) {
         return;
     }
+    if ( function_exists( 'shopforge_is_integration_enabled' ) && ! shopforge_is_integration_enabled( 'the7' ) ) {
+        return;
+    }
 
     add_filter( 'presscore_is_sidebar_enabled', '__return_false', 99 );
     add_filter( 'dt_the7_sidebar',              '__return_false', 99 );

@@ -3696,3 +3696,143 @@ msgstr "Pagine account"
 #~ msgctxt "Order status"
 #~ msgid "Shipped"
 #~ msgstr "Spedito"
+
+#: inc/shopforge-admin-page.php
+msgid "Integrations"
+msgstr "Integrazioni"
+
+#: inc/shopforge-admin-page.php
+msgid "Customizer"
+msgstr "Personalizzatore"
+
+#: inc/shopforge-customizer.php
+msgid "No published products found to preview."
+msgstr "Nessun prodotto pubblicato disponibile per l'anteprima."
+
+#: inc/shopforge-customizer.php
+msgid "This is your real product page, loaded live. Hover the quantity/wishlist/add-to-cart row to see the containers, adjust the controls and save."
+msgstr "Questa è la tua pagina prodotto reale, caricata dal vivo. Passa il mouse sulla riga quantità/wishlist/aggiungi al carrello per vedere i contenitori, regola i controlli e salva."
+
+#: inc/shopforge-customizer.php
+msgid "Preview product:"
+msgstr "Prodotto in anteprima:"
+
+#: inc/shopforge-customizer.php
+msgid "Reload"
+msgstr "Ricarica"
+
+#: inc/shopforge-customizer.php
+msgid "Wishlist button"
+msgstr "Pulsante wishlist"
+
+#: inc/shopforge-customizer.php
+msgid "Width"
+msgstr "Larghezza"
+
+#: inc/shopforge-customizer.php
+msgid "Auto (fits its content — recommended for flex rows like The7)"
+msgstr "Automatica (si adatta al contenuto — consigliata per righe flex come in The7)"
+
+#: inc/shopforge-customizer.php
+msgid "Full width, same row"
+msgstr "Larghezza piena, stessa riga"
+
+#: inc/shopforge-customizer.php
+msgid "Stacked on its own row"
+msgstr "Su una riga propria (impilato)"
+
+#: inc/shopforge-customizer.php
+msgid "Gap from quantity selector"
+msgstr "Distanza dal selettore quantità"
+
+#: inc/shopforge-customizer.php
+msgid "Show text label (\"Add to wishlist\")"
+msgstr "Mostra etichetta testuale (\"Aggiungi alla lista desideri\")"
+
+#: inc/shopforge-customizer.php
+msgid "Override colors"
+msgstr "Sovrascrivi colori"
+
+#: inc/shopforge-customizer.php
+msgid "Background"
+msgstr "Sfondo"
+
+#: inc/shopforge-customizer.php
+msgid "Icon"
+msgstr "Icona"
+
+#: inc/shopforge-customizer.php
+msgid "Text"
+msgstr "Testo"
+
+#: inc/shopforge-customizer.php
+msgid "Add to cart button"
+msgstr "Pulsante Aggiungi al carrello"
+
+#: inc/shopforge-customizer.php
+msgid "Theme default"
+msgstr "Predefinito dal tema"
+
+#: inc/shopforge-customizer.php
+msgid "Corner radius"
+msgstr "Raggio degli angoli"
+
+#: inc/shopforge-customizer.php
+msgid "Quantity selector"
+msgstr "Selettore quantità"
+
+#: inc/shopforge-customizer.php
+msgid "Changes apply live in the preview above as you edit them. Nothing is saved until you click Save."
+msgstr "Le modifiche si applicano dal vivo nell'anteprima sopra mentre le modifichi. Nulla viene salvato finché non clicchi Salva."
+
+#: inc/shopforge-customizer.php
+msgid "Save layout"
+msgstr "Salva layout"
+
+#: inc/shopforge-customizer.php
+msgid "Add-to-cart form"
+msgstr "Form aggiungi al carrello"
+
+#: inc/shopforge-customizer.php
+msgid "Click an element in the preview to open its controls."
+msgstr "Clicca un elemento nell'anteprima per aprirne i controlli."
+
+#: inc/shopforge-customizer.php
+msgid "click to edit"
+msgstr "clicca per modificare"
+
+#: inc/shopforge-customizer.php
+msgid "Height"
+msgstr "Altezza"
+
+#: inc/shopforge-customizer.php
+msgid "Min width"
+msgstr "Larghezza minima"
+
+#: inc/shopforge-customizer.php
+msgid "Font size"
+msgstr "Dimensione testo"
+
+#: inc/shopforge-customizer.php
+msgid "0 = theme default (no override)"
+msgstr "0 = predefinito dal tema (nessuna sovrascrittura)"
+
+#: inc/shopforge-customizer.php
+msgid "Top"
+msgstr "Sopra"
+
+#: inc/shopforge-customizer.php
+msgid "Right"
+msgstr "Destra"
+
+#: inc/shopforge-customizer.php
+msgid "Bottom"
+msgstr "Sotto"
+
+#: inc/shopforge-customizer.php
+msgid "Left"
+msgstr "Sinistra"
+
+#: inc/shopforge-customizer.php
+msgid "Margin (can be negative, e.g. to nudge alignment)"
+msgstr "Margine (può essere negativo, es. per correggere l'allineamento)"

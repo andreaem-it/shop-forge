@@ -311,6 +311,23 @@ body.woocommerce-checkout .woocommerce-info {
   margin-top: 0!important;
 }
 
+/* Il widget quantità di Elementor a volte inserisce l'entità HTML
+   "&#8722;" come testo letterale invece di renderla: la nascondiamo
+   e disegniamo un vero glifo "−" al suo posto. */
+.e-atc-qty-button-holder .quantity .qty-minus {
+  font-size: 0 !important;
+}
+.e-atc-qty-button-holder .quantity .qty-minus::before {
+  content: '\2212';
+  font-size: 14px;
+}
+
+/* .quantity.buttons_added .qty-minus/.qty-plus (duplicati del tema The7)
+   sono nascosti condizionalmente dal PHP in inc/shopforge-product.php
+   (blocco <style id="shopforge-atc-qty-layout">), non qui: la regola deve
+   restare legata al toggle "the7" in Integrazioni, altrimenti disattivare
+   quell'integrazione nasconde comunque i pulsanti funzionanti. */
+
 .shopforge-cart-item-qty .qty {
   width: 46px;
   min-height: 36px;
@@ -1467,4 +1484,19 @@ body.shopforge-skin-cards .wc-block-checkout__sidebar {
   border: 1px solid var(--shopforge-border);
   border-radius: var(--shopforge-radius);
   box-shadow: var(--shopforge-shadow);
+}
+
+/* Pagina prodotto: la card "Consegna stimata" ([data_consegna_prodotto])
+   ritorna stringa vuota quando il prodotto non è disponibile. Il nascondimento
+   del widget/container è gestito via JS in inc/shopforge-product.php perché
+   ":empty" non è affidabile (Elementor lascia whitespace nel markup). */
+
+/* Il testo nativo "Esaurito"/"Out of stock" di WooCommerce (.stock) nel
+   riepilogo del prodotto principale è ridondante con il badge
+   [stock_status_text] mostrato accanto al prezzo: lo nascondiamo lì.
+   Scoperto a ".summary" (non solo ".single-product") per non nascondere
+   anche il ".stock" dei prodotti correlati/upsell mostrati più sotto
+   nella stessa pagina, che non hanno alcun badge sostitutivo. */
+.single-product .summary .stock {
+  display: none !important;
 }

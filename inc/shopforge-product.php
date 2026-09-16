@@ -19,6 +19,190 @@ defined( 'ABSPATH' ) || exit;
 
 
 // -------------------------------------------------------------------------
+// Layout personalizzabile da ShopForge → Customizer: pulsante "Add to cart"
+// e selettore quantità. I colori restano quelli del tema finché l'admin non
+// attiva esplicitamente l'override (colors_enabled) — nessuna modifica
+// visiva sui siti che non hanno mai aperto il Customizer.
+// -------------------------------------------------------------------------
+
+/**
+ * Layout del pulsante wishlist sulla scheda prodotto, personalizzabile da
+ * ShopForge → Personalizzatore. Default 'auto': molti temi (es. The7)
+ * mettono quantità/wishlist/add-to-cart in una riga flex — un width:100%
+ * fisso spinge il bottone a occupare tutto lo spazio disponibile.
+ *
+ * Vive qui (core, sempre caricato) e non nel modulo Wishlist perché il
+ * Customizer la chiama sempre, anche quando il modulo Wishlist è disattivo
+ * o la licenza non è valida (nel qual caso inc/modules/shopforge-mod-wishlist.php
+ * non viene mai incluso).
+ */
+function shopforge_get_wishlist_layout(): array {
+	$defaults = [
+		'width'          => 'auto',
+		'gap'            => 10,
+		'show_label'     => true,
+		'colors_enabled' => false,
+		'bg'             => '#FFFFFF',
+		'icon_color'     => '#64748B',
+		'text_color'     => '#64748B',
+		'height'         => 0,
+		'min_width'      => 0,
+		'font_size'      => 0,
+		// margin_left è già coperto da 'gap' (distanza dal selettore quantità).
+		'margin_top'     => 0,
+		'margin_right'   => 0,
+		'margin_bottom'  => 0,
+	];
+	$saved = get_option( 'shopforge_wishlist_layout', [] );
+	return wp_parse_args( $saved, $defaults );
+}
+
+function shopforge_get_atc_layout(): array {
+	$defaults = [
+		'width'          => 'auto',
+		'colors_enabled' => false,
+		'bg'             => '#7C3AED',
+		'text_color'     => '#FFFFFF',
+		'radius'         => 6,
+		'height'         => 0,
+		'min_width'      => 0,
+		'font_size'      => 0,
+		'margin_top'     => 0,
+		'margin_right'   => 0,
+		'margin_bottom'  => 0,
+		'margin_left'    => 0,
+	];
+	return wp_parse_args( get_option( 'shopforge_atc_layout', [] ), $defaults );
+}
+
+function shopforge_get_qty_layout(): array {
+	$defaults = [
+		'colors_enabled' => false,
+		'bg'              => '#F8FAFC',
+		'icon_color'      => '#64748B',
+		'radius'          => 6,
+		'height'          => 0,
+		'width'           => 0,
+		'font_size'       => 0,
+		'margin_top'      => 0,
+		'margin_right'    => 0,
+		'margin_bottom'   => 0,
+		'margin_left'     => 0,
+	];
+	return wp_parse_args( get_option( 'shopforge_qty_layout', [] ), $defaults );
+}
+
+/**
+ * CSS margin da 4 valori (px, può essere negativo per riallineare).
+ * Chiavi mancanti in $layout (es. margin_left già gestito altrove, come il
+ * "gap" della wishlist) sono trattate come 0.
+ */
+function shopforge_margin_css( array $layout ): string {
+	$top    = (int) ( $layout['margin_top'] ?? 0 );
+	$right  = (int) ( $layout['margin_right'] ?? 0 );
+	$bottom = (int) ( $layout['margin_bottom'] ?? 0 );
+	$left   = (int) ( $layout['margin_left'] ?? 0 );
+	if ( ! $top && ! $right && ! $bottom && ! $left ) {
+		return '';
+	}
+	return sprintf( 'margin: %dpx %dpx %dpx %dpx !important;', $top, $right, $bottom, $left );
+}
+
+add_action( 'wp_head', function () {
+	if ( ! is_product() ) {
+		return;
+	}
+	$atc = shopforge_get_atc_layout();
+	$qty = shopforge_get_qty_layout();
+	?>
+	<style id="shopforge-atc-qty-layout">
+	.single_add_to_cart_button,
+	.quantity.buttons_added .minus,
+	.quantity.buttons_added .plus {
+		align-self: center !important;
+	}
+	<?php if ( $atc['width'] !== 'auto' ) : ?>
+	.single_add_to_cart_button {
+		width: 100% !important;
+		flex: <?php echo $atc['width'] === 'stacked' ? '1 1 100%' : '1 1 auto'; ?> !important;
+		<?php if ( $atc['width'] === 'stacked' ) : ?>order: 6 !important;<?php endif; ?>
+	}
+	<?php endif; ?>
+	<?php $atc_margin = shopforge_margin_css( $atc ); ?>
+	<?php if ( $atc_margin ) : ?>
+	.single_add_to_cart_button { <?php echo $atc_margin; ?> }
+	<?php endif; ?>
+	<?php $qty_margin = shopforge_margin_css( $qty ); ?>
+	<?php if ( $qty_margin ) : ?>
+	.quantity.buttons_added .minus,
+	.quantity.buttons_added .plus { <?php echo $qty_margin; ?> }
+	<?php endif; ?>
+	<?php if ( $atc['colors_enabled'] ) : ?>
+	.single_add_to_cart_button {
+		background: <?php echo esc_html( $atc['bg'] ); ?> !important;
+		color: <?php echo esc_html( $atc['text_color'] ); ?> !important;
+		border-radius: <?php echo (int) $atc['radius']; ?>px !important;
+	}
+	<?php endif; ?>
+	<?php if ( $atc['height'] || $atc['min_width'] || $atc['font_size'] ) : ?>
+	.single_add_to_cart_button {
+		<?php if ( $atc['height'] ) : ?>height: <?php echo (int) $atc['height']; ?>px !important;<?php endif; ?>
+		<?php if ( $atc['min_width'] ) : ?>min-width: <?php echo (int) $atc['min_width']; ?>px !important;<?php endif; ?>
+		<?php if ( $atc['font_size'] ) : ?>font-size: <?php echo (int) $atc['font_size']; ?>px !important;<?php endif; ?>
+	}
+	<?php endif; ?>
+	<?php if ( $qty['colors_enabled'] ) : ?>
+	.quantity.buttons_added .minus,
+	.quantity.buttons_added .plus {
+		background: <?php echo esc_html( $qty['bg'] ); ?> !important;
+		color: <?php echo esc_html( $qty['icon_color'] ); ?> !important;
+		border-radius: <?php echo (int) $qty['radius']; ?>px !important;
+	}
+	<?php endif; ?>
+	<?php if ( $qty['height'] || $qty['width'] || $qty['font_size'] ) : ?>
+	.quantity.buttons_added .minus,
+	.quantity.buttons_added .plus {
+		<?php if ( $qty['height'] ) : ?>height: <?php echo (int) $qty['height']; ?>px !important;<?php endif; ?>
+		<?php if ( $qty['width'] ) : ?>width: <?php echo (int) $qty['width']; ?>px !important;<?php endif; ?>
+		<?php if ( $qty['font_size'] ) : ?>font-size: <?php echo (int) $qty['font_size']; ?>px !important;<?php endif; ?>
+	}
+	<?php if ( $qty['font_size'] ) : ?>
+	.quantity.buttons_added .minus svg,
+	.quantity.buttons_added .plus svg {
+		width: <?php echo (int) $qty['font_size']; ?>px !important;
+		height: <?php echo (int) $qty['font_size']; ?>px !important;
+	}
+	<?php endif; ?>
+	<?php endif; ?>
+	<?php if ( ! function_exists( 'shopforge_is_integration_enabled' ) || shopforge_is_integration_enabled( 'the7' ) ) : ?>
+	/* .quantity.buttons_added a volte contiene sia i pulsanti nativi
+	   WooCommerce (.minus/.plus) sia dei duplicati (.qty-minus/.qty-plus)
+	   disegnati dal tema The7: teniamo solo i nativi. Legato allo stesso
+	   toggle "the7" del forwarding click in wp_footer qui sotto — se
+	   l'integrazione The7 è disattivata i pulsanti nativi restano visibili
+	   E funzionanti (nessun click forwarding necessario), quindi qui non
+	   li nascondiamo. */
+	.quantity.buttons_added .qty-minus,
+	.quantity.buttons_added .qty-plus {
+		display: none !important;
+	}
+	<?php endif; ?>
+	</style>
+	<?php
+	// "Stacked" forza una nuova riga anche se il tema non usa flex-wrap:wrap
+	// sul contenitore — non possiamo selezionare "il genitore" in CSS puro.
+	if ( $atc['width'] === 'stacked' ) : ?>
+	<script>
+	document.addEventListener( 'DOMContentLoaded', function () {
+		var btn = document.querySelector( '.single_add_to_cart_button' );
+		if ( btn && btn.parentElement ) btn.parentElement.style.flexWrap = 'wrap';
+	} );
+	</script>
+	<?php endif;
+}, 25 );
+
+
+// -------------------------------------------------------------------------
 // Shortcode [shopforge_variation_description]
 // -------------------------------------------------------------------------
 
@@ -120,6 +304,38 @@ add_action( 'wp_enqueue_scripts', function () {
 // Prezzo con/senza IVA. Portato dal functions.php del tema.
 // -------------------------------------------------------------------------
 
+if ( ! function_exists( 'shopforge_render_iva_price_box' ) ) {
+	function shopforge_render_iva_price_box( $product, $quantity = 1 ) {
+		if ( ! $product || ! is_a( $product, 'WC_Product' ) ) {
+			return '';
+		}
+
+		$quantity = max( 1, (int) $quantity );
+
+		$price_including_tax = wc_get_price_including_tax( $product, [ 'qty' => $quantity ] );
+		$price_excluding_tax = wc_get_price_excluding_tax( $product, [ 'qty' => $quantity ] );
+
+		if ( $price_including_tax === '' || $price_including_tax === null ) {
+			return '';
+		}
+
+		ob_start();
+		?>
+		<div class="wc-iva-price-box" data-wc-iva-box data-product-id="<?php echo esc_attr( $product->get_id() ); ?>">
+			<div class="wc-iva-price-main">
+				<?php echo wc_price( $price_including_tax ); ?>
+				<span class="wc-iva-label-main"><?php esc_html_e( 'VAT included', 'shopforge' ); ?></span>
+			</div>
+			<div class="wc-iva-price-sub">
+				<?php echo wc_price( $price_excluding_tax ); ?>
+				<span class="wc-iva-label-sub"><?php esc_html_e( 'VAT excluded', 'shopforge' ); ?></span>
+			</div>
+		</div>
+		<?php
+		return ob_get_clean();
+	}
+}
+
 add_shortcode( 'wc_price_iva_box', function ( $atts ) {
 	$atts = shortcode_atts( [
 		'id' => 0,
@@ -127,32 +343,85 @@ add_shortcode( 'wc_price_iva_box', function ( $atts ) {
 
 	$product = ! empty( $atts['id'] ) ? wc_get_product( (int) $atts['id'] ) : wc_get_product();
 
-	if ( ! $product || ! is_a( $product, 'WC_Product' ) ) {
-		return '';
-	}
-
-	$price_including_tax = wc_get_price_including_tax( $product );
-	$price_excluding_tax = wc_get_price_excluding_tax( $product );
-
-	if ( $price_including_tax === '' || $price_including_tax === null ) {
-		return '';
-	}
-
-	ob_start();
-	?>
-	<div class="wc-iva-price-box">
-		<div class="wc-iva-price-main">
-			<?php echo wc_price( $price_including_tax ); ?>
-			<span class="wc-iva-label-main"><?php esc_html_e( 'VAT included', 'shopforge' ); ?></span>
-		</div>
-		<div class="wc-iva-price-sub">
-			<?php echo wc_price( $price_excluding_tax ); ?>
-			<span class="wc-iva-label-sub"><?php esc_html_e( 'VAT excluded', 'shopforge' ); ?></span>
-		</div>
-	</div>
-	<?php
-	return ob_get_clean();
+	return shopforge_render_iva_price_box( $product );
 } );
+
+// AJAX: ricalcola il box IVA quando l'utente seleziona una variante.
+// Lo shortcode stampa il box in PHP al load pagina, ma WooCommerce non lo
+// aggiorna da solo al cambio variante (aggiorna solo .woocommerce-variation-price).
+add_action( 'wp_ajax_shopforge_iva_price_box', 'shopforge_ajax_iva_price_box' );
+add_action( 'wp_ajax_nopriv_shopforge_iva_price_box', 'shopforge_ajax_iva_price_box' );
+function shopforge_ajax_iva_price_box() {
+	check_ajax_referer( 'shopforge_iva_price_box', 'nonce' );
+	$product_id = isset( $_POST['product_id'] ) ? (int) $_POST['product_id'] : 0;
+	$quantity   = isset( $_POST['quantity'] ) ? (int) $_POST['quantity'] : 1;
+	$product    = $product_id ? wc_get_product( $product_id ) : null;
+	if ( ! $product ) {
+		wp_send_json_error();
+	}
+	wp_send_json_success( [ 'html' => shopforge_render_iva_price_box( $product, $quantity ) ] );
+}
+
+add_action( 'wp_footer', function () {
+	if ( ! function_exists( 'is_product' ) || ! is_product() ) {
+		return;
+	}
+	$nonce = wp_create_nonce( 'shopforge_iva_price_box' );
+	?>
+	<script>
+	( function ( $ ) {
+		if ( ! $ ) return;
+
+		var $box       = $( '[data-wc-iva-box]' );
+		var productId  = $box.data( 'product-id' );
+
+		function update( id, qty ) {
+			if ( ! id ) return;
+			$.post( '<?php echo esc_url_raw( admin_url( 'admin-ajax.php' ) ); ?>', {
+				action: 'shopforge_iva_price_box',
+				nonce: '<?php echo esc_js( $nonce ); ?>',
+				product_id: id,
+				quantity: qty
+			} ).done( function ( response ) {
+				if ( response && response.success && response.data.html ) {
+					$box = $( response.data.html );
+					$( '[data-wc-iva-box]' ).replaceWith( $box );
+				}
+			} );
+		}
+
+		function currentQty( $form ) {
+			var val = parseInt( $form.find( 'input.qty' ).val(), 10 );
+			return val > 0 ? val : 1;
+		}
+
+		$( document ).on( 'found_variation', 'form.variations_form', function ( event, variation ) {
+			if ( ! variation.variation_id ) return;
+			productId = variation.variation_id;
+			update( productId, currentQty( $( this ) ) );
+		} );
+
+		$( document ).on( 'change input', 'form.cart input.qty, form.variations_form input.qty', function () {
+			update( productId, currentQty( $( this ).closest( 'form' ) ) );
+		} );
+
+		<?php if ( ! function_exists( 'shopforge_is_integration_enabled' ) || shopforge_is_integration_enabled( 'the7' ) ) : ?>
+		// Il tema The7 disegna un secondo paio di pulsanti +/- (.qty-minus/.qty-plus)
+		// dentro .quantity.buttons_added, nascosti via CSS: sono loro ad avere
+		// la logica funzionante di decremento/incremento, quindi inoltriamo il
+		// click dei pulsanti nativi (.minus/.plus) verso di loro.
+		$( document ).on( 'click', '.quantity.buttons_added > .minus, .quantity.buttons_added > .plus', function ( e ) {
+			var $duplicate = $( this ).siblings( this.classList.contains( 'minus' ) ? '.qty-minus' : '.qty-plus' );
+			if ( $duplicate.length ) {
+				e.preventDefault();
+				$duplicate.trigger( 'click' );
+			}
+		} );
+		<?php endif; ?>
+	} )( window.jQuery );
+	</script>
+	<?php
+}, 30 );
 
 
 // -------------------------------------------------------------------------
@@ -213,6 +482,28 @@ if ( ! function_exists( 'shopforge_italian_holidays' ) ) {
 	}
 }
 
+// Campo "Giorni di consegna" nel tab Spedizione della scheda prodotto:
+// override per singolo prodotto, vuoto = usa il default (3 giorni lavorativi).
+add_action( 'woocommerce_product_options_shipping', function () {
+	woocommerce_wp_text_input( [
+		'id'                => '_shopforge_delivery_days',
+		'label'             => __( 'Delivery days', 'shopforge' ),
+		'description'       => __( 'Estimated shipping days used by [data_consegna_prodotto]. Leave empty to use the default (3 working days).', 'shopforge' ),
+		'desc_tip'          => true,
+		'type'              => 'number',
+		'custom_attributes' => [ 'min' => '0', 'step' => '1' ],
+	] );
+} );
+
+add_action( 'woocommerce_process_product_meta', function ( $product_id ) {
+	$value = sanitize_text_field( $_POST['_shopforge_delivery_days'] ?? '' );
+	if ( $value === '' ) {
+		delete_post_meta( $product_id, '_shopforge_delivery_days' );
+	} else {
+		update_post_meta( $product_id, '_shopforge_delivery_days', max( 0, (int) $value ) );
+	}
+} );
+
 add_shortcode( 'data_consegna_prodotto', function () {
 	global $product;
 
@@ -231,6 +522,13 @@ add_shortcode( 'data_consegna_prodotto', function () {
 		'days'        => 3,
 		'cutoff_hour' => 14,
 	] );
+
+	// Override per singolo prodotto (metabox "Consegna" in edit prodotto).
+	$days_override = get_post_meta( $product->get_id(), '_shopforge_delivery_days', true );
+	if ( $days_override !== '' ) {
+		$shipping['days'] = (int) $days_override;
+	}
+
 	$cutoff_hour = (int) $shipping['cutoff_hour'];
 	$timezone    = wp_timezone();
 	$now         = new DateTime( 'now', $timezone );
@@ -345,6 +643,46 @@ add_shortcode( 'buy_now_button', function () {
 		'<a href="%s" class="mp-buy-now-button">' . esc_html__( 'Buy now', 'shopforge' ) . '</a>',
 		esc_url( $url )
 	);
+} );
+
+
+// -------------------------------------------------------------------------
+// Nasconde le card Elementor rimaste vuote (es. [data_consegna_prodotto]
+// quando il prodotto non è disponibile). Il CSS ":empty" non basta perché
+// Elementor lascia spesso whitespace/newline nel markup anche a contenuto
+// vuoto: verifichiamo il testo effettivo via JS.
+// -------------------------------------------------------------------------
+
+add_action( 'wp_footer', function () {
+	if ( ! is_product() ) {
+		return;
+	}
+	if ( function_exists( 'shopforge_is_integration_enabled' ) && ! shopforge_is_integration_enabled( 'elementor' ) ) {
+		return;
+	}
+	?>
+	<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		document.querySelectorAll('.elementor-widget-shortcode .elementor-widget-container').forEach(function (el) {
+			// Vuoto solo se non c'è né testo né altri elementi (img, svg,
+			// icone, ecc.): uno shortcode che stampa solo un'immagine ha
+			// textContent vuoto ma non va nascosto.
+			if (el.textContent.trim() !== '' || el.children.length !== 0) {
+				return;
+			}
+			var widget = el.closest('.elementor-widget');
+			if (!widget) {
+				return;
+			}
+			widget.style.display = 'none';
+			var container = widget.parentElement;
+			if (container && container.classList.contains('elementor-element') && container.textContent.trim() === '') {
+				container.style.display = 'none';
+			}
+		});
+	});
+	</script>
+	<?php
 } );
 
 

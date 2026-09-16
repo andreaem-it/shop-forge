@@ -136,6 +136,115 @@ add_action( 'admin_post_shopforge_save_settings', function () {
 
 
 // =============================================================================
+// EXPORT / IMPORT IMPOSTAZIONI
+// =============================================================================
+
+/**
+ * Opzioni esportabili: tutte le 'shopforge_*' tranne licenza (dato legato
+ * al dominio, non ha senso portarlo su un altro sito) e il flag interno
+ * di flush rewrite.
+ */
+function shopforge_exportable_option_names(): array {
+	global $wpdb;
+	$names = $wpdb->get_col(
+		"SELECT option_name FROM {$wpdb->options}
+		 WHERE option_name LIKE 'shopforge\_%'
+		   AND option_name NOT LIKE 'shopforge\_license%'
+		   AND option_name != 'shopforge_flush_rewrite'"
+	);
+	return $names ?: [];
+}
+
+add_action( 'admin_post_shopforge_export_settings', function () {
+	if ( ! current_user_can( 'manage_woocommerce' ) || ! check_admin_referer( 'shopforge_export_settings' ) ) {
+		wp_die( esc_html__( 'Unauthorized access.', 'shopforge' ) );
+	}
+
+	$data = [];
+	foreach ( shopforge_exportable_option_names() as $name ) {
+		$data[ $name ] = get_option( $name );
+	}
+
+	nocache_headers();
+	header( 'Content-Type: application/json; charset=utf-8' );
+	header( 'Content-Disposition: attachment; filename="shopforge-settings-' . gmdate( 'Y-m-d' ) . '.json"' );
+	echo wp_json_encode( $data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE );
+	exit;
+} );
+
+add_action( 'admin_post_shopforge_import_settings', function () {
+	if ( ! current_user_can( 'manage_woocommerce' ) || ! check_admin_referer( 'shopforge_import_settings' ) ) {
+		wp_die( esc_html__( 'Unauthorized access.', 'shopforge' ) );
+	}
+
+	$json = '';
+	if ( ! empty( $_FILES['shopforge_import_file']['tmp_name'] ) && is_uploaded_file( $_FILES['shopforge_import_file']['tmp_name'] ) ) {
+		$json = (string) file_get_contents( $_FILES['shopforge_import_file']['tmp_name'] );
+	}
+
+	$data = json_decode( $json, true );
+	if ( ! is_array( $data ) ) {
+		wp_redirect( admin_url( 'admin.php?page=shopforge&tab=export-import&import_error=1' ) );
+		exit;
+	}
+
+	foreach ( $data as $key => $value ) {
+		$key = sanitize_key( (string) $key );
+		if ( ! str_starts_with( $key, 'shopforge_' ) || str_starts_with( $key, 'shopforge_license' ) ) {
+			continue;
+		}
+		update_option( $key, $value );
+	}
+
+	flush_rewrite_rules();
+	wp_redirect( admin_url( 'admin.php?page=shopforge&tab=export-import&updated=1' ) );
+	exit;
+} );
+
+function shopforge_admin_tab_export_import(): void {
+	shopforge_enqueue_fontawesome();
+	shopforge_admin_settings_notice();
+	if ( isset( $_GET['import_error'] ) ) {
+		echo '<div class="notice notice-error"><p>' . esc_html__( 'Invalid file: expected a JSON file exported from ShopForge.', 'shopforge' ) . '</p></div>';
+	}
+	?>
+	<div class="shopforge-section-label">
+		<i class="fa-solid fa-file-export" aria-hidden="true"></i>
+		<?php esc_html_e( 'Export / Import settings', 'shopforge' ); ?>
+		<span class="shopforge-section-hint">
+			<?php esc_html_e( 'Copy the whole ShopForge configuration to another site (staging, migration, backup). License is never included.', 'shopforge' ); ?>
+		</span>
+	</div>
+
+	<div class="shopforge-config-grid">
+		<div class="shopforge-config-field">
+			<label><i class="fa-solid fa-download" aria-hidden="true"></i> <?php esc_html_e( 'Export', 'shopforge' ); ?></label>
+			<p class="shopforge-config-desc"><?php esc_html_e( 'Downloads a JSON file with every ShopForge option currently set.', 'shopforge' ); ?></p>
+			<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
+				<input type="hidden" name="action" value="shopforge_export_settings">
+				<?php wp_nonce_field( 'shopforge_export_settings' ); ?>
+				<button type="submit" class="button button-primary"><?php esc_html_e( 'Download settings.json', 'shopforge' ); ?></button>
+			</form>
+		</div>
+
+		<div class="shopforge-config-field">
+			<label><i class="fa-solid fa-upload" aria-hidden="true"></i> <?php esc_html_e( 'Import', 'shopforge' ); ?></label>
+			<p class="shopforge-config-desc"><?php esc_html_e( 'Overwrites the current ShopForge settings with the ones in the uploaded file.', 'shopforge' ); ?></p>
+			<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" enctype="multipart/form-data">
+				<input type="hidden" name="action" value="shopforge_import_settings">
+				<?php wp_nonce_field( 'shopforge_import_settings' ); ?>
+				<input type="file" name="shopforge_import_file" accept="application/json" required>
+				<p><button type="submit" class="button" onclick="return confirm('<?php echo esc_js( __( 'This will overwrite current ShopForge settings. Continue?', 'shopforge' ) ); ?>');"><?php esc_html_e( 'Import and overwrite', 'shopforge' ); ?></button></p>
+			</form>
+		</div>
+	</div>
+
+	<?php shopforge_admin_settings_styles(); ?>
+	<?php
+}
+
+
+// =============================================================================
 // COLORI — default e helper
 // =============================================================================
 

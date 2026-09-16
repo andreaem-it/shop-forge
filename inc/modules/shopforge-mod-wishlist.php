@@ -59,26 +59,11 @@ add_action( 'woocommerce_product_set_stock_status', function ( int $product_id, 
 
 // ---- Contenuto endpoint ----
 
-add_action( 'woocommerce_account_shopforge-wishlist_endpoint', function () {
-	$user_id  = get_current_user_id();
-	$wishlist = get_user_meta( $user_id, '_shopforge_wishlist', true ) ?: [];
-
-	shopforge_account_section_header(
-		__( 'Wishlist', 'shopforge' ),
-		'fa-solid fa-heart',
-		/* translators: %d: number of saved products */
-		sprintf( _n( '%d saved product', '%d saved products', count( $wishlist ), 'shopforge' ), count( $wishlist ) )
-	);
-
-	if ( empty( $wishlist ) ) {
-		shopforge_account_empty_state(
-			'fa-solid fa-heart',
-			__( 'No saved products', 'shopforge' ),
-			__( 'Add products to your wishlist to find them easily.', 'shopforge' )
-		);
-		return;
-	}
-
+/**
+ * Griglia prodotti condivisa fra la pagina account (con pulsante rimuovi)
+ * e la pagina pubblica di condivisione (sola lettura).
+ */
+function shopforge_render_wishlist_grid( array $wishlist, bool $show_remove ): void {
 	echo '<div class="shopforge-wishlist-grid">';
 	foreach ( $wishlist as $product_id ) {
 		$product = wc_get_product( $product_id );
@@ -111,17 +96,63 @@ add_action( 'woocommerce_account_shopforge-wishlist_endpoint', function () {
 				<?php else : ?>
 				<span class="shopforge-badge shopforge-badge--muted"><?php esc_html_e( 'Out of stock', 'shopforge' ); ?></span>
 				<?php endif; ?>
+				<?php if ( $show_remove ) : ?>
 				<button type="button" class="shopforge-btn shopforge-btn--ghost shopforge-remove-wishlist"
 				        data-product="<?php echo esc_attr( $product_id ); ?>"
 				        data-nonce="<?php echo esc_attr( wp_create_nonce( 'shopforge_wishlist' ) ); ?>">
 					<i class="fa-solid fa-trash-can"></i>
 				</button>
+				<?php endif; ?>
 			</div>
 		</div>
 		<?php
 	}
 	echo '</div>';
+}
 
+/**
+ * Token di condivisione pubblica della wishlist: generato al primo utilizzo
+ * e stabile finché l'utente non lo rigenera esplicitamente.
+ */
+function shopforge_get_wishlist_share_token( int $user_id ): string {
+	$token = get_user_meta( $user_id, '_shopforge_wishlist_share_token', true );
+	if ( ! $token ) {
+		$token = wp_generate_password( 24, false );
+		update_user_meta( $user_id, '_shopforge_wishlist_share_token', $token );
+	}
+	return $token;
+}
+
+add_action( 'woocommerce_account_shopforge-wishlist_endpoint', function () {
+	$user_id  = get_current_user_id();
+	$wishlist = get_user_meta( $user_id, '_shopforge_wishlist', true ) ?: [];
+
+	shopforge_account_section_header(
+		__( 'Wishlist', 'shopforge' ),
+		'fa-solid fa-heart',
+		/* translators: %d: number of saved products */
+		sprintf( _n( '%d saved product', '%d saved products', count( $wishlist ), 'shopforge' ), count( $wishlist ) )
+	);
+
+	if ( empty( $wishlist ) ) {
+		shopforge_account_empty_state(
+			'fa-solid fa-heart',
+			__( 'No saved products', 'shopforge' ),
+			__( 'Add products to your wishlist to find them easily.', 'shopforge' )
+		);
+		return;
+	}
+
+	$share_url = add_query_arg( 'shopforge_wl', shopforge_get_wishlist_share_token( $user_id ), home_url( '/' ) );
+	?>
+	<div class="shopforge-wishlist-share">
+		<i class="fa-solid fa-share-nodes" aria-hidden="true"></i>
+		<input type="text" readonly value="<?php echo esc_url( $share_url ); ?>" onclick="this.select();" class="shopforge-wishlist-share__input">
+		<button type="button" class="shopforge-btn shopforge-btn--ghost shopforge-wishlist-share__copy"><?php esc_html_e( 'Copy link', 'shopforge' ); ?></button>
+	</div>
+	<style>.shopforge-wishlist-share{display:flex;align-items:center;gap:8px;margin-bottom:16px;color:#646970;}.shopforge-wishlist-share__input{flex:1;max-width:420px;}</style>
+	<?php
+	shopforge_render_wishlist_grid( $wishlist, true );
 	?>
 	<script>
 	document.querySelectorAll('.shopforge-remove-wishlist').forEach(function(btn) {
@@ -136,8 +167,52 @@ add_action( 'woocommerce_account_shopforge-wishlist_endpoint', function () {
 			});
 		});
 	});
+	var copyBtn = document.querySelector('.shopforge-wishlist-share__copy');
+	if (copyBtn) {
+		copyBtn.addEventListener('click', function() {
+			var input = document.querySelector('.shopforge-wishlist-share__input');
+			input.select();
+			navigator.clipboard && navigator.clipboard.writeText(input.value);
+		});
+	}
 	</script>
 	<?php
+} );
+
+// ---- Pagina pubblica di condivisione (?shopforge_wl=token) ----
+
+add_filter( 'query_vars', function ( $vars ) {
+	$vars[] = 'shopforge_wl';
+	return $vars;
+} );
+
+add_action( 'template_redirect', function () {
+	$token = sanitize_text_field( get_query_var( 'shopforge_wl' ) );
+	if ( ! $token ) return;
+
+	$users = get_users( [
+		'meta_key'   => '_shopforge_wishlist_share_token',
+		'meta_value' => $token,
+		'number'     => 1,
+		'fields'     => 'ID',
+	] );
+	if ( ! $users ) {
+		wp_die( esc_html__( 'This wishlist link is not valid.', 'shopforge' ), '', [ 'response' => 404 ] );
+	}
+
+	$wishlist = get_user_meta( $users[0], '_shopforge_wishlist', true ) ?: [];
+
+	get_header();
+	echo '<div class="shopforge-account-section" style="max-width:1000px;margin:40px auto;padding:0 20px;">';
+	shopforge_account_section_header( __( 'Shared wishlist', 'shopforge' ), 'fa-solid fa-heart', '' );
+	if ( empty( $wishlist ) ) {
+		shopforge_account_empty_state( 'fa-solid fa-heart', __( 'No saved products', 'shopforge' ), '' );
+	} else {
+		shopforge_render_wishlist_grid( $wishlist, false );
+	}
+	echo '</div>';
+	get_footer();
+	exit;
 } );
 
 
@@ -439,4 +514,48 @@ add_action( 'wp_head', function () {
 	}
 	</style>
 	<?php
+} );
+
+// ---- REST API (utente autenticato: cookie o application password) ----
+
+add_action( 'rest_api_init', function () {
+	register_rest_route( 'shopforge/v1', '/wishlist', [
+		'methods'             => 'GET',
+		'permission_callback' => fn() => is_user_logged_in(),
+		'callback'            => function () {
+			$wishlist = get_user_meta( get_current_user_id(), '_shopforge_wishlist', true ) ?: [];
+			return rest_ensure_response( array_values( array_map( 'intval', $wishlist ) ) );
+		},
+	] );
+
+	register_rest_route( 'shopforge/v1', '/wishlist/(?P<product_id>\d+)', [
+		[
+			'methods'             => 'POST',
+			'permission_callback' => fn() => is_user_logged_in(),
+			'callback'            => function ( WP_REST_Request $req ) {
+				$user_id    = get_current_user_id();
+				$product_id = absint( $req['product_id'] );
+				if ( ! wc_get_product( $product_id ) ) {
+					return new WP_Error( 'shopforge_invalid_product', __( 'Invalid product.', 'shopforge' ), [ 'status' => 404 ] );
+				}
+				$wishlist = get_user_meta( $user_id, '_shopforge_wishlist', true ) ?: [];
+				if ( ! in_array( $product_id, $wishlist, true ) ) {
+					$wishlist[] = $product_id;
+					update_user_meta( $user_id, '_shopforge_wishlist', $wishlist );
+				}
+				return rest_ensure_response( array_values( array_map( 'intval', $wishlist ) ) );
+			},
+		],
+		[
+			'methods'             => 'DELETE',
+			'permission_callback' => fn() => is_user_logged_in(),
+			'callback'            => function ( WP_REST_Request $req ) {
+				$user_id    = get_current_user_id();
+				$product_id = absint( $req['product_id'] );
+				$wishlist   = array_diff( get_user_meta( $user_id, '_shopforge_wishlist', true ) ?: [], [ $product_id ] );
+				update_user_meta( $user_id, '_shopforge_wishlist', array_values( $wishlist ) );
+				return rest_ensure_response( array_values( array_map( 'intval', $wishlist ) ) );
+			},
+		],
+	] );
 } );

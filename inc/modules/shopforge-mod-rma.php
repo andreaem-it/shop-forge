@@ -1158,3 +1158,31 @@ add_action( 'save_post_product', function ( int $product_id ): void {
 		update_post_meta( $product_id, '_shopforge_rma_return_period_days', max( 0, absint( $period ) ) );
 	}
 } );
+
+// ---- REST API: sola lettura, solo le richieste dell'utente autenticato ----
+
+add_action( 'rest_api_init', function () {
+	register_rest_route( 'shopforge/v1', '/rma', [
+		'methods'             => 'GET',
+		'permission_callback' => fn() => is_user_logged_in(),
+		'callback'            => function () {
+			$requests = get_posts( [
+				'post_type'      => 'shopforge_rma',
+				'author'         => get_current_user_id(),
+				'post_status'    => 'any',
+				'posts_per_page' => -1,
+			] );
+			return rest_ensure_response( array_map( function ( $request ) {
+				return [
+					'id'         => $request->ID,
+					'title'      => $request->post_title,
+					'status'     => get_post_meta( $request->ID, '_shopforge_rma_stato', true ) ?: 'aperta',
+					'status_label' => shopforge_rma_get_status_label( get_post_meta( $request->ID, '_shopforge_rma_stato', true ) ?: 'aperta' ),
+					'order_id'   => (int) get_post_meta( $request->ID, '_shopforge_rma_order_id', true ),
+					'product_id' => (int) get_post_meta( $request->ID, '_shopforge_rma_product_id', true ),
+					'date'       => $request->post_date,
+				];
+			}, $requests ) );
+		},
+	] );
+} );

@@ -403,7 +403,7 @@ add_action( 'woocommerce_order_details_after_order_table', function ( WC_Order $
 // =============================================================================
 
 add_action( 'admin_post_shopforge_save_receipt_settings', function () {
-	if ( ! current_user_can( 'manage_woocommerce' )
+	if ( ! current_user_can( shopforge_support_capability() )
 	     || ! check_admin_referer( 'shopforge_save_receipt_settings' ) ) {
 		wp_die( esc_html__( 'Unauthorized access.', 'shopforge' ) );
 	}

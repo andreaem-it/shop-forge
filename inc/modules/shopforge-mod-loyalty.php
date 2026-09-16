@@ -37,6 +37,18 @@ function shopforge_loyalty_get_point_value(): float {
 }
 
 /** Punti minimi richiesti per poter riscattare. */
+/**
+ * Matematica pura del programma fedeltà, senza dipendenze WP: estratta così
+ * da poter essere testata senza bootstrap di WordPress (vedi tests/test-loyalty-math.php).
+ */
+function shopforge_loyalty_calc_points_earned( float $order_total, float $earn_rate ): int {
+	return (int) floor( $order_total * $earn_rate );
+}
+
+function shopforge_loyalty_calc_redeem_value( int $points, float $point_value, int $decimals ): float {
+	return round( $points * $point_value, $decimals );
+}
+
 function shopforge_loyalty_get_min_redeem(): int {
 	return max( 1, (int) apply_filters( 'shopforge_loyalty_min_redeem', (int) get_option( 'shopforge_loyalty_min_redeem', 100 ) ) );
 }
@@ -89,7 +101,7 @@ add_action( 'woocommerce_order_status_completed', function ( int $order_id ) {
 	$user_id = (int) $order->get_customer_id();
 	if ( ! $user_id ) return;
 
-	$points = (int) floor( (float) $order->get_total() * shopforge_loyalty_get_earn_rate() );
+	$points = shopforge_loyalty_calc_points_earned( (float) $order->get_total(), shopforge_loyalty_get_earn_rate() );
 	if ( $points <= 0 ) return;
 
 	$order->update_meta_data( '_shopforge_loyalty_awarded', $points );
@@ -136,7 +148,7 @@ add_action( 'woocommerce_order_status_changed', function ( int $order_id, string
 
 /** @return string|WP_Error Codice coupon o errore. */
 function shopforge_loyalty_issue_coupon( int $user_id, int $points ) {
-	$amount = round( $points * shopforge_loyalty_get_point_value(), wc_get_price_decimals() );
+	$amount = shopforge_loyalty_calc_redeem_value( $points, shopforge_loyalty_get_point_value(), wc_get_price_decimals() );
 	if ( $amount <= 0 ) {
 		return new WP_Error( 'invalid_amount', __( 'Could not determine a discount amount for this coupon.', 'shopforge' ) );
 	}

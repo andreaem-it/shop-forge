@@ -45,6 +45,7 @@ function shopforge_admin_page_render(): void {
 		'colors'     => [ 'label' => __( 'Colors', 'shopforge' ),       'icon' => 'fa-solid fa-palette' ],
 		'integrations' => [ 'label' => __( 'Integrations', 'shopforge' ), 'icon' => 'fa-solid fa-plug' ],
 		'customizer'   => [ 'label' => __( 'Customizer', 'shopforge' ), 'icon' => 'fa-solid fa-wand-magic-sparkles' ],
+		'export-import' => [ 'label' => __( 'Export/Import', 'shopforge' ), 'icon' => 'fa-solid fa-file-export' ],
 		'license'    => [ 'label' => __( 'License', 'shopforge' ),      'icon' => 'fa-solid fa-key' ],
 		'shortcodes' => [ 'label' => __( 'Shortcodes', 'shopforge' ),   'icon' => 'fa-solid fa-code' ],
 	];
@@ -88,7 +89,7 @@ function shopforge_admin_page_render(): void {
 
 		<div class="shopforge-tab-content">
 			<?php
-			$woocommerce_tabs = [ 'features', 'modules', 'config', 'theme', 'colors', 'customizer' ];
+			$woocommerce_tabs = [ 'features', 'modules', 'config', 'theme', 'colors', 'customizer', 'export-import' ];
 			if ( in_array( $active_tab, $woocommerce_tabs, true ) && ! function_exists( 'shopforge_admin_tab_features' ) ) {
 				echo '<p>' . esc_html__( 'This section requires WooCommerce to be active.', 'shopforge' ) . '</p>';
 			} else {
@@ -121,6 +122,9 @@ function shopforge_admin_page_render(): void {
 						break;
 					case 'customizer':
 						shopforge_admin_tab_customizer();
+						break;
+					case 'export-import':
+						shopforge_admin_tab_export_import();
 						break;
 					default:
 						shopforge_admin_tab_features();

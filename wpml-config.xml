@@ -1,0 +1,13 @@
+<wpml-config>
+	<custom-fields>
+		<custom-field action="translate">_shopforge_product_faqs</custom-field>
+		<custom-field action="translate">_shopforge_product_compatibility</custom-field>
+		<custom-field action="translate">_shopforge_product_datasheets</custom-field>
+		<custom-field action="copy">_shopforge_delivery_days</custom-field>
+		<custom-field action="copy">_shopforge_rma_escludi</custom-field>
+		<custom-field action="copy">_shopforge_rma_return_period_days</custom-field>
+	</custom-fields>
+	<admin-texts>
+		<key name="shopforge_contact_url" />
+	</admin-texts>
+</wpml-config>

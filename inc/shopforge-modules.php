@@ -15,6 +15,20 @@
 
 defined( 'ABSPATH' ) || exit;
 
+/**
+ * Capability richiesta per le schermate/azioni di supporto clienti (RMA,
+ * resi, preventivi, ricevute) — separata da quella delle impostazioni del
+ * plugin così un sito può concedere l'accesso al solo supporto senza dare
+ * 'manage_woocommerce' completo, es.:
+ *   add_filter( 'shopforge_support_capability', fn() => 'shopforge_manage_support' );
+ *   $role->add_cap( 'shopforge_manage_support' );
+ * Di default resta 'manage_woocommerce' per non cambiare comportamento
+ * a chi non configura nulla.
+ */
+function shopforge_support_capability(): string {
+	return apply_filters( 'shopforge_support_capability', 'manage_woocommerce' );
+}
+
 
 // =============================================================================
 // REGISTRO — funzionalità + moduli

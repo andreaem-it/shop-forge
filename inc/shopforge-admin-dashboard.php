@@ -145,7 +145,7 @@ add_action( 'shopforge_rma_submitted', 'shopforge_dashboard_flush_cache' );
 // =============================================================================
 
 add_action( 'wp_dashboard_setup', function () {
-	if ( ! current_user_can( 'manage_woocommerce' ) ) return;
+	if ( ! current_user_can( shopforge_support_capability() ) ) return;
 	if ( ! class_exists( 'WooCommerce' ) ) return;
 
 	wp_add_dashboard_widget( 'shopforge_dash_sales', __( 'ShopForge — Sales', 'shopforge' ), 'shopforge_render_dashboard_sales_widget' );

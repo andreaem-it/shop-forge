@@ -86,6 +86,15 @@ Yes, all strings are wrapped for translation with the `shopforge` text domain. A
 
 == Changelog ==
 
+= 1.19.0 =
+* New Gutenberg blocks and Elementor widgets for the main product shortcodes (price VAT box, delivery estimate, buy now, stock status, product FAQ) — usable directly from the block/Elementor inserter instead of pasting shortcodes.
+* New "Export/Import" settings tab: download all ShopForge settings as JSON and re-import them on another site (license excluded).
+* Wishlist: added a public share link (read-only, no login required) per customer.
+* REST API: new `shopforge/v1/wishlist` (read/add/remove) and `shopforge/v1/rma` (read-only, own requests) endpoints.
+* Support screens (RMA, returns, quotes, receipts) now check a filterable `shopforge_support_capability` instead of hard-coded `manage_woocommerce`, so a site can grant support access without full store-management rights.
+* Added `wpml-config.xml` and a Polylang `pll_copy_post_metas` filter so product FAQ/compatibility/datasheet fields are recognized as translatable.
+* Added a minimal assert-based test for the loyalty points/redeem-value math (`tests/test-loyalty-math.php`).
+
 = 1.18.1 =
 * Customizer: added top/right/bottom(/left) margin controls for the wishlist button, add-to-cart button and quantity selector (can be negative, useful to nudge vertical alignment).
 * Fixed the wishlist button's `margin-top: 10px` being hard-coded with no override, and added `align-self: center` to the three controlled buttons so they line up on the same row even when heights differ (e.g. "Auto" width mode).

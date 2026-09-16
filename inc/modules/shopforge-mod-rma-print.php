@@ -10,7 +10,7 @@ defined( 'ABSPATH' ) || exit;
 add_action( 'admin_init', function () {
 	if ( empty( $_GET['page'] ) || 'shopforge-rma-print' !== $_GET['page'] ) return;
 
-	if ( ! current_user_can( 'manage_woocommerce' ) ) {
+	if ( ! current_user_can( shopforge_support_capability() ) ) {
 		wp_die( esc_html__( 'Insufficient permissions.', 'shopforge' ) );
 	}
 	if ( ! isset( $_GET['_wpnonce'] ) || ! wp_verify_nonce( $_GET['_wpnonce'], 'shopforge_rma_print_request' ) ) {

@@ -29,7 +29,7 @@ function shopforge_rma_stats_resolution_days( int $request_id, string $stato ): 
 }
 
 function shopforge_rma_stats_page_render(): void {
-	if ( ! current_user_can( 'manage_woocommerce' ) ) return;
+	if ( ! current_user_can( shopforge_support_capability() ) ) return;
 
 	$final_statuses = [ 'chiusa', 'rimborsata', 'sostituita', 'rifiutata', 'annullata' ];
 	$requests = get_posts( [ 'post_type' => 'shopforge_rma', 'posts_per_page' => -1, 'post_status' => 'publish' ] );

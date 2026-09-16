@@ -3,7 +3,7 @@
  * Plugin Name:  ShopForge
  * Plugin URI:   https://www.andreaem.it
  * Description:  Modular WooCommerce plugin — account area, tracking, wishlist, returns, quotes, notifications and UX improvements.
- * Version:      1.18.1
+ * Version:      1.19.0
  * Author:       Andrea Emili
  * Author URI:   https://www.andreaem.it
  * Text Domain:  shopforge
@@ -119,6 +119,14 @@ add_action( 'plugins_loaded', function () {
     // Settings page admin (tab Moduli, usata dal router in shopforge-admin-page.php)
     require_once SHOPFORGE_DIR . 'inc/shopforge-settings.php';
     require_once SHOPFORGE_DIR . 'inc/shopforge-customizer.php';
+    require_once SHOPFORGE_DIR . 'inc/shopforge-blocks.php';
+
+    // Widget Elementor: la classe estende \Elementor\Widget_Base, quindi va
+    // caricata solo quando Elementor è davvero attivo e pronto — 'elementor/loaded'
+    // (non 'plugins_loaded', il cui ordine fra i due plugin non è garantito).
+    add_action( 'elementor/loaded', function () {
+        require_once SHOPFORGE_DIR . 'inc/shopforge-elementor.php';
+    } );
 } );
 
 // Override template: cerca nella cartella del plugin prima del fallback WooCommerce.

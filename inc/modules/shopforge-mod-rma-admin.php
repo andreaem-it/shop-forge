@@ -181,7 +181,7 @@ add_filter( 'bulk_actions-edit-shopforge_rma', function ( $actions ) {
 } );
 
 add_filter( 'handle_bulk_actions-edit-shopforge_rma', function ( $redirect_to, $action, $post_ids ) {
-	if ( ! current_user_can( 'manage_woocommerce' ) ) return $redirect_to;
+	if ( ! current_user_can( shopforge_support_capability() ) ) return $redirect_to;
 
 	if ( str_starts_with( $action, 'shopforge_rma_set_status_' ) ) {
 		$status = substr( $action, strlen( 'shopforge_rma_set_status_' ) );
@@ -457,7 +457,7 @@ add_action( 'save_post_shopforge_rma', function ( int $post_id ): void {
 add_action( 'save_post_shopforge_rma', function (): void {
 	if ( empty( $_POST['shopforge_rma_send_admin_message'] ) || empty( $_POST['shopforge_rma_admin_message_nonce'] ) ) return;
 	if ( ! wp_verify_nonce( $_POST['shopforge_rma_admin_message_nonce'], 'shopforge_rma_add_admin_message' ) ) return;
-	if ( ! current_user_can( 'manage_woocommerce' ) ) return;
+	if ( ! current_user_can( shopforge_support_capability() ) ) return;
 
 	$post_id = absint( $_POST['shopforge_rma_id'] ?? 0 );
 	$text    = sanitize_textarea_field( $_POST['shopforge_rma_admin_message_text'] ?? '' );
@@ -493,7 +493,7 @@ add_action( 'wp_ajax_shopforge_rma_update_status', function () {
 	if ( ! wp_verify_nonce( $_POST['nonce'] ?? '', 'shopforge_rma_admin' ) ) {
 		wp_send_json_error( [ 'message' => __( 'Security: invalid nonce.', 'shopforge' ) ] );
 	}
-	if ( ! current_user_can( 'manage_woocommerce' ) ) {
+	if ( ! current_user_can( shopforge_support_capability() ) ) {
 		wp_send_json_error( [ 'message' => __( 'Insufficient permissions.', 'shopforge' ) ] );
 	}
 

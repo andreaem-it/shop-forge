@@ -16,6 +16,16 @@
 
 defined( 'ABSPATH' ) || exit;
 
+// Polylang: copia questi meta quando si crea la traduzione di un prodotto
+// (WPML usa invece wpml-config.xml, che non serve a Polylang).
+add_filter( 'pll_copy_post_metas', function ( $metas ) {
+	return array_merge( $metas, [
+		'_shopforge_product_faqs',
+		'_shopforge_product_compatibility',
+		'_shopforge_product_datasheets',
+	] );
+} );
+
 
 // =============================================================================
 // SHORTCODE [product_faq]

@@ -10,7 +10,7 @@ defined( 'ABSPATH' ) || exit;
 add_action( 'admin_init', function () {
 	if ( empty( $_GET['shopforge_rma_export_csv'] ) || empty( $_GET['post_type'] ) || 'shopforge_rma' !== $_GET['post_type'] ) return;
 
-	if ( ! current_user_can( 'manage_woocommerce' ) ) {
+	if ( ! current_user_can( shopforge_support_capability() ) ) {
 		wp_die( esc_html__( 'Insufficient permissions.', 'shopforge' ) );
 	}
 
